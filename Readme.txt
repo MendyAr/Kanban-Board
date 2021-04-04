@@ -1,1 +1,1 @@
-the son is yellow the sky is blue, i would connect my teacher and his chair with glue.
+the sun is yellow the sky is blue, i would connect my teacher and his chair with glue.

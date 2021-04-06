@@ -28,6 +28,5 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public string Title { get { return title; } set { title = value; } }
 
         public string Description { get { return description; } set { description = value; } }
-
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
+using BTask = IntroSE.Kanban.Backend.BuisnessLayer.Task;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -12,30 +14,20 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private int maxBacklog = -1;
         private int maxInProgress = -1;
         private int maxDone = -1;
-        private Dictionary<int,Task> backlog = new Dictionary<int, Task>;
-        private Dictionary<int,Task> inProgress = new Dictionary<int, Task>;
-        private Dictionary<int,Task> done = new Dictionary<int, Task>;
+        private Dictionary<int,BTask> backlog = new Dictionary<int, BTask>();
+        private Dictionary<int,BTask> inProgress = new Dictionary<int, BTask>();
+        private Dictionary<int,BTask> done = new Dictionary<int, BTask>();
 
         //constructor
-        public Board(string name, string creatorEmail)
+        internal Board(string creatorEmail, string name)
         {
             this.name = name;
             this.creatorEmail = creatorEmail;
-            this.id = name + creatorEmail;
         }
 
         //methods
-        private void checkColumnOrdinal(int columnOrdinal)
-        {
-            if (columnOrdinal < 0 || columnOrdinal > 2)
-                throw new ArgumentException("column ordinal out of range");
-        }
-
         internal void LimitColumn(int columnOrdinal, int limit)
         {
-            checkColumnOrdinal;
-            if (limit < -1)
-                throw new ArgumentException("impossible limit");
             if (columnOrdinal == 0)
             {
                 if (backlog.Count > limit)
@@ -58,7 +50,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         internal int GetColumnLimit(int columnOrdinal)
         {
-            checkColumnOrdinal;
             if (columnOrdinal == 0)
             {
                 return maxBacklog;
@@ -73,14 +64,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        internal Task AddTask(string title, string description, DateTime dueDate)
+        internal STask AddTask(DateTime creationTime, string title, string description, DateTime dueDate)
         {
-
+            if (maxBacklog != -1 && backlog.Count == maxDone)
+                throw new IndexOutOfRangeException("Cannot add new tasks into board '" + this.creatorEmail + ":" + this.name + "': 'Backlog' column is already at its limit");
+            BTask task = new BTask(taskIdCounter, creationTime, title, description, dueDate);
+            backlog[taskIdCounter] = task;
+            taskIdCounter++;
+            return task.serviceTask();
         }
         
         internal void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
         {
-            checkColumnOrdinal;
             if (columnOrdinal == 0)
             {
                 try
@@ -89,7 +84,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board");
                 }
             }
             else if (columnOrdinal == 1)
@@ -100,7 +95,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board");
                 }
             }
             else
@@ -111,7 +106,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Done' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Done' of this board");
                 }
             }
 
@@ -119,7 +114,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         internal void UpdateTaskTitle(int columnOrdinal, int taskId, string title)
         {
-            checkColumnOrdinal;
             if (columnOrdinal == 0)
             {
                 try
@@ -128,7 +122,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board");
                 }
             }
             else if (columnOrdinal == 1)
@@ -139,7 +133,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board");
                 }
             }
             else
@@ -150,7 +144,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Done' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Done' of this board");
                 }
             }
 
@@ -158,7 +152,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         
         internal void UpdateTaskDescription(int columnOrdinal, int taskId, string description)
         {
-            checkColumnOrdinal;
             if (columnOrdinal == 0)
             {
                 try
@@ -167,7 +160,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board");
                 }
             }
             else if (columnOrdinal == 1)
@@ -178,7 +171,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board");
                 }
             }
             else
@@ -189,7 +182,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Done' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Done' of this board");
                 }
             }
 
@@ -197,9 +190,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         
         internal void AdvanceTask(int columnOrdinal, int taskId)
         {
-            checkColumnOrdinal;
             if (columnOrdinal == 0)
             {
+                if (maxInProgress != -1 && inProgress.Count == maxInProgress)
+                    throw new IndexOutOfRangeException("Cannot advance tasks from 'Backlog': 'In Progress' column is already at its limit");
                 try
                 {
                     inProgress[taskId] = backlog[taskId];
@@ -207,11 +201,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'Backlog' of this board");
                 }
             }
-            else if (columnOrdinal == 1)
+            else
             {
+                if (maxDone != -1 && done.Count == maxDone)
+                    throw new IndexOutOfRangeException("Cannot advance tasks from 'In Progress': 'Done' column is already at its limit");
                 try
                 {
                     done[taskId] = inProgress[taskId];
@@ -219,38 +215,33 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 }
                 catch (KeyNotFoundException)
                 {
-                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board")
+                    throw new ArgumentException("There is no task with id '" + taskId + "' in column 'In Progress' of this board");
                 }
-            }
-            else
-            {
-                throw new ArgumentException("Cannot advance tasks from column 'Done'")
             }
         }
         
-        internal IList<Task> GetColumn(int columnOrdinal)
+        internal IList<STask> GetColumn(int columnOrdinal)
         {
-            checkColumnOrdinal;
-            //Ilist<Task> column = new Ilist<Task>;
+            IList<STask> column = new List<STask>();
             if (columnOrdinal == 0)
             {
-                foreach (Task task in backlog.Values)
+                foreach (BTask task in backlog.Values)
                 {
-                    column.Add(8);
+                    column.Add(task.serviceTask());
                 }
             }
             else if (columnOrdinal == 1)
             {
-                foreach (Task task in backlog.Values)
+                foreach (BTask task in backlog.Values)
                 {
-                    column.Add(8);
+                    column.Add(task.serviceTask());
                 }
             }
             else
             {
-                foreach (Task task in backlog.Values)
+                foreach (BTask task in backlog.Values)
                 {
-                    column.Add(8);
+                    column.Add(task.serviceTask());
                 }
             }
             return column;

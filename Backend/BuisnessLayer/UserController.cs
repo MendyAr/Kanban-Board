@@ -7,20 +7,26 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     class UserController
     {
         private Dictionary<string,User> users;
-        public UserController(List<DataUser> ADTUsers) // ADTUser is a User from the DataLayer
+
+        public UserController()
         {
-            foreach (DataUser dataUser in ADTUsers)
-            {
-                User user = new User(dataUser);
-                this.users.Add(dataUser.email, user);
-            }
+
         }
-        public User Register(string email, int password)
+        /*public UserController(List<DataUser> du)
         {
-            if (EmailExist(email))
+            foreach (DataUser dataUser in du)
             {
-                throw new Exception("A user already exist with this Email address");
+                User user = new User(dataUser.Email, dataUser.Password); //possible to add builder in User
+                this.users.Add(user.Email, user);
             }
+        }*/
+        public User Register(string email, string password)
+        {
+            if (email == null)
+                throw new Exception("Email can't ne null");
+
+            if (EmailExist(email))
+                throw new Exception("A user already exist with this Email address");
 
             return new User(email, password);
         }
@@ -40,11 +46,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             return emailExist;
         }
 
-        public User Login(string email, int password)
+        public User Login(string email, string password)
         {
             if (EmailExist(email)) {
                 User user = users[email];
-                if (user.isMyPassword(password)) 
+                if (user.validatePassword(password)) 
                 {
                     return user;
                 }

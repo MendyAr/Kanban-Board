@@ -7,44 +7,64 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     class UserController
     {
         private Dictionary<string,User> users;
-        public UserController(List<DataUser> ADTUsers) // ADTUser is a User from the DataLayer
-        {
-            foreach (DataUser dataUser in ADTUsers)
-            {
-                User user = new User(dataUser);
-                this.users.Add(dataUser.email, user);
-            }
-        }
+
+
+        public UserController() { } // an empty constructor while we dont upload data
+
+        // constructor when we will use data uploading
+        //public UserController(List<DLUser> DLUsers) // ADTUser is a User from the DataLayer
+        //{
+        //    foreach (DLUser dataUser in DLUsers)
+        //    {
+        //        User user = new User(dataUser);
+        //        this.users.Add(dataUser.email, user);
+        //    }
+        //}
+
+
         public User Register(string email, int password)
         {
+            if (email == null)
+                throw new Exception("Email cannot be null");
+
+            if (!IsValidEmail(email))
+            {
+                throw new Exception("This email address is invalid, please check for spellMistakes");
+            }
+
             if (EmailExist(email))
             {
                 throw new Exception("A user already exist with this Email address");
             }
 
-            return new User(email, password);
+            User us = new User(email, password);
+            this.users.Add(email, us);
+            return us;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private bool EmailExist(string email)
         {
-            bool emailExist = false;
-
-           foreach(KeyValuePair<string,User> valuePair in users)
-            {
-                if (valuePair.Key.Equals(email))
-                {
-                    emailExist = true;
-                    break;
-                }
-            }
-            return emailExist;
+            return users.ContainsKey(email);
         }
 
         public User Login(string email, int password)
         {
             if (EmailExist(email)) {
                 User user = users[email];
-                if (user.isMyPassword(password)) 
+                if (user.validatePassword(password)) 
                 {
                     return user;
                 }

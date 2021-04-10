@@ -22,7 +22,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //}
 
 
-        public User Register(string email, int password)
+        public User Register(string email, string password)
         {
             if (email == null)
                 throw new Exception("Email cannot be null");
@@ -60,7 +60,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             return users.ContainsKey(email);
         }
 
-        public User Login(string email, int password)
+        public User Login(string email, string password)
         {
             if (EmailExist(email)) {
                 User user = users[email];

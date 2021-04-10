@@ -20,13 +20,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
             // log.add("create new Task)
         }
-        public int TaskId { get { return taskId; } }
+        internal int TaskId { get { return taskId; } }
 
-        public DateTime CreationTime { get { return creationTime; }}
-        public DateTime DueDate { get { return dueDate; } set { dueDate = value; } }
+        internal DateTime CreationTime { get { return creationTime; }}
+        internal DateTime DueDate { get { return dueDate; } set { dueDate = value; } }
 
-        public string Title { get { return title; } set { title = value; } }
+        internal string Title { get { return title; } set { title = value; } }
 
-        public string Description { get { return description; } set { description = value; } }
+        internal string Description { get { return description; } set { description = value; } }
     }
 }

@@ -9,67 +9,67 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         private BoardController bc;
 
-        public BoardService()
+        internal BoardService()
         {
             bc = new BoardController();
         }
 
-        public Response LimitColumn(string email, string boardName, int columnOrdinal, int limit)
+        internal Response LimitColumn(string email, string boardName, int columnOrdinal, int limit)
         {
             throw new NotImplementedException();
         }
 
-        public Response<int> GetColumnLimit(string email, string boardName, int columnOrdinal)
+        internal Response<int> GetColumnLimit(string email, string boardName, int columnOrdinal)
         {
             throw new NotImplementedException();
         }
 
-        public Response<string> GetColumnName(string email, string boardName, int columnOrdinal)
+        internal Response<string> GetColumnName(string email, string boardName, int columnOrdinal)
         {
             throw new NotImplementedException();
         }
 
-        public Response<Task> AddTask(string email, string boardName, string title, string description, DateTime dueDate)
+        internal Response<Task> AddTask(string email, string boardName, string title, string description, DateTime dueDate)
         {
             throw new NotImplementedException();
         }
 
-        public Response UpdateTaskDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
+        internal Response UpdateTaskDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
             throw new NotImplementedException();
         }
 
-        public Response UpdateTaskTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
+        internal Response UpdateTaskTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
         {
             throw new NotImplementedException();
         }
 
-        public Response UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
+        internal Response UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
         {
             throw new NotImplementedException();
         }
 
-        public Response AdvanceTask(string email, string boardName, int columnOrdinal, int taskId)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Response<IList<Task>> GetColumn(string email, string boardName, int columnOrdinal)
+        internal Response AdvanceTask(string email, string boardName, int columnOrdinal, int taskId)
         {
             throw new NotImplementedException();
         }
 
-        public Response AddBoard(string email, string name)
+        internal Response<IList<Task>> GetColumn(string email, string boardName, int columnOrdinal)
         {
             throw new NotImplementedException();
         }
 
-        public Response RemoveBoard(string email, string name)
+        internal Response AddBoard(string email, string name)
         {
             throw new NotImplementedException();
         }
 
-        public Response<IList<Task>> InProgressTasks(string email)
+        internal Response RemoveBoard(string email, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Response<IList<Task>> InProgressTasks(string email)
         {
             throw new NotImplementedException();
         }

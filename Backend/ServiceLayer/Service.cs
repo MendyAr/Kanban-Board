@@ -54,7 +54,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-            return UserS.Login(email, password);
+            var response = UserS.Login(email, password);
+            if (!response.ErrorOccured)
+            {
+                ConnectedEmail = email;
+                log.Info("logged in successfuly!");
+            }
+            else
+            {
+                log.Info("failed to log in");
+            }    
+            return response;
         }
         /// <summary>        
         /// Log out an logged in user. 

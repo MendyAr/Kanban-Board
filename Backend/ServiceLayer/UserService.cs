@@ -11,22 +11,31 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private UserController uc = new UserController();
         public Response Register(string email, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                uc.Register(email, password);
+                return new Response();
+            }
+            catch (Exception ex)
+            {
+                return new Response(ex.Message);
+            }
         }
 
         public Response<User> Login(string email, string password)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                BuisnessLayer.User  loginUser = uc.Login(email, password);
+                User serviceLayerUser = new User(loginUser.Email);
+                Response<User> re = Response<User>.FromValue(serviceLayerUser);
+                return re;             
+            }
+            catch (Exception er)
+            {
+                return Response<User>.FromError(er.Message);
+            }
 
-        public Response Logout(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void ValidateUserLoggin(string email)
-        {
-            throw new NotImplementedException();
         }
 
     }

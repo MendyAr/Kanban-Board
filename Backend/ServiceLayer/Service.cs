@@ -10,13 +10,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
+
         private readonly UserService UserS;
         private readonly BoardService BoardS;
         private string connectedEmail;
-
         public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
 
-
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public Service()
         {
             //LoadData();
@@ -66,13 +66,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (ConnectedEmail == email)
             {
                 ConnectedEmail = null;
+                log.Info("logged out successfuly!");
                 return new Response();
             }
             else
             {
+                log.Info("falied to logout!");
                 return new Response("this user isn't logged in");
             }
-            
         }
 
         /// <summary>

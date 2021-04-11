@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using log4net;
+using log4net.Config;
+using System.Reflection;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -9,15 +13,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private readonly UserService UserS;
         private readonly BoardService BoardS;
         private string connectedEmail;
-
         public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
 
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public Service()
         {
             //LoadData();
             UserS = new UserService();
             BoardS = new BoardService();
-    }
+
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            log.Info("Starting log!");
+        }
         ///<summary>This method loads the data from the persistance.
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
@@ -60,10 +68,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (ConnectedEmail == email)
             {
                 ConnectedEmail = null;
+                log.Info("logged out successfuly!");
                 return new Response();
             }
             else
             {
+                log.Info("falied to logout!");
                 return new Response("this user isn't logged in");
             }
             

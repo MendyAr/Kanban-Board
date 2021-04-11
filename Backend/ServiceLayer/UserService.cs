@@ -9,7 +9,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     class UserService
     {
         private UserController uc = new UserController();
-        public Response Register(string email, string password)
+        internal Response Register(string email, string password)
         {
             try
             {
@@ -21,8 +21,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return new Response(ex.Message);
             }
         }
-
-        public Response<User> Login(string email, string password)
+        internal Response<User> Login(string email, string password)
         {
             try
             {
@@ -35,7 +34,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 return Response<User>.FromError(er.Message);
             }
-
         }
 
     }

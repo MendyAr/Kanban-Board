@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -10,10 +10,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private string title;
         private string description;
 
-       public Task(int taskId, DateTime dueDate, string title, string description)
+       public Task(int taskId,DateTime creationTime,  string title, string description, DateTime dueDate)
         {
             this.taskId = taskId;
-            this.creationTime = DateTime.Now;
+            this.creationTime = creationTime;
             this.dueDate = dueDate;
             this.title = title;
             this.description = description;

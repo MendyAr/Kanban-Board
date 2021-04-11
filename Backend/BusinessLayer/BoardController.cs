@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -26,7 +25,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
         }
 
@@ -39,12 +38,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
-
         }
 
-        public STask AddTask(string email, string boardName, DateTime creationTime, string title, string description, DateTime dueDate)
+        public Task AddTask(string email, string boardName, DateTime creationTime, string title, string description, DateTime dueDate)
         {
             try
             {
@@ -52,7 +50,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -69,7 +67,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
             catch (ArgumentException e)
             {
@@ -86,7 +84,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
             catch (ArgumentException e)
             {
@@ -103,7 +101,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
             catch (ArgumentException e)
             {
@@ -122,7 +120,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
             catch (ArgumentException e)
             {
@@ -134,7 +132,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        public IList<STask> GetColumn(string email, string boardName, int columnOrdinal)
+        public IList<Task> GetColumn(string email, string boardName, int columnOrdinal)
         {
             checkColumnOrdinal(columnOrdinal);
             try
@@ -143,27 +141,27 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (KeyNotFoundException)
             {
-                throw new ArgumentException("There is no board with name '" + boardName + "' for user '" + email + "'");
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
         }
         
-        public void AddBoard(string email, string name)
+        public void AddBoard(string email, string boardName)
         {
-            if (boards[email].ContainsKey(name))
-                throw new ArgumentException("A board with name '" + name + "' already exsist for user '" + email + "'");
-            boards[email][name] = new Board(email, name);
+            if (boards[email].ContainsKey(boardName))
+                throw new ArgumentException("Board '" + email + ":" + boardName + "' already exist");
+            boards[email][boardName] = new Board(email, boardName);
         }
 
-        public void RemoveBoard(string email, string name)
+        public void RemoveBoard(string email, string boardName)
         {
-            if (!boards[email].ContainsKey(name))
-                throw new ArgumentException("A board with name '" + name + "' does not exsist for user '" + email + "'");
-            boards[email].Remove(name);
+            if (!boards[email].ContainsKey(boardName))
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
+            boards[email].Remove(boardName);
         }
 
-        public IList<STask> InProgressTasks(string email)
+        public IList<Task> InProgressTasks(string email)
         {
-            IList<STask> inProgress = new List<STask>();
+            IList<Task> inProgress = new List<Task>();
             foreach (Board board in boards[email].Values)
             {
                 concatLists(inProgress, board.GetColumn(1));
@@ -171,9 +169,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             return inProgress;
         }
 
-        private void concatLists(IList<STask> addTo, IList<STask> addFrom)
+        private void concatLists(IList<Task> addTo, IList<Task> addFrom)
         {
-            foreach (STask task in addFrom)
+            foreach (Task task in addFrom)
                 addTo.Add(task);
         }
 

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
-using BTask = IntroSE.Kanban.Backend.BuisnessLayer.Task;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -14,9 +12,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private int maxBacklog = -1;
         private int maxInProgress = -1;
         private int maxDone = -1;
-        private Dictionary<int,BTask> backlog = new Dictionary<int, BTask>();
-        private Dictionary<int,BTask> inProgress = new Dictionary<int, BTask>();
-        private Dictionary<int,BTask> done = new Dictionary<int, BTask>();
+        private Dictionary<int,Task> backlog = new Dictionary<int, Task>();
+        private Dictionary<int,Task> inProgress = new Dictionary<int, Task>();
+        private Dictionary<int,Task> done = new Dictionary<int, Task>();
 
         //constructor
         internal Board(string creatorEmail, string name)
@@ -64,14 +62,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        internal STask AddTask(DateTime creationTime, string title, string description, DateTime dueDate)
+        internal Task AddTask(DateTime creationTime, string title, string description, DateTime dueDate)
         {
-            if (maxBacklog != -1 && backlog.Count == maxDone)
+            if (maxBacklog != -1 && backlog.Count == maxBacklog)
                 throw new IndexOutOfRangeException("Cannot add new tasks into board '" + this.creatorEmail + ":" + this.name + "': 'Backlog' column is already at its limit");
-            BTask task = new BTask(taskIdCounter, creationTime, title, description, dueDate);
+            Task task = new Task(taskIdCounter, creationTime, title, description, dueDate);
             backlog[taskIdCounter] = task;
             taskIdCounter++;
-            return task.serviceTask();
+            return task;
         }
         
         internal void UpdateTaskDueDate(int columnOrdinal, int taskId, DateTime dueDate)
@@ -220,28 +218,28 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        internal IList<STask> GetColumn(int columnOrdinal)
+        internal IList<Task> GetColumn(int columnOrdinal)
         {
-            IList<STask> column = new List<STask>();
+            IList<Task> column = new List<Task>();
             if (columnOrdinal == 0)
             {
-                foreach (BTask task in backlog.Values)
+                foreach (Task task in backlog.Values)
                 {
-                    column.Add(task.serviceTask());
+                    column.Add(task);
                 }
             }
             else if (columnOrdinal == 1)
             {
-                foreach (BTask task in backlog.Values)
+                foreach (Task task in backlog.Values)
                 {
-                    column.Add(task.serviceTask());
+                    column.Add(task);
                 }
             }
             else
             {
-                foreach (BTask task in backlog.Values)
+                foreach (Task task in backlog.Values)
                 {
-                    column.Add(task.serviceTask());
+                    column.Add(task);
                 }
             }
             return column;

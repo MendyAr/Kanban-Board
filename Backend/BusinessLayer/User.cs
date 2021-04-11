@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private static readonly int PASS_MIN_LENGTH = 4;
         private static readonly int PASS_MAX_LENGTH = 20;
 
-        internal string Email { get { return email; } }
+        public string Email { get { return email; } }
         private string Password
         {
             get { return password; }
@@ -28,7 +28,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
 
 
-        internal User(string email, string pass)
+        public User(string email, string pass)
         {
             if (email == null)
                 throw new Exception("email can't be null");
@@ -40,7 +40,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
     
     
-        internal bool validatePassword(string pass)
+        public bool validatePassword(string pass)
         {
             return Password.Equals(pass);
         }

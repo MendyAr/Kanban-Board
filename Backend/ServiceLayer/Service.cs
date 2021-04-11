@@ -6,12 +6,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
-        private readonly UserService UserS;
-        private readonly BoardService BoardS;
-        private string connectedEmail;
-
-        public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
-
+        private UserService UserS;
+        private BoardService BoardS;
         public Service()
         {
             //LoadData();
@@ -45,10 +41,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-            var response = UserS.Login(email, password);
-            if (!response.ErrorOccured)
-                ConnectedEmail = email;
-            return response;
+            return UserS.Login(email, password);
         }
         /// <summary>        
         /// Log out an logged in user. 
@@ -57,16 +50,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            if (ConnectedEmail == email)
-            {
-                ConnectedEmail = null;
-                return new Response();
-            }
-            else
-            {
-                return new Response("this user isn't logged in");
-            }
-            
+            return UserS.Logout(email);
         }
 
         /// <summary>

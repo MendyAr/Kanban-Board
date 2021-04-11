@@ -1,19 +1,32 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Linq;
+using log4net;
+using log4net.Config;
+using System.Reflection;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
-        private UserService UserS;
-        private BoardService BoardS;
+        private readonly UserService UserS;
+        private readonly BoardService BoardS;
+        private string connectedEmail;
+
+        public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
+
+
         public Service()
         {
             //LoadData();
             UserS = new UserService();
             BoardS = new BoardService();
-    }
+
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            log.Info("Starting log!");
+        }
         ///<summary>This method loads the data from the persistance.
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
@@ -50,7 +63,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            return UserS.Logout(email);
+            if (ConnectedEmail == email)
+            {
+                ConnectedEmail = null;
+                return new Response();
+            }
+            else
+            {
+                return new Response("this user isn't logged in");
+            }
+            
         }
 
         /// <summary>

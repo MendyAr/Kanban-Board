@@ -10,9 +10,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     internal class Column
     {
         //fields
-        internal readonly string columnName; 
-        internal int limit; //ranges from -1 (unlimited) to and positive number (actual limit)
-        private Dictionary<int ,Task> column; //key - task's ID
+        private string columnName;
+        private int limit; //ranges from -1 (unlimited) to and positive number (actual limit)
+        private Dictionary<int, Task> column; //key - task's ID
+
+        internal string ColumnName { get => columnName;  }
+        internal int Limit
+        {
+            get => limit;
+            set
+            {
+                 if (value != -1 && column.Count > value) 
+                     throw new ArgumentException(columnName);
+                 this.limit = value;
+            }
+        }
 
         //constructors
         internal Column(string columnName)
@@ -23,26 +35,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
 
         //methods
-        /// <summary>
-        /// Sets the limit of tasks the column can hols
-        /// </summary>
-        /// <param name="limit">new limit</param>
-        /// <exception cref="ArgumentException">Thrown when the given limit is smaller than current number of tasks in column</exception>
-        internal void limitColumn(int limit)
-        {
-            if (limit != -1 && column.Count > limit) 
-                throw new ArgumentException(columnName);
-            this.limit = limit;
-        }
-
-        /// <summary>
-        /// Gets the current limit
-        /// </summary>
-        /// <returns>Current limit of column</returns>
-        internal int GetColumnLimit()
-        {
-            return limit;
-        }
 
         /// <summary>
         /// Adds a new task that represents given parameters to the column

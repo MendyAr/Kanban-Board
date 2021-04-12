@@ -1,28 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//using log4net;
-//using System.Reflection;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class User
     {
 
-        private string email;       //readonly
+        private readonly string email;
         private string password;
         private static readonly int PASS_MIN_LENGTH = 4;
         private static readonly int PASS_MAX_LENGTH = 20;
 
-        internal string Email { get { return email; } }
+        public string Email { get { return email; } }
         private string Password
         {
             get { return password; }
             set
             {
-                validatePasswordRules(value); //throw exception if not valid
+                validatePasswordRules(value); //throws an exception if not valid
                 password = value;
             }
         }

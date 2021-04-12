@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Linq;
+﻿using System;
 using log4net;
 using log4net.Config;
 using System.Reflection;
@@ -10,6 +8,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
+
         private readonly UserService UserS;
         private readonly BoardService BoardS;
         private string connectedEmail;
@@ -72,7 +71,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
-            if (ConnectedEmail == email)
+            if (email == null)
+            {
+                log.Info("Trying to logout with null email!");
+                return new Response("It's not possible to logout with null email");
+            }
+            else if (ConnectedEmail == email)
             {
                 ConnectedEmail = null;
                 log.Info("logged out successfuly!");
@@ -83,7 +87,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Info("falied to logout!");
                 return new Response("this user isn't logged in");
             }
-            
         }
 
         /// <summary>

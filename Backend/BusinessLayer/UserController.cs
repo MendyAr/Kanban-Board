@@ -5,10 +5,14 @@ using System.Collections.Generic;
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class UserController
-    {
+    {   
+        //filed
+        
         private Dictionary<string,User> users;
 
-
+        
+        //constructor
+        
         public UserController() // temprary constructor until we use DataBases
         {
             users = new Dictionary<string, User>();
@@ -24,7 +28,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //    }
         //}
 
-
+        //methods
         internal User Register(string email, string password)
         {
             if (email == null)

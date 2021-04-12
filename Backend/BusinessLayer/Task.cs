@@ -12,20 +12,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
        public Task(int taskId,DateTime creationTime,  string title, string description, DateTime dueDate)
         {
-            validateTitle(title);
-            validateDescription(description);
             this.taskId = taskId;
             this.creationTime = creationTime;
             this.dueDate = dueDate;
-            this.title = title;
-            this.description = description;
+            Title = title;
+            Description = description;
 
             // log.add("create new Task)
         }
 
         private void validateDescription(string description)
         {
-            if(description!= null && description.Length > 500)
+            if(description != null && description.Length > 500)
             {
                 throw new FormatException("Description max length is 500 characters");
             }   
@@ -52,8 +50,23 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         internal DateTime CreationTime { get { return creationTime; }}
         internal DateTime DueDate { get { return dueDate; } set { dueDate = value; } }
 
-        internal string Title { get { return title; } set { title = value; } }
+        internal string Title { get { return title; } 
+            set {
+                validateTitle(value);
+                title = value; } }
 
-        internal string Description { get { return description; } set { description = value; } }
+        internal string Description { get { return description; } 
+            set {
+                validateDescription(value);
+                if(value == null)
+                {
+                    description = "";
+                }
+                else
+                {
+                    description = value;
+                }
+                 } }
+
     }
 }

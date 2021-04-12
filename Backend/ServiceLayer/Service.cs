@@ -42,7 +42,18 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<returns cref="Response">The response of the action</returns>
         public Response Register(string email, string password)
         {
-            return UserS.Register(email, password);
+            Response response = UserS.Register(email, password);
+            if (response.ErrorOccured)
+            {
+                log.Info("Failed to register!");
+                return response;
+            }
+            else
+            {
+                log.Info("User Registered successfully!");
+                return BoardS.Register(email);
+            }
+
         }
         /// <summary>
         /// Log in an existing user

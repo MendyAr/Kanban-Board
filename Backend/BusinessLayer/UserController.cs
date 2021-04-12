@@ -1,4 +1,8 @@
 ﻿using System;
+using log4net;
+using log4net.Config;
+using System.Reflection;
+using System.IO;
 using System.Collections.Generic;
 
 
@@ -8,10 +12,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     {
         private Dictionary<string,User> users;
 
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public UserController() // temprary constructor until we use DataBases
+        public UserController()
         {
             users = new Dictionary<string, User>();
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
         // constructor when we will use data uploading
@@ -33,20 +40,25 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         internal User Register(string email, string password)
         {
             if (email == null)
+            {
+                log.Info("Tryng to Register with null email!");
                 throw new Exception("Email cannot be null");
-
+            }
             if (!IsValidEmail(email))
             {
+                log.Info("Trying to register with invalid email!");
                 throw new Exception("This email address is invalid, please check for spellMistakes");
             }
 
             if (EmailExist(email))
             {
+                log.Info("Trying to register with an existing email!");
                 throw new Exception("A user already exist with this Email address");
             }
 
             User us = new User(email, password);
             this.users.Add(email, us);
+            log.Info("new User created and added successfully!");
             return us;
         }
 
@@ -93,10 +105,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 User user = users[email];
                 if (user.validatePassword(password)) 
                 {
+                    log.Info("login successfully!");
                     return user;
                 }
                     
             }
+            log.Info("Failed to login!");
             throw new Exception("Email or Password is invalid");
         }
 

@@ -3,38 +3,42 @@ using System.Collections.Generic;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    class BoardController
+    /// <summary>
+    /// A collection of all the boards in the system. Manages operationg within specific boards and general board related checks
+    /// </summary>
+    /// <remarks>in methods requesting columnOrdinal - the integer will represent 1 out of the 3 columns: 0 - Backlog, 1 - In Progress, 2 - Done</remarksY>
+    internal class BoardController
     {
         //fields
         private Dictionary<string, Dictionary<string, Board>> boards ;
 
         //constructors
-        public BoardController()
+        internal BoardController()
         {
             boards = new Dictionary<string, Dictionary<string, Board>>();
         }
 
         //methods
-        public void Register(string email)
+        internal void Register(string email)
         {
             boards[email] = new Dictionary<string, Board>();
         }
 
-        public void AddBoard(string email, string boardName)
+        internal void AddBoard(string email, string boardName)
         {
             if (boards[email].ContainsKey(boardName))
                 throw new ArgumentException("Board '" + email + ":" + boardName + "' already exist");
             boards[email][boardName] = new Board();
         }
 
-        public void RemoveBoard(string email, string boardName)
+        internal void RemoveBoard(string email, string boardName)
         {
             if (!boards[email].ContainsKey(boardName))
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             boards[email].Remove(boardName);
         }
 
-        public void LimitColumn(string email, string boardName, int columnOrdinal, int limit)
+        internal void LimitColumn(string email, string boardName, int columnOrdinal, int limit)
         {
             checkColumnOrdinal(columnOrdinal);
             if (limit < -1)
@@ -53,7 +57,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-        public int GetColumnLimit(string email, string boardName, int columnOrdinal)
+        internal int GetColumnLimit(string email, string boardName, int columnOrdinal)
         {
             checkColumnOrdinal(columnOrdinal);
             try
@@ -66,7 +70,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-        public Task AddTask(string email, string boardName, DateTime creationTime, string title, string description, DateTime dueDate)
+        internal Task AddTask(string email, string boardName, DateTime creationTime, string title, string description, DateTime dueDate)
         {
             try
             {
@@ -82,7 +86,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-        public void UpdateTaskDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
+        internal void UpdateTaskDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
             checkColumnOrdinal(columnOrdinal);
             try
@@ -103,7 +107,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-        public void UpdateTaskTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
+        internal void UpdateTaskTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
         {
             checkColumnOrdinal(columnOrdinal);
             try
@@ -124,7 +128,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-        public void UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
+        internal void UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
         {
             checkColumnOrdinal(columnOrdinal);
             try
@@ -145,7 +149,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-        public void AdvanceTask(string email, string boardName, int columnOrdinal, int taskId)
+        internal void AdvanceTask(string email, string boardName, int columnOrdinal, int taskId)
         {
             checkColumnOrdinal(columnOrdinal);
             if (columnOrdinal == 2)
@@ -168,7 +172,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        public IList<Task> GetColumn(string email, string boardName, int columnOrdinal)
+        internal IList<Task> GetColumn(string email, string boardName, int columnOrdinal)
         {
             checkColumnOrdinal(columnOrdinal);
             try
@@ -181,7 +185,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        public IList<Task> InProgressTasks(string email)
+        internal IList<Task> InProgressTasks(string email)
         {
             IList<Task> inProgress = new List<Task>();
             foreach (Board board in boards[email].Values)

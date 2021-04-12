@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-//using log4net;
-//using System.Reflection;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class User
     {
 
-        private string email;       //readonly
+        private readonly string email;
         private string password;
         private static readonly int PASS_MIN_LENGTH = 4;
         private static readonly int PASS_MAX_LENGTH = 20;
@@ -22,13 +16,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             get { return password; }
             set
             {
-                validatePasswordRules(value); //throw exception if not valid
+                validatePasswordRules(value); //throws an exception if not valid
                 password = value;
             }
         }
 
 
-        public User(string email, string pass)
+        internal User(string email, string pass)
         {
             if (email == null)
                 throw new Exception("email can't be null");
@@ -40,7 +34,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
     
     
-        public bool validatePassword(string pass)
+        internal bool validatePassword(string pass)
         {
             return Password.Equals(pass);
         }

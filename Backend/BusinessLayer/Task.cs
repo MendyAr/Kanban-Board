@@ -4,12 +4,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class Task 
     {
+        //fileds
         private readonly int taskId;
         private readonly DateTime creationTime;
         private DateTime dueDate;
         private string title;
         private string description;
 
+        //constructor
        public Task(int taskId,DateTime creationTime,  string title, string description, DateTime dueDate)
         {
             this.taskId = taskId;
@@ -21,6 +23,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             // log.add("create new Task)
         }
 
+        //functions
         private void validateDescription(string description)
         {
             if(description != null && description.Length > 500)

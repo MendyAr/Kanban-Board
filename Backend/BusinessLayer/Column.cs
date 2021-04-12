@@ -69,7 +69,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <exception cref="OutOfMemoryException">Thrown when column is already at its limit</exception>
         internal void AddTask(Task task)
         {
-            //Exception is thrown if the column is currently at its limit. 
             //no need to check that limit != -1 as then the boolean check will always be false anyway
             if (column.Count == limit)
                 throw new OutOfMemoryException(columnName);
@@ -157,7 +156,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <returns>IList of all the tasks in the column</returns>
         internal IList<Task> GetColumn()
         {
-            IList<Task> column = new List<Task>;
+            IList<Task> column = new List<Task>();
             foreach (Task task in this.column.Values)
             {
                 column.Add(task);

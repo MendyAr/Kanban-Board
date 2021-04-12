@@ -6,14 +6,34 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     class BoardController
     {
         //fields
-        private Dictionary<string, Dictionary<string, Board>> boards = new Dictionary<string, Dictionary<string, Board>>;
+        private Dictionary<string, Dictionary<string, Board>> boards ;
 
         //constructors
         public BoardController()
         {
+            boards = new Dictionary<string, Dictionary<string, Board>>();
         }
 
         //methods
+        public void Register(string email)
+        {
+            boards[email] = new Dictionary<string, Board>();
+        }
+
+        public void AddBoard(string email, string boardName)
+        {
+            if (boards[email].ContainsKey(boardName))
+                throw new ArgumentException("Board '" + email + ":" + boardName + "' already exist");
+            boards[email][boardName] = new Board();
+        }
+
+        public void RemoveBoard(string email, string boardName)
+        {
+            if (!boards[email].ContainsKey(boardName))
+                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
+            boards[email].Remove(boardName);
+        }
+
         public void LimitColumn(string email, string boardName, int columnOrdinal, int limit)
         {
             checkColumnOrdinal(columnOrdinal);
@@ -26,6 +46,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             catch (KeyNotFoundException)
             {
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
+            }
+            catch (ArgumentException e)
+            {
+                throw new ArgumentException("Cannot set limit: There are more than " + limit + " tasks in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
             }
         }
 
@@ -52,9 +76,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
-            catch (IndexOutOfRangeException e)
+            catch (OutOfMemoryException e)
             {
-                throw new IndexOutOfRangeException(e.Message);
+                throw new OutOfMemoryException("Cannot add task: Column '" + e.Message + "' of board '" + email + ":" + boardName + "' is currently at its limit");
             }
         }
 
@@ -68,6 +92,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             catch (KeyNotFoundException)
             {
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                throw new ArgumentException("Cannot update task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
             }
             catch (ArgumentException e)
             {
@@ -86,6 +114,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
+            catch (IndexOutOfRangeException e)
+            {
+                throw new ArgumentException("Cannot update task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
+            }
             catch (ArgumentException e)
             {
                 throw new ArgumentException(e.Message);
@@ -102,6 +134,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             catch (KeyNotFoundException)
             {
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                throw new ArgumentException("Cannot update task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
             }
             catch (ArgumentException e)
             {
@@ -122,13 +158,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
             }
-            catch (ArgumentException e)
-            {
-                throw new ArgumentException(e.Message);
-            }
             catch (IndexOutOfRangeException e)
             {
-                throw new IndexOutOfRangeException(e.Message);
+                throw new ArgumentException("Cannot advance task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
+            }
+            catch (OutOfMemoryException e)
+            {
+                throw new OutOfMemoryException("Cannot advance task: Column '" + e.Message + "' of board '" + email + ":" + boardName + "' is currently at its limit");
             }
         }
         
@@ -145,20 +181,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
         
-        public void AddBoard(string email, string boardName)
-        {
-            if (boards[email].ContainsKey(boardName))
-                throw new ArgumentException("Board '" + email + ":" + boardName + "' already exist");
-            boards[email][boardName] = new Board(email, boardName);
-        }
-
-        public void RemoveBoard(string email, string boardName)
-        {
-            if (!boards[email].ContainsKey(boardName))
-                throw new ArgumentException("Board '" + email + ":" + boardName+ "' does not exist");
-            boards[email].Remove(boardName);
-        }
-
         public IList<Task> InProgressTasks(string email)
         {
             IList<Task> inProgress = new List<Task>();
@@ -178,7 +200,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private void checkColumnOrdinal(int columnOrdinal)
         {
             if (columnOrdinal < 0 || columnOrdinal > 2)
-                throw new ArgumentException("column ordinal out of range");
+                throw new IndexOutOfRangeException("Column ordinal out of range: Argument needs to be between 0 and 2 (inclusive)");
         }
     }
 }

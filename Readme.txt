@@ -1,1 +1,1 @@
-the sun is yellow the sky is blue, i would connect my teacher and his chair with glue.
+207543489_

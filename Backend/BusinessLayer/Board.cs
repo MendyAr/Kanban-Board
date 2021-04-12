@@ -7,7 +7,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     /// Contains 3 columns: Backlog, In Progress, Done
     /// manages those 3 columns and the addition/movement of tasks in them
     /// </summary>
-    /// <remarks>in method requesting columnOrdinal - the integer will represent 1 out of the 3 columns: 0 - Backlog, 1 - In Progress, 2 - Done</remarks>
+    /// <remarks>in methods requesting columnOrdinal - the integer will represent 1 out of the 3 columns: 0 - Backlog, 1 - In Progress, 2 - Done</remarksY>
     internal class Board
     {
         //fields

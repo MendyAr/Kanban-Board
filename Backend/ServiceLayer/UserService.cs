@@ -8,7 +8,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     class UserService
     {
+
         private UserController uc = new UserController();
+
+        internal UserService()
+        {
+            uc = new UserController();
+        }
         internal Response Register(string email, string password)
         {
             try

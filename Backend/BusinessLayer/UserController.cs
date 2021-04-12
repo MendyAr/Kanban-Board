@@ -9,7 +9,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private Dictionary<string,User> users;
 
 
-        public UserController() { } // an empty constructor while we dont upload data
+        public UserController() // temprary constructor until we use DataBases
+        {
+            users = new Dictionary<string, User>();
+        } 
 
         // constructor when we will use data uploading
         //public UserController(List<DLUser> DLUsers) // ADTUser is a User from the DataLayer

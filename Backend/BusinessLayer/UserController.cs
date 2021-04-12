@@ -9,12 +9,16 @@ using System.Collections.Generic;
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class UserController
-    {
+    {   
+        //filed
+        
         private Dictionary<string,User> users;
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        public UserController()
+        
+        //constructor
+        
+        public UserController() // temprary constructor until we use DataBases
         {
             users = new Dictionary<string, User>();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
@@ -31,6 +35,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //    }
         //}
 
+
+        //methods
 
         ///<summary>Registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>

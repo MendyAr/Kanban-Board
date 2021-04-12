@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     /// manages those 3 columns and the addition/movement of tasks in them
     /// </summary>
     /// <remarks>in method requesting columnOrdinal - the integer will represent 1 out of the 3 columns: 0 - Backlog, 1 - In Progress, 2 - Done</remarks>
-    class Board
+    internal class Board
     {
         //fields
         private int taskIdCounter = 1; //will be updated by every task added to the board and so keeping each ID unique
@@ -24,6 +24,17 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
 
         //methods
+
+        /// <summary>
+        /// returns the name of a selected column
+        /// </summary>
+        /// <param name="columnOrdinal">integer representing column</param>
+        /// <returns>name of a column</returns>
+        internal string GetColumnName(int columnOrdinal)
+        {
+            return columns[columnOrdinal].ColumnName;
+        }
+
         /// <summary>
         /// limits a column within the board
         /// </summary>
@@ -31,7 +42,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="limit">new limit</param>
         internal void LimitColumn(int columnOrdinal, int limit)
         {
-            columns[columnOrdinal].limitColumn(limit);
+            columns[columnOrdinal].Limit = limit;
         }
 
         /// <summary>
@@ -41,7 +52,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <returns>the column's limit</returns>
         internal int GetColumnLimit(int columnOrdinal)
         {
-            return columns[columnOrdinal].GetColumnLimit();
+            return columns[columnOrdinal].Limit;
         }
         
         /// <summary>

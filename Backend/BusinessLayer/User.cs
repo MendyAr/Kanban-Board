@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             get { return password; }
             set
             {
-                validatePasswordRules(value); //throws an exception if not valid
+                validatePasswordRules(value);
                 password = value;
             }
         }
@@ -25,19 +25,26 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         internal User(string email, string pass)
         {
             if (email == null)
-                throw new Exception("email can't be null");
+                throw new ArgumentNullException("email can't be null");
             if (pass == null)
-                throw new Exception("password can't be null");
+                throw new ArgumentNullException("password can't be null");
             
             this.email = email;
             this.Password = pass;
         }
-    
-    
+
+        /// <summary>validate password with the user saved password.</summary>
+        /// <param name="pass">the password given for check.</param>
+        /// <returns>true/false accordingly.</returns>
         internal bool validatePassword(string pass)
         {
             return Password.Equals(pass);
         }
+        /// <summary>
+        /// check the structure of the password.
+        /// </summary>
+        /// <param name="pass">password to check.</param>
+        /// <exception cref="Exception">thrown when the password doesn't apply the structure rules.</exception>
         private void validatePasswordRules(string pass)
         {
             if (pass.Length > PASS_MAX_LENGTH | pass.Length < PASS_MIN_LENGTH) //check length

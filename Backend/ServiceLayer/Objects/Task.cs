@@ -17,5 +17,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.Description = description;
             this.DueDate = DueDate;
         }
+
+        internal Task(BuisnessLayer.Task task)
+        {
+            this.Id = task.TaskId;
+            this.CreationTime = task.CreationTime;
+            this.Title = task.Title;
+            this.Description = task.Description;
+            this.DueDate = task.DueDate;
+        }
     }
 }

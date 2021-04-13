@@ -4,6 +4,7 @@ using log4net.Config;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
@@ -75,10 +76,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <returns>true/false accordingly.</returns>
         private bool IsValidEmail(string email)
         {
+            var emailValidator = new EmailAddressAttribute();
             try
             {
                 var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
+                return addr.Address == email &emailValidator.IsValid(email) ;
             }
             catch
             {

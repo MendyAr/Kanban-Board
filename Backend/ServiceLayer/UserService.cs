@@ -24,17 +24,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<param name="password">the user password.</param>
         ///<returns cref="Response">The response of the action</returns>
 
-
-        internal Response Register(string email, string password)
+        internal Response<User> Register(string email, string password)
         {
             try
             {
-                uc.Register(email, password);
-                return new Response();
+                BuisnessLayer.User BUser=  uc.Register(email, password);
+                User SUser = new User(BUser.Email);
+                return Response<User>.FromValue(SUser);
             }
             catch (Exception ex)
             {
-                return new Response(ex.Message);
+                return Response<User>.FromError(ex.Message);
             }
         }
         

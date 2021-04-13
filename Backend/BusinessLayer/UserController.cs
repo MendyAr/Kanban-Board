@@ -5,6 +5,8 @@ using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+
 
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
@@ -76,24 +78,23 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <returns>true/false accordingly.</returns>
         private bool IsValidEmail(string email)
         {
+
             var emailValidator = new EmailAddressAttribute();
-            try
-            {
-                foreach (char letter in email)
+            Regex rg = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+            bool validEmail = rg.IsMatch(email);
+
+            foreach (char letter in email)
                 {
-                    if ("אבגדהוזחטיכלמנסעפצקרשתךםןףץ".Contains(letter))
+                    if ("אבגדהוזחטיכלמנסעפצקרשתךםןףץ+*/`~,".Contains(letter))
                     {
                         return false;
                     }
                 }
                 var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email &emailValidator.IsValid(email) ;
-            }
-            catch
-            {
-                return false;
-            }
+                return addr.Address == email & emailValidator.IsValid(email) & validEmail;
         }
+           
+        
 
         /// <summary>
         /// check if a user with the same email address exist in the system.

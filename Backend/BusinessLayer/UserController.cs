@@ -79,6 +79,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             var emailValidator = new EmailAddressAttribute();
             try
             {
+                foreach (char letter in email)
+                {
+                    if ("אבגדהוזחטיכלמנסעפצקרשתךםןףץ".Contains(letter))
+                    {
+                        return false;
+                    }
+                }
                 var addr = new System.Net.Mail.MailAddress(email);
                 return addr.Address == email &emailValidator.IsValid(email) ;
             }

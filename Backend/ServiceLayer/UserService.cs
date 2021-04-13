@@ -8,18 +8,23 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     class UserService
     {
-
+        //fields
         private UserController uc = new UserController();
 
+        //constructor
         internal UserService()
         {
             uc = new UserController();
         }
 
+        //functions
+
         ///<summary>Registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
         ///<returns cref="Response">The response of the action</returns>
+
+
         internal Response Register(string email, string password)
         {
             try

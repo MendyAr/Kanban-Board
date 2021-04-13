@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using log4net;
 using log4net.Config;
 using System.Reflection;
@@ -9,12 +10,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     public class Service
     {
 
+        //fields
         private readonly UserService UserS;
         private readonly BoardService BoardS;
         private string connectedEmail;
         public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
-
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        //constructors
         public Service()
         {
             //LoadData();
@@ -25,17 +28,22 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Starting log!");
         }
+
+        //methods
+
         ///<summary>This method loads the data from the persistance.
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
             throw new NotImplementedException();
         }
+
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
             throw new NotImplementedException();
         }
+
         ///<summary>This method registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
@@ -47,8 +55,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return response;
             else
                 return BoardS.Register(email);
-
         }
+
         /// <summary>
         /// Log in an existing user
         /// </summary>
@@ -57,11 +65,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
-            var response = UserS.Login(email, password);
+            Response<User> response = UserS.Login(email, password);
             if (!response.ErrorOccured)
                 ConnectedEmail = email;
             return response;
         }
+
         /// <summary>        
         /// Log out an logged in user. 
         /// </summary>
@@ -135,8 +144,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string boardName, string title, string description, DateTime dueDate)
         {
-            return BoardS.AddTask(email, boardName, title, description, dueDate);
+            return BoardS.AddTask(email, boardName, DateTime.Now, title, description, dueDate);
         }
+
         /// <summary>
         /// Update the due date of a task
         /// </summary>
@@ -150,6 +160,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.UpdateTaskDueDate(email, boardName, columnOrdinal, taskId, dueDate);
         }
+
         /// <summary>
         /// Update task title
         /// </summary>
@@ -163,6 +174,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.UpdateTaskTitle(email, boardName, columnOrdinal, taskId, title);
         }
+
         /// <summary>
         /// Update the description of a task
         /// </summary>
@@ -176,6 +188,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.UpdateTaskDescription(email, boardName, columnOrdinal, taskId, description);
         }
+
         /// <summary>
         /// Advance a task to the next column
         /// </summary>
@@ -188,6 +201,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.AdvanceTask(email, boardName, columnOrdinal, taskId);
         }
+
         /// <summary>
         /// Returns a column given it's name
         /// </summary>
@@ -199,6 +213,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.GetColumn(email, boardName, columnOrdinal);
         }
+
         /// <summary>
         /// Adds a board to the specific user.
         /// </summary>
@@ -209,6 +224,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.AddBoard(email, name);
         }
+
         /// <summary>
         /// Removes a board to the specific user.
         /// </summary>
@@ -219,6 +235,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.RemoveBoard(email, name);
         }
+
         /// <summary>
         /// Returns all the In progress tasks of the user.
         /// </summary>

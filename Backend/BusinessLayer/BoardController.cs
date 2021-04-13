@@ -68,10 +68,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             checkColumnOrdinal(columnOrdinal);
             checkBoardExistance(email, boardName);
-            try
-            {
-                return boards[email][boardName].GetColumnName(columnOrdinal);
-            }
+            return boards[email][boardName].GetColumnName(columnOrdinal);
         }
 
         /// <summary>

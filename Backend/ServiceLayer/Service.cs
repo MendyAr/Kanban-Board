@@ -48,13 +48,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
         ///<returns cref="Response">The response of the action</returns>
-        public Response Register(string email, string password)
+        public Response<User> Register(string email, string password)
         {
-            Response response = UserS.Register(email, password);
-            if (response.ErrorOccured)
-                return response;
+            Response<User> userRegisterResponse = UserS.Register(email, password);
+            if (userRegisterResponse.ErrorOccured)
+                return userRegisterResponse;
             else
-                return BoardS.Register(email);
+            {
+                Response boardRespones = BoardS.Register(email);
+                if (boardRespones.ErrorOccured)
+                    return Response<User>.FromError(boardRespones.ErrorMessage);
+
+                return userRegisterResponse;
+            }
         }
 
         /// <summary>

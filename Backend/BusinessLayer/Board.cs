@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// </summary>
         internal Board()
         {
-            this.columns = new Column[] { new Column("Backlog"), new Column("In Progress"), new Column("Done")};
+            this.columns = new Column[] { new Column("backlog"), new Column("in progress"), new Column("done")};
         }
 
         //methods

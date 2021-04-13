@@ -51,16 +51,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response Register(string email, string password)
         {
             Response userRegisterResponse = UserS.Register(email, password);
-            if (userRegisterResponse.ErrorOccured)
-                return userRegisterResponse;
-            else
-            {
-                Response boardRespones = BoardS.Register(email);
-                if (boardRespones.ErrorOccured)
-                    return Response<User>.FromError(boardRespones.ErrorMessage);
-
-                return userRegisterResponse;
-            }
+            if (!userRegisterResponse.ErrorOccured)
+                userRegisterResponse = BoardS.Register(email);
+            return userRegisterResponse;
         }
 
         /// <summary>

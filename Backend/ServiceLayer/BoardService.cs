@@ -92,7 +92,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                return Response<string>.FromValue(bc.GetColumnName(email, boardName, columnOrdinal);
+                return Response<string>.FromValue(bc.GetColumnName(email, boardName, columnOrdinal));
             }
             catch (Exception e)
             {

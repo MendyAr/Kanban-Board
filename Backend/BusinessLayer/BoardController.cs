@@ -297,7 +297,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             try
             {
                 boards[email][boardName].AdvanceTask(columnOrdinal, taskId);
-                log.Info("SUCCESSFULLY advanced Task '" + taskId + "' from '" + email + ":" + boardName + "[" + columnOrdinal + "]' to '" + taskId + "' from '" + email + ":" + boardName + "[" + (columnOrdinal + 1) "]'");
+                log.Info("SUCCESSFULLY advanced Task '" + taskId + "' from '" + email + ":" + boardName + "[" + columnOrdinal + "]' to '" + taskId + "' from '" + email + ":" + boardName + "[" + (columnOrdinal + 1) + "]'");
             }
             catch (IndexOutOfRangeException e)
             {

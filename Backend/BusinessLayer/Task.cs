@@ -44,7 +44,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             this.taskId = taskId;
             this.creationTime = creationTime;
-            this.dueDate = dueDate;
+            DueDate = dueDate;
             Title = title;
             Description = description;
         }

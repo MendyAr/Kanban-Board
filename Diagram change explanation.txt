@@ -1,0 +1,34 @@
+serviceLayer:
+
+Adding UserService and Board service- we decided that we need a to separate the functionality of service to improve the cohesion and to handle our 2 main entite of businessLayer (User,Board)
+
+
+bussinesLayer:
+
+BoardController
+1. Adding BoardController- we realise that it is more logical and efficient to have an entitie that will handle all the existing boards
+
+Board:
+1.Add GetColumnName-since we added class Column, we realized utilizing the column field + all the tests running through all the chain of objects we decided to chain GetColumn as well
+2.Add LimitColumn-need a function to execute the the demand.
+3.Add GetColumnLimit - since we added class Column, we realized utilizing the column field + all the tests running through all the chain of objects we decided to chain GetColumn as well
+4.AddTask - this function replase createTask of the old Diagram, and the signature had change according to the requirements.
+5.Change signature of Update Functions- to get to the wanted Task we needed more information.
+6.AdvanceTask- this function replace moveTask of the old Diagram, the signature change because we need more information to get to the wanted Task
+
+Column
+1. Adding Column- Roi please empliment this one
+
+Task
+1.Adding validators to Task- we want to restrict and manipulate if needed the option for title,description and dueDate.
+2.Adding max and min variable- if in the future we will want to change them it will be easy. 
+3.Adding taskId - important to have a key for each Task.
+
+UserController:
+1.Add EmailExist - we need to add this function to make sure a user want register twice
+2.Add ValidateEmail - we need to make sure that the input is indeed an email.
+
+User:
+1.Add min and max length to password- to make it easy in the future to change this requirement.
+2.Remove logout - we dicided that the User doesnt need to know if he is connected or not.
+3.Remove Board and Task functions - we have board controller to do all of those.

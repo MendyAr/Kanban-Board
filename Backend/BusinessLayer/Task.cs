@@ -6,15 +6,41 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     {
         //fileds
         private readonly int taskId;
+        internal int TaskId { get { return taskId; } }
+
         private readonly DateTime creationTime;
+        internal DateTime CreationTime { get { return creationTime; } }
+
         private DateTime dueDate;
+        internal DateTime DueDate { get { return dueDate; } set {
+                ValidateDueDate(value);
+                dueDate = value; } }
+
+
         private string title;
+        internal string Title
+        {
+            get { return title; }
+            set
+            {
+                ValidateTitle(value);
+                title = value;
+            }
+        }
+
         private string description;
+        internal string Description
+        {
+            get { return description; }
+            set
+            {
+                ValidateDescription(value);
+                this.description = value;
+            }
+        }
 
         //constructor
-        
-
-       public Task(int taskId,DateTime creationTime,  string title, string description, DateTime dueDate)
+        public Task(int taskId,DateTime creationTime,  string title, string description, DateTime dueDate)
         {
             this.taskId = taskId;
             this.creationTime = creationTime;
@@ -25,24 +51,26 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         //functions
 
-
         ///<summary>Validate the propriety of a given description.</summary>
         ///<param name="description">The description given to the Task</param>
         ///<exception cref="Exception">thrown when description is longer then 500 characters.</exception>
-        private void validateDescription(string description)
+        private void ValidateDescription(string description)
         {
-            if(description != null && description.Length > 500)
+            if(description == null)
+            {
+                throw new ArgumentNullException("description cant be null, if you dont need description please enter empty string");
+            }
+            if(description.Length > 500)
             {
                 throw new FormatException("Description max length is 500 characters");
             }   
         }
 
-
         ///<summary>Validate the propriety of a given title.</summary>
         /// <param name="title">The title given to the Task</param>
         /// <exception cref="ArgumentNullException">Thrown when title is null object </exception> 
         /// <exception cref="FormatException"> Thrown when the title dont answer are format requairements (empty, longer then 50)</exception>
-        private void validateTitle(string title)
+        private void ValidateTitle(string title)
         {
             if(title == null)
             {
@@ -58,30 +86,17 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
-
-        //getters and setters
-        internal int TaskId { get { return taskId; } }
-
-        internal DateTime CreationTime { get { return creationTime; }}
-        internal DateTime DueDate { get { return dueDate; } set { dueDate = value; } }
-
-        internal string Title { get { return title; } 
-            set {
-                validateTitle(value);
-                title = value; } }
-
-        internal string Description { get { return description; } 
-            set {
-                validateDescription(value);
-                if(value == null)
-                {
-                    description = "";
-                }
-                else
-                {
-                    description = value;
-                }
-                 } }
-
+        private void ValidateDueDate(DateTime dueDate)
+        {
+            if (dueDate == null)
+            {
+                throw new ArgumentNullException("Due date must not be null");
+            }
+            if (dueDate < DateTime.Now)
+            {
+                throw new ArgumentException("This due date time already past");
+            }
+            
+        }
     }
 }

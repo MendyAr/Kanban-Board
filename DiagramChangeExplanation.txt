@@ -27,8 +27,11 @@ Task
 UserController:
 1.Add EmailExist - when register we want to check that no email as this already enrolled, and when login to verify that this email is enrolled, may use us in future changes and requirements
 2.Add ValidateEmail - we need to make sure that the input of an email is indeed an email.
+3.Adding max and min static variable- if in the future we will want to change the rules of a specific filed it will be easy. 
+4.Adding validatePasswordRules - when register or log in we want to check that the given password answer on the rules that we difine for a valid password.
 
 User:
-1.Adding max and min static variable- if in the future we will want to change the rules of a specific filed it will be easy. 
-2.Remove logout function - we decided that it is much more efficient and lower the coupling to save the log in user in the Servece, so the log out will only be to change the field in Service and has no relation to User
-3.Remove Board and Task functions - we decided to have a BoardController that will manipulate and no need to this function in User.
+
+1.Remove logout function - we decided that it is much more efficient and lower the coupling to save the log in user in the Servece, so the log out will only be to change the field in Service and has no relation to User
+2.Remove Board and Task functions - we decided to have a BoardController that will manipulate and no need to this function in User.
+3.moving validatePasswordRules to UserController - we dicided that is more logical to have email rules and password rules in the same plase to cohesion so we moved it to UserController

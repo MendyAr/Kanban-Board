@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 
-
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class UserController
@@ -16,7 +15,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //filed
         
         private Dictionary<string,User> users;
-
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         
         //constructor
@@ -28,17 +26,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
-        // constructor when we will use data uploading
-        //public UserController(List<DLUser> DLUsers) // ADTUser is a User from the DataLayer
-        //{
-        //    foreach (DLUser dataUser in DLUsers)
-        //    {
-        //        User user = new User(dataUser);
-        //        this.users.Add(dataUser.email, user);
-        //    }
-        //}
-
-
         //methods
 
         ///<summary>Registers a new user to the system.</summary>
@@ -48,17 +35,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
         internal User Register(string email, string password)
         {
-            if (email == null)
-            {
-                log.Info("Tryng to Register with null email!");
-                throw new Exception("Email cannot be null");
-            }
-            if (!IsValidEmail(email))
-            {
-                log.Info("Trying to register with invalid email!");
-                throw new Exception("This email address is invalid, please check for spellMistakes");
-            }
-
             if (EmailExist(email))
             {
                 log.Info("Trying to register with an existing email!");
@@ -75,36 +51,36 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// check if the input string match an email structure.
         /// </summary>
         /// <param name="email">the input email.</param>
-        /// <returns>true/false accordingly.</returns>
-        private bool IsValidEmail(string email)
+        ///<exception cref="Exception">thrown when email is null or not in email structure.</exception>
+        private void ValidateEmail(string email)
         {
+            if (email == null)
+            {
+                log.Info("Tryng to Register with null email!");
+                throw new Exception("Email cannot be null");
+            }
 
             var emailValidator = new EmailAddressAttribute();
             Regex rg = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
             bool validEmail = rg.IsMatch(email);
-
-            foreach (char letter in email)
-                {
-                    if ("אבגדהוזחטיכלמנסעפצקרשתךםןףץ+*/`~,".Contains(letter))
-                    {
-                        return false;
-                    }
-                }
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email & emailValidator.IsValid(email) & validEmail;
+            char[] invalidCharacters = { 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת', 'ך', 'ם', 'ן', 'ף', 'ץ', '+', '*', '/', '`', '~' };
+            var addr = new System.Net.Mail.MailAddress(email);
+            if(!(addr.Address == email & emailValidator.IsValid(email) & validEmail & email.IndexOfAny(invalidCharacters) == -1))
+            {
+                log.Info("Trying to register with invalid email!");
+                throw new Exception("This email address is invalid, please check for spellMistakes");
+            }
         }
-           
-        
 
         /// <summary>
         /// check if a user with the same email address exist in the system.
         /// </summary>
         /// <param name="email">the input email need to be checked.</param>
         /// <returns>true/false accordingly.</returns>
-        private bool EmailExist(string email)
+        /// ///<exception cref="Exception">thrown when email is null or not in email structure.</exception>
+        internal bool EmailExist(string email)
         {
-            if (email == null)
-                return false;
+            ValidateEmail(email); 
             return users.ContainsKey(email);
         }
 
@@ -129,8 +105,5 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             log.Info("Failed to login!");
             throw new Exception("Email or Password is invalid");
         }
-
-       
-
     }
 }

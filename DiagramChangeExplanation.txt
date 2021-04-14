@@ -1,34 +1,34 @@
 serviceLayer:
 
-Adding UserService and Board service- we decided that we need a to separate the functionality of service to improve the cohesion and to handle our 2 main entite of businessLayer (User,Board)
+Adding UserService and Board service- we decided that we need to separate the functionality of service to improve the cohesion and to handle our 2 main entites of businessLayer (User,Board)
 
 
 bussinesLayer:
 
 BoardController
-1. Adding BoardController- we realise that it is more logical and efficient to have an entitie that will handle all the existing boards
+1. Adding BoardController- we realise that it is more logical and efficient to have an entitie that will handle all the existing boards and will be responsible for logical rules that depends on few boards. other then that by doing that we lower the coupling of Board and User, so now User want change the behavior of Board.
 
 Board:
 1.Add GetColumnName-since we added class Column, we realized utilizing the column field + all the tests running through all the chain of objects we decided to chain GetColumn as well
-2.Add LimitColumn-need a function to execute the the demand.
+2.Add LimitColumn-need a function to execute the the demand of letting the user change the amount of Task that can be in a Column.
 3.Add GetColumnLimit - since we added class Column, we realized utilizing the column field + all the tests running through all the chain of objects we decided to chain GetColumn as well
-4.AddTask - this function replase createTask of the old Diagram, and the signature had change according to the requirements.
-5.Change signature of Update Functions- to get to the wanted Task we needed more information.
-6.AdvanceTask- this function replace moveTask of the old Diagram, the signature change because we need more information to get to the wanted Task
+4.AddTask - this function replase createTask of the old Diagram, and the signature had change so we will be able to get to our wanted Task.
+5.Change signature of Update Functions- we needed more information to get to specific Task. we need to know the taskID and the columnOrdinal.
+6.AdvanceTask- this function replace moveTask of the old Diagram, the signature change because we needed more information to get to specific Task. we need to know the taskID and the columnOrdinal.
 
 Column
-1. Adding Column- Roi please empliment this one
+1. Adding Column- Initially we thought of using 3 dictionaries for each column but found out we checked the columnOrdinal way too much, creating an array of columns and accessing it with columnOrdinal was easier and better
 
 Task
 1.Adding validators to Task- we want to restrict and manipulate if needed the option for title,description and dueDate.
-2.Adding max and min variable- if in the future we will want to change them it will be easy. 
-3.Adding taskId - important to have a key for each Task.
+2.Adding max and min static variable- if in the future we will want to change the rules of a specific filed it will be easy. 
+3.Adding taskId - important to have a key for each Task, so when needed we will be able to get to him easily and change only the wanted Task
 
 UserController:
-1.Add EmailExist - we need to add this function to make sure a user want register twice
-2.Add ValidateEmail - we need to make sure that the input is indeed an email.
+1.Add EmailExist - when register we want to check that no email as this already enrolled, and when login to verify that this email is enrolled, may use us in future changes and requirements
+2.Add ValidateEmail - we need to make sure that the input of an email is indeed an email.
 
 User:
-1.Add min and max length to password- to make it easy in the future to change this requirement.
-2.Remove logout - we dicided that the User doesnt need to know if he is connected or not.
-3.Remove Board and Task functions - we have board controller to do all of those.
+1.Adding max and min static variable- if in the future we will want to change the rules of a specific filed it will be easy. 
+2.Remove logout function - we decided that it is much more efficient and lower the coupling to save the log in user in the Servece, so the log out will only be to change the field in Service and has no relation to User
+3.Remove Board and Task functions - we decided to have a BoardController that will manipulate and no need to this function in User.

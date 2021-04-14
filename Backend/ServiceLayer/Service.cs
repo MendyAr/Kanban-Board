@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-            log.Info("Starting log!");
+            log.Info("Kanban.app booted");
         }
 
         //methods

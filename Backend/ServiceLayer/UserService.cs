@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Linq;
-
-using IntroSE.Kanban.Backend.BuisnessLayer;
+﻿using System;
+using UC = IntroSE.Kanban.Backend.BuisnessLayer.UserController;
+using BUser = IntroSE.Kanban.Backend.BuisnessLayer.User;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
-    class UserService
+    internal class UserService
     {
         //fields
-        private UserController uc = new UserController();
+        private UC uc = new UC();
 
         //constructor
         internal UserService()
         {
-            uc = new UserController();
+            uc = new UC();
         }
 
         //functions
@@ -23,7 +21,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
         ///<returns cref="Response">The response of the action</returns>
-
         internal Response Register(string email, string password)
         {
             try
@@ -31,9 +28,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 uc.Register(email, password);
                 return new Response();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return new Response(ex.Message);
+                return new Response(e.Message);
             }
         }
         
@@ -47,14 +44,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                BuisnessLayer.User  loginUser = uc.Login(email, password);
+                BUser loginUser = uc.Login(email, password);
                 User serviceLayerUser = new User(loginUser.Email);
-                Response<User> re = Response<User>.FromValue(serviceLayerUser);
-                return re;             
+                Response<User> response = Response<User>.FromValue(serviceLayerUser);
+                return response;             
             }
-            catch (Exception er)
+            catch (Exception e)
             {
-                return Response<User>.FromError(er.Message);
+                return Response<User>.FromError(e.Message);
             }
         }
 

@@ -64,9 +64,18 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the user, instead the response should contain a error message in case of an error</returns>
         public Response<User> Login(string email, string password)
         {
+            if (connectedEmail != null)
+                return Response<User>.FromError("User '" + connectedEmail + "' is currently logged in. Log out before attempting to log in.");
             Response<User> response = UserS.Login(email, password);
             if (!response.ErrorOccured)
+            {
                 ConnectedEmail = email;
+                log.Info("SUCCESSFULLY logged in: '" + email + "'");
+            }
+            else
+            {
+                log.Warn("FAILED log in attempt: '" + email + "'");
+            }
             return response;
         }
 
@@ -79,13 +88,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             if (connectedEmail == null || !ConnectedEmail.Equals(email))
             {
-                log.Info("falied to logout!");
+                log.Info("FAILED to logout: '" + ConnectedEmail +"'");
                 return new Response("Can't logout: user " + email + " is not logged in");
             }
             else
             {
+                log.Info("SUCCESSFULLY logged out: '" + ConnectedEmail +"'");
                 ConnectedEmail = null;
-                log.Info("logged out successfuly!");
                 return new Response();
             }
         }
@@ -100,6 +109,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response LimitColumn(string email, string boardName, int columnOrdinal, int limit)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted LimitColumn(" + email + "," + boardName + "," + columnOrdinal + "," + limit + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.LimitColumn(email, boardName, columnOrdinal, limit);
         }
 
@@ -112,6 +134,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>The limit of the column.</returns>
         public Response<int> GetColumnLimit(string email, string boardName, int columnOrdinal)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<int>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumnLimit(" + email + "," + boardName + "," + columnOrdinal + ")");
+                return Response<int>.FromError("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.GetColumnLimit(email, boardName, columnOrdinal);
         }
 
@@ -124,6 +159,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>The name of the column.</returns>
         public Response<string> GetColumnName(string email, string boardName, int columnOrdinal)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<string>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumnName(" + email + "," + boardName + "," + columnOrdinal + ")");
+                return Response<string>.FromError("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.GetColumnName(email, boardName, columnOrdinal);
         }
 
@@ -138,6 +186,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Task, instead the response should contain a error message in case of an error</returns>
         public Response<Task> AddTask(string email, string boardName, string title, string description, DateTime dueDate)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<Task>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AddTask(" + email + "," + boardName + "," + title + "," + description + "," + dueDate + ")");
+                return Response<Task>.FromError("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.AddTask(email, boardName, DateTime.Now, title, description, dueDate);
         }
 
@@ -152,6 +213,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted UpdateTaskDueDate(" + email + "," + boardName + "," + columnOrdinal + "," + taskId + "," + dueDate + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.UpdateTaskDueDate(email, boardName, columnOrdinal, taskId, dueDate);
         }
 
@@ -166,6 +240,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted UpdateTaskTitle(" + email + "," + boardName + "," + columnOrdinal + "," + taskId + "," + title + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.UpdateTaskTitle(email, boardName, columnOrdinal, taskId, title);
         }
 
@@ -180,6 +267,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted UpdateTaskDescription(" + email + "," + boardName + "," + columnOrdinal + "," + taskId + "," + description + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.UpdateTaskDescription(email, boardName, columnOrdinal, taskId, description);
         }
 
@@ -193,6 +293,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AdvanceTask(string email, string boardName, int columnOrdinal, int taskId)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AdvanceTask(" + email + "," + boardName + "," + columnOrdinal + "," + taskId + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.AdvanceTask(email, boardName, columnOrdinal, taskId);
         }
 
@@ -205,6 +318,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> GetColumn(string email, string boardName, int columnOrdinal)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<IList<Task>>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumn(" + email + "," + boardName + "," + columnOrdinal + ")");
+                return Response<IList<Task>>.FromError("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.GetColumn(email, boardName, columnOrdinal);
         }
 
@@ -216,6 +342,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AddBoard(string email, string name)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AddBoard(" + email + "," + name + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.AddBoard(email, name);
         }
 
@@ -227,6 +366,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveBoard(string email, string name)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted RemoveBoard(" + email + "," + name + ")");
+                return new Response("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.RemoveBoard(email, name);
         }
 
@@ -237,7 +389,34 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the list of tasks, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> InProgressTasks(string email)
         {
+            try
+            {
+                validateLogin(email);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<IList<Task>>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted InProgressTasks(" + email + ")");
+                return Response<IList<Task>>.FromError("Can't operate -  User '" + email + "' is not logged in");
+            }
             return BoardS.InProgressTasks(email);
+        }
+
+        /// <summary>
+        /// Validates the user operates legally - i.e. is logged in and operates on his domain
+        /// </summary>
+        /// <param name="email">calling user's email</param>
+        /// <exception cref="NullReferenceException">Thrown if no user is logged in</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the user logged in is trying to access data outside his domain</exception>
+        private void validateLogin(string email)
+        {
+            if (connectedEmail == null)
+                throw new NullReferenceException();
+            if (!email.Equals(connectedEmail))
+                throw new InvalidOperationException();
         }
     }
 }

@@ -61,11 +61,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<exception cref="Exception">thrown when description is longer then 500 characters.</exception>
         private void ValidateDescription(string description)
         {
-            if(description == null)
-            {
-                throw new ArgumentNullException("description cant be null, if you dont need description please enter empty string");
-            }
-
             if(description.Length > MAX_DESCRIPTION_LENGTH)
             {
                 throw new FormatException("Description max length is" + MAX_DESCRIPTION_LENGTH + "characters");

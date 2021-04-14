@@ -150,11 +150,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="DueDate">new and updated due date</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new DueDate isn't legal</exception>
         /// <remarks>calls checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime DueDate)
         {
             checkColumnOrdinal(columnOrdinal);
+            if (columnOrdinal == 2)
+                throw new ArgumentOutOfRangeException("Cannot update task in column 'done'");
             checkBoardExistance(email, boardName);
             try
             {
@@ -182,11 +185,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="title">new and updated title</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new title isn't legal</exception>
         /// <remarks>calls checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
         {
             checkColumnOrdinal(columnOrdinal);
+            if (columnOrdinal == 2)
+                throw new ArgumentOutOfRangeException("Cannot update task in column 'done'");
             checkBoardExistance(email, boardName);
             try
             {
@@ -210,11 +216,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="description">new and updated description</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new description isn't legal</exception>
         /// <remarks>calls checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
         {
             checkColumnOrdinal(columnOrdinal);
+            if (columnOrdinal == 2)
+                throw new ArgumentOutOfRangeException("Cannot update task in column 'done'");
             checkBoardExistance(boardName, email);
             try
             {
@@ -237,14 +246,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="boardName">board in which the task is stored</param>
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
-        /// <exception cref="ArgumentException">Throw if asking to advance a task from 'Done' column, if the task isn't stored in said column, if next column is at it's limit</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to advance a task from column 2</exception>
+        /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if next column is at it's limit</exception>
         /// <remarks>calls checkColumnOrdinal, checkBoardExistance</remarks>
         internal void AdvanceTask(string email, string boardName, int columnOrdinal, int taskId)
         {
             checkColumnOrdinal(columnOrdinal);
             checkBoardExistance(email, boardName);
             if (columnOrdinal == 2)
-                throw new ArgumentException("Cannot advance tasks from column 'Done'");
+                throw new ArgumentOutOfRangeException("Cannot advance tasks from column 'done'");
             try
             {
                 boards[email][boardName].AdvanceTask(columnOrdinal, taskId);

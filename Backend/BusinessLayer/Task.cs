@@ -5,6 +5,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     class Task 
     {
         //fileds
+        private static int MIN_TITLE_LENGTH = 1;
+        private static int MAX_TITLE_LENGTH = 50;
+        private static int MIN_DESCRIPTION_LENGTH = 0;
+        private static int MAX_DESCRIPTION_LENGTH = 500;
+
         private readonly int taskId;
         internal int TaskId { get { return taskId; } }
 
@@ -60,10 +65,16 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new ArgumentNullException("description cant be null, if you dont need description please enter empty string");
             }
-            if(description.Length > 500)
+
+            if(description.Length > MAX_DESCRIPTION_LENGTH)
             {
-                throw new FormatException("Description max length is 500 characters");
-            }   
+                throw new FormatException("Description max length is" + MAX_DESCRIPTION_LENGTH + "characters");
+            }
+
+            if (description.Length < MIN_DESCRIPTION_LENGTH)
+            {
+                throw new FormatException("Description minimum length is" + MIN_DESCRIPTION_LENGTH + "characters");
+            }
         }
 
         ///<summary>Validate the propriety of a given title.</summary>
@@ -76,16 +87,20 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new ArgumentNullException("Title must not be null");
             }
-            if (title.Length == 0) 
+            if (title.Length < MIN_TITLE_LENGTH) 
             {
-                throw new FormatException("Title cannot be empty");
+                throw new FormatException("Title must contain at list " + MIN_TITLE_LENGTH + " character");
             }
-            if (title.Length > 50)
+            if (title.Length > MAX_TITLE_LENGTH)
             {
-                throw new FormatException("Title length cannot be more then 50 characters");
+                throw new FormatException("Title length cannot be more then " + MAX_TITLE_LENGTH + " characters");
             }
         }
 
+        ///<summary>Validate the propriety of a given dueDate.</summary>
+        /// <param name="dueDate">The title given to the Task</param>
+        /// <exception cref="ArgumentNullException">Thrown when dueDate is null object </exception> 
+        /// <exception cref="FormatException"> Thrown when the dueDate is earlier then now. </exception>
         private void ValidateDueDate(DateTime dueDate)
         {
             if (dueDate == null)

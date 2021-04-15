@@ -41,7 +41,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 if (users.ContainsKey(email))
                 {
-                    log.Warn("FAILED register attempt: ' " + email+ " ' already exists ");
+                    log.Warn("FAILED register attempt: ' " + email + " ' already exists ");
                     throw new Exception("A user already exist with this Email address");
                 }
             
@@ -55,7 +55,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (Exception e)
             {
-                log.Info("FAILED register attempt: ' " + email + " ' "+  e.Message);
+                log.Info("FAILED register attempt: ' " + email + " ' " + e.Message);
                 throw new Exception(e.Message);
             }
 

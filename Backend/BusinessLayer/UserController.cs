@@ -49,9 +49,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 ValidateEmail(email);
                 validatePasswordRules(password);
             }
-            catch (ArgumentNullException e)
+            catch (ArgumentNullException)
             {
                 log.Info(string.Format(LOG_FAILED_REGISTER_MESSAGE, "null email", "email must not be null"));
+                throw new Exception("email must not be null");
             }
             catch (Exception e)
             {

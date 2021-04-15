@@ -11,17 +11,17 @@ using System.Text.RegularExpressions;
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class UserController
-    {   
+    {
         //fields
-        
-        private Dictionary<string,User> users; //key - email, value - user of that email
+
+        private Dictionary<string, User> users; //key - email, value - user of that email
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
         private static readonly int PASS_MIN_LENGTH = 4;
         private static readonly int PASS_MAX_LENGTH = 20;
 
         //constructors
-        public UserController() 
+        public UserController()
         {
             users = new Dictionary<string, User>();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
@@ -37,28 +37,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
         internal User Register(string email, string password)
         {
+            if (users.ContainsKey(email))
+            {
+                log.Warn("FAILED register attempt: '" + email + "' already exists");
+                throw new Exception("A user already exist with this Email address");
+            }
             try
             {
-                if (users.ContainsKey(email))
-                {
-                    log.Warn("FAILED register attempt: ' " + email + " ' already exists ");
-                    throw new Exception("A user already exist with this Email address");
-                }
-            
                 ValidateEmail(email);
                 validatePasswordRules(password);
             }
-            catch (ArgumentNullException)
-            {
-                log.Info("FAILED register attempt: ' " + "null email" + " ' email must not be null");
-                throw new Exception("email must not be null");
-            }
             catch (Exception e)
             {
-                log.Info("FAILED register attempt: ' " + email + " ' " + e.Message);
+                log.Info("FAILED register attempt: '" + email + "' " + e.Message);
                 throw new Exception(e.Message);
             }
-
             User newUser = new User(email, password);
             this.users.Add(email, newUser);
             log.Info("SUCCESSFULLY registered attempt: '" + email + "'");
@@ -74,14 +67,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <exception cref="Exception">thrown when a user with this email doesn't exist or when the password is incorrect.</exception>
         internal User Login(string email, string password)
         {
-            if (users.ContainsKey(email)) {
+            if (users.ContainsKey(email))
+            {
                 User user = users[email];
-                if (user.validatePassword(password)) 
+                if (user.validatePassword(password))
                 {
                     log.Info("login successfully!");
                     return user;
                 }
-                    
+
             }
             log.Info("Failed to login!");
             throw new Exception("Email or Password is invalid");
@@ -103,7 +97,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Regex rg = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
             bool validEmail = rg.IsMatch(email);
             var addr = new System.Net.Mail.MailAddress(email);
-            if(!(addr.Address == email & emailValidator.IsValid(email) & validEmail))
+            if (!(addr.Address == email & emailValidator.IsValid(email) & validEmail))
             {
                 throw new Exception("This email address is invalid, please check for spellMistakes");
             }
@@ -122,7 +116,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             //check length
             if (pass.Length < PASS_MIN_LENGTH)
                 throw new Exception("password too short");
-            if (pass.Length > PASS_MAX_LENGTH ) 
+            if (pass.Length > PASS_MAX_LENGTH)
                 throw new Exception("password too long");
 
 

@@ -37,15 +37,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
         internal User Register(string email, string password)
         {
-            if (users.ContainsKey(email))
-            {
-                log.Warn("FAILED register attempt: '" + email + "' already exists");
-                throw new Exception("A user already exist with this Email address");
-            }
             try
             {
+                if (users.ContainsKey(email))
+                {
+                    log.Warn("FAILED register attempt: '" + email + "' already exists");
+                    throw new Exception("A user already exist with this Email address");
+                }
+
                 ValidateEmail(email);
                 validatePasswordRules(password);
+            }
+            catch (ArgumentNullException)
+            {
+                log.Info("FAILED register attempt: '" + "null email " + "' an email cannot be null" );
+                throw new Exception("an email cannot be null");
             }
             catch (Exception e)
             {

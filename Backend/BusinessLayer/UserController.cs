@@ -19,7 +19,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //password limiters
         private static readonly int PASS_MIN_LENGTH = 4;
         private static readonly int PASS_MAX_LENGTH = 20;
-        private static string LOG_FAILED_REGISTER_MESSAGE = "FAILED register attempt: ' {0} '  {1}"; //{0} email,{1} error explenation
 
         //constructors
         public UserController() 
@@ -42,7 +41,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 if (users.ContainsKey(email))
                 {
-                    log.Warn(string.Format(LOG_FAILED_REGISTER_MESSAGE, email, "already exists"));
+                    log.Warn("FAILED register attempt: ' " + email+ " ' already exists ");
                     throw new Exception("A user already exist with this Email address");
                 }
             
@@ -51,12 +50,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             catch (ArgumentNullException)
             {
-                log.Info(string.Format(LOG_FAILED_REGISTER_MESSAGE, "null email", "email must not be null"));
+                log.Info("FAILED register attempt: ' " + "null email" + " ' email must not be null");
                 throw new Exception("email must not be null");
             }
             catch (Exception e)
             {
-                log.Info(string.Format(LOG_FAILED_REGISTER_MESSAGE, email, e.Message));
+                log.Info("FAILED register attempt: ' " + email + " ' "+  e.Message);
                 throw new Exception(e.Message);
             }
 

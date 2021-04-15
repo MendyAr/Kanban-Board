@@ -14,7 +14,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     internal class BoardController
     {
         //fields
-        private Dictionary<string, Dictionary<string, Board>> boards ; //first key will be the email of each user, second key will be the board name
+        private Dictionary<string, Dictionary<string, Board>> boards; //first key will be the email of each user, second key will be the board name
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
@@ -149,7 +149,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             try
             {
                 Task task = boards[email][boardName].AddTask(creationTime, title, description, DueDate);
-                log.Info("SUCCESSFULLY added task '" + task.TaskId +"' to '" + email + ":" + boardName + "'");
+                log.Info("SUCCESSFULLY added task '" + task.TaskId + "' to '" + email + ":" + boardName + "'");
                 return task;
             }
             catch (OutOfMemoryException e)
@@ -192,7 +192,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             catch (IndexOutOfRangeException e)
             {
                 log.Warn("FAILED to update task '" + taskId + "' at '" + email + ":" + boardName + "[" + columnOrdinal + "]' - Task not found");
-                throw new ArgumentException("Cannot update task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
+                throw new ArgumentException("Cannot update task: A task with ID '" + taskId + "' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
             }
             catch (Exception e)
             {
@@ -229,7 +229,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             catch (IndexOutOfRangeException e)
             {
                 log.Warn("FAILED to update task '" + taskId + "' at '" + email + ":" + boardName + "[" + columnOrdinal + "]' - Task not found");
-                throw new ArgumentException("Cannot update task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
+                throw new ArgumentException("Cannot update task: A task with ID '" + taskId + "' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
             }
             catch (Exception e)
             {
@@ -251,7 +251,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <remarks>calls checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
         {
-            checkBoardExistance(boardName, email, "access");
+            checkBoardExistance(email, boardName, "access");
             checkColumnOrdinal(email, boardName, columnOrdinal);
             if (columnOrdinal == 2)
             {
@@ -302,15 +302,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             catch (IndexOutOfRangeException e)
             {
                 log.Warn("FAILED to advance task '" + taskId + "' from '" + email + ":" + boardName + "[" + columnOrdinal + "]' - Task not found");
-                throw new ArgumentException("Cannot advance task: A task with ID '" + taskId +"' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
+                throw new ArgumentException("Cannot advance task: A task with ID '" + taskId + "' does not exist in column '" + e.Message + "' of board '" + email + ":" + boardName + "'");
             }
             catch (OutOfMemoryException e)
             {
-                log.Warn("FAILED to advance task '" + taskId + "' from '" + email + ":" + boardName + "[" + columnOrdinal + "]' - Column '" + email + ":" + boardName + "[" + (columnOrdinal + 1)+ "]' is currently at its limit");
+                log.Warn("FAILED to advance task '" + taskId + "' from '" + email + ":" + boardName + "[" + columnOrdinal + "]' - Column '" + email + ":" + boardName + "[" + (columnOrdinal + 1) + "]' is currently at its limit");
                 throw new OutOfMemoryException("Cannot advance task: Column '" + e.Message + "' of board '" + email + ":" + boardName + "' is currently at its limit");
             }
         }
-        
+
         /// <summary>
         /// gets all the tasks in a specified column
         /// </summary>
@@ -325,7 +325,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             checkColumnOrdinal(email, boardName, columnOrdinal);
             return boards[email][boardName].GetColumn(columnOrdinal);
         }
-        
+
         /// <summary>
         /// gets all the tasks of a user that are 'In Progress'
         /// </summary>
@@ -376,9 +376,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <exception cref="ArgumentException">thrown if the board does not exist</exception>
         private void checkBoardExistance(string email, string boardName, string action)
         {
+            if (email == null | boardName == null)
+            {
+                log.Warn("FAILED to" + action + " '" + email + ":" + boardName + "' - email and boardName cannot be null");
+            }
             if (!boards[email].ContainsKey(boardName))
             {
-                log.Warn("FAILED " + action + " '" + email + ":" + boardName + "' - Board doesn't exist");
+                log.Warn("FAILED to" + action + " '" + email + ":" + boardName + "' - Board doesn't exist");
                 throw new ArgumentException("Board '" + email + ":" + boardName + "' does not exist");
             }
         }

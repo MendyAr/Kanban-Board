@@ -11,7 +11,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     internal class Board
     {
         //fields
-        private int taskIdCounter = 1; //will be updated by every task added to the board and so keeping each ID unique
+        private int taskIdCounter; //will be updated by every task added to the board and so keeping each ID unique
         private Column[] columns;
 
         //constructor
@@ -21,6 +21,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         internal Board()
         {
             this.columns = new Column[] { new Column("backlog"), new Column("in progress"), new Column("done")};
+            taskIdCounter = 0;
         }
 
         //methods

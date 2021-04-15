@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<param name="password">the user password.</param>
         ///<returns cref="User">The User created by the registration.</returns>
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
-        internal User Register(string email, string password)
+        internal void Register(string email, string password)
         {
             try
             {
@@ -61,7 +61,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             User newUser = new User(email, password);
             this.users.Add(email, newUser);
             log.Info("SUCCESSFULLY registered attempt: '" + email + "'");
-            return newUser;
         }
 
         /// <summary>

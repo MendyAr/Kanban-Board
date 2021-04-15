@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //password limiters
         private static readonly int PASS_MIN_LENGTH = 4;
         private static readonly int PASS_MAX_LENGTH = 20;
-        
+
         //constructors
         public UserController() 
         {
@@ -37,21 +37,28 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
         internal User Register(string email, string password)
         {
-            if (users.ContainsKey(email))
-            {
-                log.Warn("FAILED register attempt: '" + email + "' already exists");
-                throw new Exception("A user already exist with this Email address");
-            }
             try
             {
+                if (users.ContainsKey(email))
+                {
+                    log.Warn("FAILED register attempt: ' " + email + " ' already exists ");
+                    throw new Exception("A user already exist with this Email address");
+                }
+            
                 ValidateEmail(email);
                 validatePasswordRules(password);
             }
+            catch (ArgumentNullException)
+            {
+                log.Info("FAILED register attempt: ' " + "null email" + " ' email must not be null");
+                throw new Exception("email must not be null");
+            }
             catch (Exception e)
             {
-                log.Info("FAILED register attempt: '" + email + "' " + e.Message);
+                log.Info("FAILED register attempt: ' " + email + " ' " + e.Message);
                 throw new Exception(e.Message);
             }
+
             User newUser = new User(email, password);
             this.users.Add(email, newUser);
             log.Info("SUCCESSFULLY registered attempt: '" + email + "'");

@@ -63,7 +63,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             if(description == null)
                 return;
-            {
             if(description.Length > MAX_DESCRIPTION_LENGTH)
             {
                 throw new FormatException("Description max length is" + MAX_DESCRIPTION_LENGTH + "characters");

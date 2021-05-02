@@ -3,7 +3,7 @@ using System.Data.SQLite;
 using System.IO;
 
 
-namespace Practical_DB.DataAccessLayer
+namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal abstract class DalController
     {
@@ -119,7 +119,7 @@ namespace Practical_DB.DataAccessLayer
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"delete from {_tableName} where id={DTOObj.Id}"
+                    CommandText = $"delete from {_tableName} where id={DTOObj.ID}"
                 };
                 try
                 {

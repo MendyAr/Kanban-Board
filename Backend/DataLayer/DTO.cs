@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    internal abstract class AbstrctDalObject
+    internal abstract class DTO
     {
         public string ID { get; set; }
         protected DalController _controller;
-        protected AbstrctDalObject(DalController controller)
+        protected DTO(DalController controller)
         {
             _controller = controller;
         }

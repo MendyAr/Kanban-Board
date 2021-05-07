@@ -108,7 +108,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
         /// <param name="limit">The new limit value. A value of -1 indicates no limit.</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response LimitColumn(string userEmail,string creatorEmail, string boardName, int columnOrdinal, int limit)
+        public Response LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted LimitColumn(" + userEmail + "," + boardName + "," + columnOrdinal + "," + limit + ")");
                 return new Response("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.LimitColumn(userEmail, boardName, columnOrdinal, limit);
+            return BoardS.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumnLimit(" + userEmail + "," + boardName + "," + columnOrdinal + ")");
                 return Response<int>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.GetColumnLimit(userEmail, boardName, columnOrdinal);
+            return BoardS.GetColumnLimit(userEmail, creatorEmail, boardName, columnOrdinal);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumnName(" + userEmail + "," + boardName + "," + columnOrdinal + ")");
                 return Response<string>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.GetColumnName(userEmail, boardName, columnOrdinal);
+            return BoardS.GetColumnName(userEmail, creatorEmail, boardName, columnOrdinal);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AddTask(" + userEmail + "," + boardName + "," + title + "," + description + "," + dueDate + ")");
                 return Response<Task>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.AddTask(userEmail, boardName, DateTime.Now, title, description, dueDate);
+            return BoardS.AddTask(userEmail, creatorEmail, boardName, DateTime.Now, title, description, dueDate);
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted UpdateTaskDueDate(" + userEmail + "," + boardName + "," + columnOrdinal + "," + taskId + "," + dueDate + ")");
                 return new Response("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.UpdateTaskDueDate(userEmail, boardName, columnOrdinal, taskId, dueDate);
+            return BoardS.UpdateTaskDueDate(userEmail, creatorEmail, boardName, columnOrdinal, taskId, dueDate);
         }
 
         /// <summary>
@@ -259,7 +259,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted UpdateTaskTitle(" + userEmail + "," + boardName + "," + columnOrdinal + "," + taskId + "," + title + ")");
                 return new Response("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.UpdateTaskTitle(userEmail, boardName, columnOrdinal, taskId, title);
+            return BoardS.UpdateTaskTitle(userEmail, creatorEmail, boardName, columnOrdinal, taskId, title);
         }
 
         /// <summary>
@@ -287,18 +287,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted UpdateTaskDescription(" + userEmail + "," + boardName + "," + columnOrdinal + "," + taskId + "," + description + ")");
                 return new Response("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.UpdateTaskDescription(userEmail, boardName, columnOrdinal, taskId, description);
+            return BoardS.UpdateTaskDescription(userEmail, creatorEmail, boardName, columnOrdinal, taskId, description);
         }
 
         /// <summary>
         /// Advance a task to the next column
         /// </summary>
         /// <param name="userEmail">userEmail of user. Must be logged in</param>
+        /// <param name="creatorEmail">Email of the board creator</param>
         /// <param name="boardName">The name of the board</param>
         /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
         /// <param name="taskId">The task to be updated identified task ID</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response AdvanceTask(string userEmail, string boardName, int columnOrdinal, int taskId)
+        public Response AdvanceTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
             try
             {
@@ -313,7 +314,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AdvanceTask(" + userEmail + "," + boardName + "," + columnOrdinal + "," + taskId + ")");
                 return new Response("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.AdvanceTask(userEmail, boardName, columnOrdinal, taskId);
+            return BoardS.AdvanceTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId);
         }
 
         /// <summary>
@@ -339,7 +340,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumn(" + userEmail + "," + boardName + "," + columnOrdinal + ")");
                 return Response<IList<Task>>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.GetColumn(userEmail, boardName, columnOrdinal);
+            return BoardS.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
         }
 
         /// <summary>
@@ -348,7 +349,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="userEmail">userEmail of the user. Must be logged in</param>
         /// <param name="name">The name of the new board</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response AddBoard(string userEmail, string boardName)
+        public Response AddBoard(string userEmail, string name)
         {
             try
             {
@@ -383,7 +384,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// </summary>
         /// <param name="creatorEmail">userEmail of the board creator. Must be logged in</param>
         /// <param name="userEmail">userEmail of the user. Must be logged in</param>
-        /// <param name="name">The name of the board</param>
+        /// <param name="boardName">The name of the board</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
@@ -397,10 +398,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (InvalidOperationException)
             {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted RemoveBoard(" + userEmail + "," + name + ")");
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted RemoveBoard(" + userEmail + "," + boardName + ")");
                 return new Response("Can't operate -  User '" + userEmail + "' is not logged in");
             }
-            return BoardS.RemoveBoard(userEmail, name);
+            return BoardS.RemoveBoard(userEmail, creatorEmail, boardName);
         }
 
         /// <summary>

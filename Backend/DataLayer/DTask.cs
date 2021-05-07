@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private string description;
         private DateTime creationTime;
         private DateTime dueDate;
-        public DTask(int taskId, string boardName, string title, string description, DateTime creationTime, DateTime dueDate, bool persisted) : base(new DTaskController())
+        public DTask(int taskId, string boardName, string title, string description, DateTime creationTime, DateTime dueDate) : base(new DTaskController())
         {
             this.boardName = boardName;
             this.taskId = taskId;

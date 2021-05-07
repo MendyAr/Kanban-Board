@@ -348,7 +348,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="userEmail">userEmail of the user. Must be logged in</param>
         /// <param name="name">The name of the new board</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response AddBoard(string userEmail, string name)
+        public Response AddBoard(string userEmail, string boardName)
         {
             try
             {
@@ -385,7 +385,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="userEmail">userEmail of the user. Must be logged in</param>
         /// <param name="name">The name of the board</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response RemoveBoard(string userEmail, string creatorEmail, string name)
+        public Response RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
             try
             {

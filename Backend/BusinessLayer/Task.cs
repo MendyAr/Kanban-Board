@@ -1,4 +1,5 @@
-﻿    using System;
+﻿using IntroSE.Kanban.Backend.DataLayer;
+using System;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -19,6 +20,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private DateTime dueDate;
         internal DateTime DueDate { get { return dueDate; } set {
                 ValidateDueDate(value);
+                dTask.DueDate = value;
                 dueDate = value; } }
 
 
@@ -29,7 +31,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             set
             {
                 ValidateTitle(value);
+                dTask.Title = value;
                 title = value;
+
             }
         }
 
@@ -40,18 +44,33 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             set
             {
                 ValidateDescription(value);
+                dTask.Description = value;
                 this.description = value;
             }
         }
 
-        //constructor
-        public Task(int taskId,DateTime creationTime,  string title, string description, DateTime dueDate)
+        private DTask dTask;
+
+        //constructors
+        public Task(int taskId,string boardName, DateTime creationTime,  string title, string description, DateTime dueDate)
         {
             this.taskId = taskId;
             this.creationTime = creationTime;
             DueDate = dueDate;
             Title = title;
             Description = description;
+            dTask = new DTask(taskId, boardName, title, description, creationTime, dueDate);
+            dTask.insert();
+        }
+
+        public Task(DTask dTask)
+        {
+            taskId = dTask.TaskId;
+            creationTime = dTask.CreationTime;
+            dueDate = dTask.DueDate;
+            title = dTask.Title;
+            Description = dTask.Description;
+            dTask.persist = true;
         }
 
         //functions

@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
     internal abstract class DalController
     {
         protected readonly string _connectionString;
-        private readonly string _tableName;
+        protected readonly string _tableName;
         public DalController(string tableName)
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));

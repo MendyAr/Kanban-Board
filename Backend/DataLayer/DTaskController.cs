@@ -8,13 +8,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DTaskController : DalController
     {
-        private static string _taskIdColumnName = "TaskId";
-        private static string _creationTimeColumnName = "CreationTime";
-        private static string _titleColumnName = "Title";
-        private static string _descriptionColumnName = "Description";
-        private static string _dueDateColumnName = "DueDate";
-        private static string _assigneeColumnName = "Assignee";
-
         public DTaskController() : base("Task")
         {}
         protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
@@ -38,10 +31,16 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName} ({_taskIdColumnName} ,{_creationTimeColumnName}, {_titleColumnName}, {_descriptionColumnName}, {_dueDateColumnName}, {_assigneeColumnName}) VALUES ({tesk.TaskId}, {tesk.CreationTime.ToString()}, {tesk.Title}, {tesk.Description}, {tesk.DueDate.ToString()}, {tesk.Assignee})" 
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{tesk.TaskId}, @{tesk.CreationTime.ToString()}, @{tesk.Title}, @{tesk.Description}, @{tesk.DueDate.ToString()}, @{tesk.Assignee})" 
                 };
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter(tesk.TaskId.ToString(), tesk.TaskId));
+                    command.Parameters.Add(new SQLiteParameter(tesk.CreationTime.ToString(), tesk.CreationTime));
+                    command.Parameters.Add(new SQLiteParameter(tesk.Title, tesk.Title));
+                    command.Parameters.Add(new SQLiteParameter(tesk.Description, tesk.Description));
+                    command.Parameters.Add(new SQLiteParameter(tesk.DueDate.ToString(), tesk.DueDate));
+                    command.Parameters.Add(new SQLiteParameter(tesk.Assignee, tesk.Assignee));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }

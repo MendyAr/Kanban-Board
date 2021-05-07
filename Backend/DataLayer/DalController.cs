@@ -16,14 +16,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this._tableName = tableName;
         }
 
-        public bool Update(long id, string attributeName, string attributeValue)
+        public bool Update(int id, string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
-                {
+                SQLiteCommand command = new SQLiteCommand{
                     Connection = connection,
+                    // make madeCommand not abstract 
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={id}"
                 };
                 try

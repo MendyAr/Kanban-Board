@@ -82,7 +82,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             } }
 
 
-        public DTask(int taskId, string boardName, string title, string description, DateTime creationTime, DateTime dueDate, string assignee) : base(new DTaskController())
+        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee) : base(new DTaskController())
         {
             this.taskId = taskId;
             Title = title;

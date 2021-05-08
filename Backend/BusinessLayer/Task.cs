@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private static int MAX_TITLE_LENGTH = 50;
         private static int MIN_DESCRIPTION_LENGTH = 0;
         private static int MAX_DESCRIPTION_LENGTH = 300;
-
+        
         private readonly int taskId;
         internal int TaskId { get { return taskId; } }
 
@@ -65,6 +65,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Description = description;
             dTask = new DTask(taskId, creationTime, title, description, dueDate, Assignee) ;
             dTask.insert();
+            dTask.Persist = true;
         }
 
         public Task(DTask dTask)

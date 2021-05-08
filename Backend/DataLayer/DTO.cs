@@ -9,12 +9,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
     internal abstract class DTO
     {
         public string ID { get; set; }
-        public bool persist;
+        public bool Persist { get; set; }
+        
         protected DalController _controller;
         protected DTO(DalController controller)
         {
             _controller = controller;
-            persist = false;
+            Persist= false;
         }
 
         public abstract void insert(); // insert a new line to matching table

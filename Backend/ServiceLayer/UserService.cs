@@ -17,6 +17,35 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         //functions
 
+
+        ///<summary>This method loads the users data from the persistance </summary>
+        internal Response LoadData()
+        {
+            try
+            {
+                uc.LoadData();
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
+    }
+
+        ///<summary>Removes all persistent users data.</summary>
+        internal Response DeleteData()
+        {
+            try
+            {
+                uc.DeleteData();
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
+        }
+
         ///<summary>Registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>

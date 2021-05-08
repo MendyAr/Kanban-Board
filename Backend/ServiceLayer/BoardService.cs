@@ -22,6 +22,34 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         //methods 
 
+        ///<summary>This method loads all the boards and tasks data from the persistance </summary>
+        internal Response LoadData()
+        {
+            try
+            {
+                bc.LoadData();
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
+        }
+
+        ///<summary>Removes all the boards and tasks data from the persistence.</summary>
+        internal Response DeleteData()
+        {
+            try
+            {
+                bc.DeleteData();
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
+        }
+
         /// <summary>
         /// registers the user at the board controller
         /// </summary>
@@ -260,7 +288,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <summary>
         /// Adds a board created by another user to the logged-in user. 
         /// </summary>
-        /// <param name="userEmail">userEmail of the current user. Must be logged in</param>
+        /// <param name="userEmail">userEmail of the current user.</param>
         /// <param name="creatorEmail">userEmail of the board creator</param>
         /// <param name="boardName">The name of the new board</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
@@ -302,11 +330,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <returns>Response holding: IList containing all of the user's 'In Progress' tasks if succeeded, a message detailing the error if occured</returns>
-        internal Response<IList<Task>> InProgressTasks(string userEmail)
+        internal Response<IList<Task>> InProgressTasks(string usereEmail)
         {
             try
             {
-                IList<BTask> inProgress = bc.InProgressTasks(userEmail);
+                IList<BTask> inProgress = bc.InProgressTasks(usereEmail);
                 return Response<IList<Task>>.FromValue(translateList(inProgress));
             }
             catch (Exception e)
@@ -318,14 +346,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <summary>
         /// Assigns a task to a user
         /// </summary>
-        /// <param name="userEmail">userEmail of the current user. Must be logged in</param>
+        /// <param name="userEmail">userEmail of the current user.</param>
         /// <param name="creatorEmail">userEmail of the board creator</param>
         /// <param name="boardName">The name of the board</param>
         /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
         /// <param name="taskId">The task to be updated identified task ID</param>        
         /// <param name="emailAssignee">userEmail of the user to assign to task to</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        internal Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
             try
             {
@@ -354,7 +382,25 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 return Response<IList<String>>.FromError(e.Message);
             }
+
         }
+
+        /// <summary>
+        /// Returns the list of board of a user. The function returns all the board names the user created or joined.
+        /// </summary>
+        /// <param name="userEmail">The userEmail of the user. Must be logged-in.</param>
+        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
+        internal Response<IList<String>> GetBoardNames(string userEmail)
+        {
+            try
+            {
+                IList<String> boardNames = bc.GetBoardNames(userEmail);
+                return Response<IList<String>>.FromValue(boardNames);
+            }
+            catch (Exception e)
+            {
+                return Response<IList<String>>.FromError(e.Message);
+            }
 
         /// <summary>
         /// translates a list containing tasks of business layer to a list containing the service layer form of the same tasks

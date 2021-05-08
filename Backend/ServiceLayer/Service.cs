@@ -14,16 +14,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private readonly UserService UserS;
         private readonly BoardService BoardS;
         private string connectedEmail;
-        public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
+        private string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
         public Service()
         {
-            //LoadData();
             UserS = new UserService();
             BoardS = new BoardService();
-
+            LoadData();
+            
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Kanban.app booted");
@@ -35,13 +35,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
-            throw new NotImplementedException();
+            UserS.LoadData();
+            BoardS.LoadData();
         }
 
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            throw new NotImplementedException();
+            UserS.DeleteData();
+            BoardS.DeleteData();
         }
 
         ///<summary>This method registers a new user to the system.</summary>

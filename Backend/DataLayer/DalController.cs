@@ -136,5 +136,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return res > 0;
         }
 
+        protected abstract bool insert(DTO dTO);
+
     }
 }

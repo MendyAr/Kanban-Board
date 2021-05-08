@@ -376,7 +376,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                validateLogin(userEmail);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted JoinBoard({userEmail}, {creatorEmail}, {boardName})");
+                return new Response($"Can't operate -  User '{userEmail}' is not logged in");
+            }
+            return BoardS.JoinBoard(userEmail, creatorEmail, boardName);
         }
 
         /// <summary>
@@ -421,8 +434,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (InvalidOperationException)
             {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted InProgressTasks(" + userEmail + ")");
-                return Response<IList<Task>>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted InProgressTasks({userEmail})");
+                return Response<IList<Task>>.FromError($"Can't operate -  User '{userEmail}' is not logged in");
             }
             return BoardS.InProgressTasks(userEmail);
         }
@@ -439,7 +452,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
-            throw new NotImplementedException();
+            try
+            {
+                validateLogin(userEmail);
+            }
+            catch (NullReferenceException)
+            {
+                return new Response("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted AssignTask({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {emailAssignee})");
+                return new Response($"Can't operate -  User '{userEmail}' is not logged in");
+            }
+            return BoardS.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
         }
 
         /// <summary>
@@ -449,7 +475,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
         public Response<IList<String>> GetBoardNames(string userEmail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                validateLogin(userEmail);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<IList<String>>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted GetBoardNames({userEmail})");
+                return Response<IList<String>>.FromError($"Can't operate -  User '{userEmail}' is not logged in");
+            }
+            return BoardS.GetBoardNames(userEmail);
         }
 
         /// <summary>

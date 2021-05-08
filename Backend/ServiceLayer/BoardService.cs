@@ -264,9 +264,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="creatorEmail">userEmail of the board creator</param>
         /// <param name="boardName">The name of the new board</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response JoinBoard(string userEmail, string creatorEmail, string boardName)
+        internal Response JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bc.JoinBoard(userEmail, creatorEmail, boardName);
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
         }
 
         /// <summary>
@@ -280,7 +288,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                bc.RemoveBoard(userEmail, boardName);
+                bc.RemoveBoard(creatorEmail, boardName);
                 return new Response();
             }
             catch (Exception e)
@@ -319,7 +327,33 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bc.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
+        /// </summary>
+        /// <param name="userEmail">The userEmail of the user. Must be logged-in.</param>
+        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
+        public Response<IList<String>> GetBoardNames(string userEmail)
+        {
+            try
+            {
+                IList<String> boardNames = bc.GetBoardNames(userEmail);
+                return Response<IList<String>>.FromValue(boardNames);
+            }
+            catch (Exception e)
+            {
+                return Response<IList<String>>.FromError(e.Message);
+            }
         }
 
         /// <summary>

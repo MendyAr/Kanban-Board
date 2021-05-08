@@ -49,6 +49,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
+        private string assignee;
+
+        public string Assignee { get => assignee; set => assignee = value; }
+
         private DTask dTask;
 
         //constructors
@@ -59,7 +63,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             DueDate = dueDate;
             Title = title;
             Description = description;
-            dTask = new DTask(taskId, boardName, title, description, creationTime, dueDate);
+            dTask = new DTask(taskId, creationTime, title, description, dueDate, Assignee) ;
             dTask.insert();
         }
 

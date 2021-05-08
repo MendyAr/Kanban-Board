@@ -384,12 +384,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (NullReferenceException)
             {
-                return Response<int>.FromError("Can't operate -  Please log in first");
+                return new Response("Can't operate -  Please log in first");
             }
             catch (InvalidOperationException)
             {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted JoinBoard(" + userEmail + "," + creatorEmail + "," + boardName + ")");
-                return Response<int>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted JoinBoard({userEmail}, {creatorEmail}, {boardName})");
+                return new Response($"Can't operate -  User '{userEmail}' is not logged in");
             }
             return BoardS.JoinBoard(userEmail, creatorEmail, boardName);
         }
@@ -436,8 +436,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (InvalidOperationException)
             {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted InProgressTasks(" + userEmail + ")");
-                return Response<IList<Task>>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted InProgressTasks({userEmail})");
+                return Response<IList<Task>>.FromError($"Can't operate -  User '{userEmail}' is not logged in");
             }
             return BoardS.InProgressTasks(userEmail);
         }
@@ -460,12 +460,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (NullReferenceException)
             {
-                return Response<int>.FromError("Can't operate -  Please log in first");
+                return new Response("Can't operate -  Please log in first");
             }
             catch (InvalidOperationException)
             {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AssignTask(" + userEmail + "," + creatorEmail + "," + boardName + "," + columnOrdinal + "," + taskId + "," + emailAssignee + ")");
-                return Response<int>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted AssignTask({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {emailAssignee})");
+                return new Response($"Can't operate -  User '{userEmail}' is not logged in");
             }
             return BoardS.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
         }
@@ -487,8 +487,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (InvalidOperationException)
             {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetBoardNames(" + userEmail + ")");
-                return Response<IList<String>>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{ConnectedEmail}' attempted GetBoardNames({userEmail})");
+                return Response<IList<String>>.FromError($"Can't operate -  User '{userEmail}' is not logged in");
             }
             return BoardS.GetBoardNames(userEmail);
         }

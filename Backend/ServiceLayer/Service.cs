@@ -14,16 +14,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private readonly UserService UserS;
         private readonly BoardService BoardS;
         private string connectedEmail;
-        public string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
+        private string ConnectedEmail { get => connectedEmail; set => connectedEmail = value; }
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
         public Service()
         {
-            //LoadData();
             UserS = new UserService();
             BoardS = new BoardService();
-
+            LoadData();
+            
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Kanban.app booted");
@@ -35,13 +35,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
-            throw new NotImplementedException();
+            UserS.LoadData();
+            BoardS.LoadData();
         }
 
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            throw new NotImplementedException();
+            UserS.DeleteData();
+            BoardS.DeleteData();
         }
 
         ///<summary>This method registers a new user to the system.</summary>
@@ -375,7 +377,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                validateLogin(userEmail);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<int>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted JoinBoard(" + userEmail + "," + creatorEmail + "," + boardName + ")");
+                return Response<int>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+            }
+            return BoardS.JoinBoard(userEmail, creatorEmail, boardName);
         }
 
         /// <summary>
@@ -438,7 +453,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
-            throw new NotImplementedException();
+            try
+            {
+                validateLogin(userEmail);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<int>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted AssignTask(" + userEmail + "," + creatorEmail + "," + boardName + "," + columnOrdinal + "," + taskId + "," + emailAssignee + ")");
+                return Response<int>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+            }
+            return BoardS.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
         }
 
         /// <summary>
@@ -448,7 +476,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
         public Response<IList<String>> GetBoardNames(string userEmail)
         {
-            throw new NotImplementedException();
+            try
+            {
+                validateLogin(userEmail);
+            }
+            catch (NullReferenceException)
+            {
+                return Response<IList<String>>.FromError("Can't operate -  Please log in first");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetBoardNames(" + userEmail + ")");
+                return Response<IList<String>>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
+            }
+            return BoardS.GetBoardNames(userEmail);
         }
 
         /// <summary>

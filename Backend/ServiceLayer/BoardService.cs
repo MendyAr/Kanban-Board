@@ -369,7 +369,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <summary>
         /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
         /// </summary>
-        /// <param name="userEmail">The userEmail of the user. Must be logged-in.</param>
+        /// <param name="userEmail">calling user's email</param>
         /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
         public Response<IList<String>> GetBoardNames(string userEmail)
         {
@@ -384,23 +384,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
 
         }
-
-        /// <summary>
-        /// Returns the list of board of a user. The function returns all the board names the user created or joined.
-        /// </summary>
-        /// <param name="userEmail">The userEmail of the user. Must be logged-in.</param>
-        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
-        internal Response<IList<String>> GetBoardNames(string userEmail)
-        {
-            try
-            {
-                IList<String> boardNames = bc.GetBoardNames(userEmail);
-                return Response<IList<String>>.FromValue(boardNames);
-            }
-            catch (Exception e)
-            {
-                return Response<IList<String>>.FromError(e.Message);
-            }
 
         /// <summary>
         /// translates a list containing tasks of business layer to a list containing the service layer form of the same tasks

@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
     internal abstract class DalController
     {
         protected readonly string _connectionString;
-        private readonly string _tableName;
+        protected readonly string _tableName;
         public DalController(string tableName)
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
@@ -16,14 +16,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this._tableName = tableName;
         }
 
-        public bool Update(long id, string attributeName, string attributeValue)
+        public bool Update(int id, string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
-                {
+                SQLiteCommand command = new SQLiteCommand{
                     Connection = connection,
+                    // make madeCommand not abstract 
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={id}"
                 };
                 try
@@ -135,6 +135,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
             return res > 0;
         }
+
+        protected abstract bool insert(DTO dTO);
 
     }
 }

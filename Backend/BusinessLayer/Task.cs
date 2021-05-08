@@ -5,7 +5,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     class Task 
     {
-        //fileds
+        //fields
         private static int MIN_TITLE_LENGTH = 1;
         private static int MAX_TITLE_LENGTH = 50;
         private static int MIN_DESCRIPTION_LENGTH = 0;

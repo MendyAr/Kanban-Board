@@ -25,7 +25,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             get { return title; }
             set
             {
-                if (persist)
+                if (Persist)
                 {
                     _controller.Update(TaskId, _titleColumnName, value);
                 }
@@ -41,7 +41,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             set
             {
 
-                if (persist)
+                if (Persist)
                 {
                     _controller.Update(TaskId, _descriptionColumnName, value);
                 }
@@ -61,7 +61,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             set
             {
 
-                if (persist)
+                if (Persist)
                 {
                     _controller.Update(TaskId, _dueDateColumnName, value.ToString());
                 }
@@ -74,7 +74,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         public string Assignee { get { return assignee; } 
             set
             {
-                if (persist)
+                if (Persist)
                 {
                     _controller.Update(taskId, _assignee, value);
                 }
@@ -86,9 +86,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             this.taskId = taskId;
             Title = title;
-            Description= description;
+            Description = description;
             this.creationTime = creationTime;
-            DueDate= dueDate;
+            DueDate = dueDate;
             Assignee = assignee;
         }
 

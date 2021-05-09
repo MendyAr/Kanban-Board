@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private static int MAX_TITLE_LENGTH = 50;
         private static int MIN_DESCRIPTION_LENGTH = 0;
         private static int MAX_DESCRIPTION_LENGTH = 300;
-
+        
         private readonly int taskId;
         internal int TaskId { get { return taskId; } }
 
@@ -49,6 +49,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
         }
 
+        private string assignee;
+
+        public string Assignee { get => assignee; set => assignee = value; }
+
         private DTask dTask;
 
         //constructors
@@ -59,8 +63,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             DueDate = dueDate;
             Title = title;
             Description = description;
-            dTask = new DTask(taskId, boardName, title, description, creationTime, dueDate);
+            dTask = new DTask(taskId, creationTime, title, description, dueDate, Assignee) ;
             dTask.insert();
+            dTask.Persist = true;
         }
 
         public Task(DTask dTask)

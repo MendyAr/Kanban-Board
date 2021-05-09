@@ -6,10 +6,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     class Task 
     {
         //fields
-        private static int MIN_TITLE_LENGTH = 1;
-        private static int MAX_TITLE_LENGTH = 50;
-        private static int MIN_DESCRIPTION_LENGTH = 0;
-        private static int MAX_DESCRIPTION_LENGTH = 300;
+        private  int MIN_TITLE_LENGTH = 1;
+        private int MAX_TITLE_LENGTH = 50;
+        private int MIN_DESCRIPTION_LENGTH = 0;
+        private int MAX_DESCRIPTION_LENGTH = 300;
         
         private readonly int taskId;
         internal int TaskId { get { return taskId; } }

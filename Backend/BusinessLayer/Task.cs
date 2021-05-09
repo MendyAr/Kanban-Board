@@ -75,7 +75,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             dueDate = dTask.DueDate;
             title = dTask.Title;
             Description = dTask.Description;
-            dTask.persist = true;
+            dTask.Persist = true;
         }
 
         //functions

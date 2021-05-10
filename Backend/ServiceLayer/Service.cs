@@ -39,10 +39,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             Response res = UserS.LoadData();
             if (res.ErrorOccured)
+            {
+                log.Error("Failed to load users data!");
                 return new Response(res.ErrorMessage);
+            }
             res = BoardS.LoadData();
-            if (res.ErrorOccured)
+            if (res.ErrorOccured) 
+            {
+                log.Error("Failed to load boards and tasks data!");
                 return new Response(res.ErrorMessage);
+            }
         }
 
         ///<summary>Removes all persistent data.</summary>
@@ -50,10 +56,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             Response res = UserS.DeleteData();
             if (res.ErrorOccured)
+            {
+                log.Error("Failed to delete users data!");
                 return new Response(res.ErrorMessage);
+            }
             res = BoardS.DeleteData();
             if (res.ErrorOccured)
+            {
+                log.Error("Failed to delete boards and tasks data!");
                 return new Response(res.ErrorMessage);
+            }
         }
 
         ///<summary>This method registers a new user to the system.</summary>

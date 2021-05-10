@@ -8,12 +8,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DTask : DTO
     {
-        private static string _titleColumnName = "Title";
-        private static string _descriptionColumnName = "Description";
-        private static string _dueDateColumnName = "DueDate";
-        private static string _assignee = "Assignee";
-
-
+        
         private readonly int taskId;
         public int TaskId
         { get { return taskId; } }
@@ -27,7 +22,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    _controller.Update(TaskId, _titleColumnName, value);
+                    Update("Title", value);
                 }
                 title = value;
             }
@@ -43,7 +38,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                    _controller.Update(TaskId, _descriptionColumnName, value);
+                   Update("Description", value);
                 }
                 description = value;
             }
@@ -63,7 +58,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                    _controller.Update(TaskId, _dueDateColumnName, value.ToString());
+                    Update("DueDate", value.ToString());
                 }
                 dueDate = value;
             }
@@ -76,13 +71,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    _controller.Update(taskId, _assignee, value);
+                    Update("Assignee", value);
                 }
                 assignee = value;
             } }
 
 
-        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee) : base(new DTaskController())
+        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee) : base(new DTaskController(),)
         {
             this.taskId = taskId;
             Title = title;
@@ -90,11 +85,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this.creationTime = creationTime;
             DueDate = dueDate;
             Assignee = assignee;
-        }
-
-        public override void insert()
-        {
-            _controller.insert(this);
         }
     }
 }

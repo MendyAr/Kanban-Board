@@ -25,17 +25,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
         {
             Name = bColumn.Name;
             Limit = bColumn.Limit;
-            //Tasks = TranslateTasks(bColumn.Tasks); - preferred solution
+            Tasks = TranslateTasks(bColumn.Tasks);// - preferred solution
 
-            //possible solution - start
-            //Tasks = new List<Task>();
-            //foreach (BTask bTask in bColumn.Tasks)
-            //{
-            //    Tasks.Add(new Task(bTask));
-            //}
-            //end
-
-
+            /*
             //should not be here - start
             IList<Task> tasks = new List<Task>();
             foreach (BTask bTask in bColumn.Tasks)
@@ -45,6 +37,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
             //end
 
             Tasks = tasks; 
+            */
         }
 
         private static IList<Task> TranslateTasks(IList<BTask> bTasks)

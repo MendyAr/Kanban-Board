@@ -74,7 +74,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return res > 0;
         }
 
+
         public virtual List<DTO> Select()
+
         {
             List<DTO> results = new List<DTO>();
             using (var connection = new SQLiteConnection(_connectionString))

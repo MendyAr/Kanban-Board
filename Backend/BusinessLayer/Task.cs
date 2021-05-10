@@ -51,20 +51,46 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         private string assignee;
 
-        public string Assignee { get => assignee; set => assignee = value; }
+
+        public string Assignee { get => assignee; set 
+            {
+                dTask.Assignee = value;
+                assignee = value;
+            } }
+
+
+        private string _boardCreator;
+        public string BoardCreator { get => _boardCreator; set
+            {
+                dTask.BoardCreator = value;
+                _boardCreator = value;
+            } }
+
+        private string _boardName;
+        public string BoardName
+        {
+            get => _boardName; set
+            {
+                dTask.BoardName = value;
+                _boardName = value;
+            }
+        }
 
         private DTask dTask;
 
         //constructors
-        public Task(int taskId,string boardName, DateTime creationTime,  string title, string description, DateTime dueDate)
+        public Task(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate,string assignee, string boardCreator, string boardName)
         {
+            dTask = new DTask(taskId, creationTime, title, description, dueDate, assignee, boardCreator, boardName);
             this.taskId = taskId;
             this.creationTime = creationTime;
             DueDate = dueDate;
-            Title = title;
+            Title= title;
             Description = description;
-            dTask = new DTask(taskId, creationTime, title, description, dueDate, Assignee) ;
-            dTask.insert();
+            Assignee = assignee;
+            this._boardCreator = boardCreator;
+            this._boardName = boardName;
+            dTask.Insert();
             dTask.Persist = true;
         }
 
@@ -103,7 +129,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         ///<summary>Validate the propriety of a given title.</summary>
         /// <param name="title">The title given to the Task</param>
         /// <exception cref="ArgumentNullException">Thrown when title is null object </exception> 
-        /// <exception cref="FormatException"> Thrown when the title dont answer are format requairements (empty, longer then 50)</exception>
+        /// <exception cref="FormatException"> Thrown when the title don't answer are format requirements (empty, longer then 50)</exception>
         private void ValidateTitle(string title)
         {
             if(title == null)

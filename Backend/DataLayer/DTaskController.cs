@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -55,6 +53,42 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Close();
                 }
             }      
+        }
+
+        public List<DTO> Select(string creator,string boardName,int taskId)
+
+        {
+            string ID =  taskId + creator + boardName;
+            List<DTO> results = new List<DTO>();
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName};";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        results.Add(ConvertReaderToObject(dataReader));
+
+                    }
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return results;
         }
     }
     

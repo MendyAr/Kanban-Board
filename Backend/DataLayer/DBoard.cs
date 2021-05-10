@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DBoard : DTO
     {
-        private static string CreatorColumnName = "Creator";
-        private static string BoardNameColumnName = "Creator";
-        private static string LimitColumn1Name = "LimitColumn1";
-        private static string LimitColumn2Name = "LimitColumn2";
-        private static string LimitColumn3Name = "LimitColumn3";
+        
         private readonly string _creator;
         public string Creator { get => _creator;}
 
@@ -20,9 +12,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private string _boardName;
         public string BoardName { get => _boardName; set 
             {
-                if (persist)
+
+                if (Persist)
                 {
-                    update(BoardNameColumnName, value);
+                    Update("Name", value);
                 }
                 _boardName = value;
             } }
@@ -33,9 +26,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             get => _limitColumn1; set
             {
-                if (persist)
+                if (Persist)
                 {
-                    update(_limitColumn1, value);
+                    Update("LimitColumn1", value);
                 }
                 _limitColumn1 = value;
             }
@@ -47,9 +40,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             get => _limitColumn2; set
             {
-                if (persist)
+                if (Persist)
                 {
-                    update(_limitColumn2, value);
+                    Update("LimitColumn2", value);
                 }
                 _limitColumn2 = value;
             }
@@ -61,16 +54,16 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             get => _limitColumn3; set
             {
-                if (persist)
+                if (Persist)
                 {
-                    update(_limitColumn3, value);
+                    Update("LimitColumn3", value);
                 }
                 _limitColumn3 = value;
             }
         }
 
 
-        public DBoard (string creator, string boardName,int limitColumn1, int limitColumn2, int limitColumn3) : base(new DBoardController())
+        public DBoard (string creator, string boardName,int limitColumn1, int limitColumn2, int limitColumn3) : base(new DBoardController(),creator + boardName)
         {
             this._creator = creator;
             this._boardName = boardName;
@@ -78,10 +71,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             _limitColumn2 = limitColumn2;
             _limitColumn3 = limitColumn3;
 
-        }
-        public override void insert()
-        {
-            _controller.insert();
         }
     }
 }

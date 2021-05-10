@@ -74,7 +74,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return res > 0;
         }
 
-        protected List<DTO> Select()
+        public List<DTO> Select()
         {
             List<DTO> results = new List<DTO>();
             using (var connection = new SQLiteConnection(_connectionString))

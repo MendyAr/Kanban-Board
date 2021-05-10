@@ -6,7 +6,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-
+using IntroSE.Kanban.Backend.DataLayer.DUserController;
+using IntroSE.Kanban.Backend.DataLayer.DUser;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -15,6 +16,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //fields
 
         private Dictionary<string, User> users; //key - email, value - user of that email
+        private DUserController DUC;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
         private static readonly int PASS_MIN_LENGTH = 4;
@@ -24,11 +26,46 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public UserController()
         {
             users = new Dictionary<string, User>();
+            this.DUC = new DUserController();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
         //methods
+
+        ///<summary>This method loads the users data from the persistance </summary>
+        internal void LoadData()
+        {
+            try
+            {
+                List<DUser> Dusers = DUserController.LoadData();
+                foreach (DUser Duser in Dusers)
+                {
+                    User user = new User(Duser);
+                    users[user.Email] = user;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        ///<summary>Removes all persistent users data.</summary>
+        internal void DeleteData()
+        {
+            try
+            {
+                DUserController.DeleteData();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+
+
 
         ///<summary>Registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>

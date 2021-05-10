@@ -110,6 +110,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             dueDate = dTask.DueDate;
             title = dTask.Title;
             Description = dTask.Description;
+            Assignee = dTask.Assignee;
+            Ordinal = dTask.Ordinal;
+            BoardCreator = dTask.BoardCreator;
+            BoardName = dTask.BoardName;
             dTask.Persist = true;
         }
 

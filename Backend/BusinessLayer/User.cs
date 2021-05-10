@@ -1,4 +1,5 @@
 ﻿using System;
+using IntroSE.Kanban.Backend.DataLayer.DUser;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
@@ -24,7 +25,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             this.email = email;
             this.Password = pass;
         }
-        
+
+        //constructor for Duser objects
+        public User(DUser)
+        {
+            this.email = DUser.Email;
+            this.Password = DUser.Password;
+        }
+
         //methods
 
         /// <summary>validate password with the user saved password.</summary>

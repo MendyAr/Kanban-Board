@@ -1,4 +1,6 @@
-﻿using System.Data.SQLite;
+﻿using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Linq;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -51,6 +53,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
             DColumn result = new DColumn(creator,boardName,ordinal,limit);
             return result;
+        }
+
+        protected override List<DTO> Select()
+        {
+            List<DColumn> columnsList = base.Select().Cast<DColumn>().ToList();
+            List<DTask> tasksList = taskController.Select().Cast<DTask>().ToList();
+
         }
     }
 }

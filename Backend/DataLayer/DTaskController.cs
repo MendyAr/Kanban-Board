@@ -23,18 +23,19 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return result;
         }
 
-        public bool Insert(DTask tesk)
+        public void Insert(DTO dTO)
         {
-            int res = -1;
+            DTask tesk = (DTask)dTO;             
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{tesk.TaskId}, @{tesk.CreationTime.ToString()}, @{tesk.Title}, @{tesk.Description}, @{tesk.DueDate.ToString()}, @{tesk.Assignee})" 
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{tesk.ID},@{tesk.TaskId}, @{tesk.CreationTime.ToString()}, @{tesk.Title}, @{tesk.Description}, @{tesk.DueDate.ToString()}, @{tesk.Assignee})" 
                 };
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter(tesk.ID, tesk.ID));
                     command.Parameters.Add(new SQLiteParameter(tesk.TaskId.ToString(), tesk.TaskId));
                     command.Parameters.Add(new SQLiteParameter(tesk.CreationTime.ToString(), tesk.CreationTime));
                     command.Parameters.Add(new SQLiteParameter(tesk.Title, tesk.Title));
@@ -42,7 +43,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Parameters.Add(new SQLiteParameter(tesk.DueDate.ToString(), tesk.DueDate));
                     command.Parameters.Add(new SQLiteParameter(tesk.Assignee, tesk.Assignee));
                     connection.Open();
-                    res = command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
                 }
                 catch
                 {
@@ -53,9 +54,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Dispose();
                     connection.Close();
                 }
-
-            }
-            return res > 0;
+            }      
         }
     }
     

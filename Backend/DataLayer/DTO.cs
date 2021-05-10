@@ -20,7 +20,7 @@
             ID = id;
         }
 
-        protected void Insert()
+        public void Insert()
         {
             _controller.Insert(this);
         }

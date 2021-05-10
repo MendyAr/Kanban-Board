@@ -23,7 +23,6 @@
         protected void insert()
         {
             _controller.insert(this);
-            ID = id;
         }
 
         protected abstract string buildUpdateSqlSyntax(string[] keys, string attributeName, string attributeValue);

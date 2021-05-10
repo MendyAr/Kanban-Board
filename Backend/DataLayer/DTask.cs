@@ -76,6 +76,20 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 assignee = value;
             } }
 
+        private int _ordinal;
+        public int Ordinal
+        {
+            get => _ordinal; set
+            {
+                if (Persist)
+                {
+                    Update("Ordinal", value);
+                }
+                _ordinal = value;
+            }
+        }
+
+
         private string _boardCreator;
         public string BoardCreator { get => _boardCreator; set
             {
@@ -100,7 +114,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         }
 
 
-        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee, string boardCreator, string boardName) : base(new DTaskController(),boardCreator+boardName+taskId)
+        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(new DTaskController(),boardCreator+boardName+taskId)
         {
             this.taskId = taskId;
             Title = title;
@@ -108,6 +122,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this.creationTime = creationTime;
             DueDate = dueDate;
             Assignee = assignee;
+            Ordinal = ordinal;
             BoardCreator = boardCreator;
             BoardName = boardName;
         }

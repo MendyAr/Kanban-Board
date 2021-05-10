@@ -59,6 +59,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             } }
 
 
+        private int _ordinal;
+        public int  Ordinal { get => _ordinal; set
+            {
+                dTask.Ordinal = value;
+                _ordinal = value;
+            } }
+
+
         private string _boardCreator;
         public string BoardCreator { get => _boardCreator; set
             {
@@ -79,15 +87,16 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private DTask dTask;
 
         //constructors
-        public Task(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate,string assignee, string boardCreator, string boardName)
+        public Task(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate,string assignee,int ordinal, string boardCreator, string boardName)
         {
-            dTask = new DTask(taskId, creationTime, title, description, dueDate, assignee, boardCreator, boardName);
+            dTask = new DTask(taskId, creationTime, title, description, dueDate, assignee,ordinal, boardCreator, boardName);
             this.taskId = taskId;
             this.creationTime = creationTime;
             DueDate = dueDate;
             Title= title;
             Description = description;
             Assignee = assignee;
+            Ordinal = ordinal;
             this._boardCreator = boardCreator;
             this._boardName = boardName;
             dTask.Insert();
@@ -101,6 +110,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             dueDate = dTask.DueDate;
             title = dTask.Title;
             Description = dTask.Description;
+            Assignee = dTask.Assignee;
+            Ordinal = dTask.Ordinal;
+            BoardCreator = dTask.BoardCreator;
+            BoardName = dTask.BoardName;
             dTask.Persist = true;
         }
 

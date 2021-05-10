@@ -20,5 +20,10 @@
             ID = id;
         }
 
+        protected void insert()
+        {
+            _controller.insert(this);
+        }
+
     }
 }

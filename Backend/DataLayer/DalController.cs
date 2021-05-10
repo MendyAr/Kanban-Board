@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this._tableName = tableName;
         }
 
-        public bool Update(int id, string attributeName, string attributeValue)
+        public bool Update(string id, string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -47,7 +47,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return res > 0;
         }
 
-        public bool Update(long id, string attributeName, long attributeValue)
+        public bool Update(string id, string attributeName, long attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -136,7 +136,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return res > 0;
         }
 
-        protected abstract bool insert(DTO dTO);
+        public abstract void Insert(DTO dTO);
 
     }
 }

@@ -59,7 +59,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             List<DColumn> columnsList = base.Select().Cast<DColumn>().ToList();
             List<DTask> tasksList = taskController.Select().Cast<DTask>().ToList();
+            foreach (DTask task in tasksList)
+            {
 
+            }
         }
     }
 }

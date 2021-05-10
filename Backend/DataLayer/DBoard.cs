@@ -62,6 +62,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
+        private DColumn[] columns;
+        public DColumn[] Columns { get => columns; }
 
         public DBoard (string creator, string boardName,int limitColumn1, int limitColumn2, int limitColumn3) : base(new DBoardController(),creator + boardName)
         {
@@ -70,7 +72,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             _limitColumn1 = limitColumn1;
             _limitColumn2 = limitColumn2;
             _limitColumn3 = limitColumn3;
-
+            columns = new DColumn[3];
         }
     }
 }

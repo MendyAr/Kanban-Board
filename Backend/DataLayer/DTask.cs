@@ -76,8 +76,31 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 assignee = value;
             } }
 
+        private string _boardCreator;
+        public string BoardCreator { get => _boardCreator; set
+            {
+                if (Persist)
+                {
+                    Update("BoardCreator", value);
+                }
+                _boardCreator = value;
+            } }
 
-        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee) : base(new DTaskController(),)
+        private string _boardName;
+        public string BoardName
+        {
+            get => _boardName; set
+            {
+                if (Persist)
+                {
+                    Update("BoardName", value);
+                }
+                _boardName = value;
+            }
+        }
+
+
+        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee, string boardCreator, string boardName) : base(new DTaskController(),boardCreator+boardName+taskId)
         {
             this.taskId = taskId;
             Title = title;
@@ -85,6 +108,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this.creationTime = creationTime;
             DueDate = dueDate;
             Assignee = assignee;
+            BoardCreator = boardCreator;
+            BoardName = boardName;
         }
     }
 }

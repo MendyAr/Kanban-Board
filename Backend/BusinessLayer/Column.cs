@@ -10,28 +10,38 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     internal class Column
     {
         //fields
-        private string columnName;
-        private int limit; //ranges from -1 (unlimited) to and positive number (actual limit)
-        private Dictionary<int, Task> column; //key - task's ID
+        private string name;
+        private Dictionary<int, Task> tasks = new Dictionary<int, Task>(); //key - task's ID
+        private int limit = -1; //ranges from -1 (unlimited) to and positive number (actual limit)
 
-        internal string ColumnName { get => columnName;  }
+        internal string Name { get => name; set => name = value; }
         internal int Limit
         {
             get => limit;
             set
             {
-                 if (value != -1 && column.Count > value) 
-                     throw new ArgumentException(columnName);
-                 this.limit = value;
+                 if (value != -1 && tasks.Count > value) 
+                     throw new ArgumentException(Name);
+                 limit = value;
+            }
+        }
+        internal IList<Task> Tasks
+        {
+            get
+            {
+                IList<Task> tasks = new List<Task>();
+                foreach (Task task in this.tasks.Values)
+                {
+                    tasks.Add(task);
+                }
+                return tasks;
             }
         }
 
         //constructors
-        internal Column(string columnName)
+        internal Column(string Name)
         {
-            this.columnName = columnName;
-            this.limit = -1; 
-            this.column = new Dictionary<int, Task>();
+            this.Name = Name;
         }
 
         //methods
@@ -46,12 +56,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="DueDate">Task's due date</param>
         /// <returns>The new task that was created</returns>
         /// <exception cref="OutOfMemoryException">Thrown when column is already at its limit</exception>
-        internal Task AddTask(int taskId, DateTime creationTime, string title, string description, DateTime DueDate) {
+        internal Task AddTask(int taskId, string Assignee, DateTime creationTime, string title, string description, DateTime DueDate) {
             //no need to check that limit != -1 as then the boolean check will always be false anyway
-            if (column.Count == limit)
-                throw new OutOfMemoryException(columnName);
-            column[taskId] = new Task(taskId, creationTime, title, description, DueDate);
-            return column[taskId];
+            if (tasks.Count == limit)
+                throw new OutOfMemoryException(Name);
+            tasks[taskId] = new Task(taskId, Assignee, creationTime, title, description, DueDate);
+            return tasks[taskId];
         }
 
         /// <summary>
@@ -62,9 +72,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         internal void AddTask(Task task)
         {
             //no need to check that limit != -1 as then the boolean check will always be false anyway
-            if (column.Count == limit)
-                throw new OutOfMemoryException(columnName);
-            column[task.TaskId] = task;
+            if (tasks.Count == limit)
+                throw new OutOfMemoryException(Name);
+            tasks[task.TaskId] = task;
         }
 
         /// <summary>
@@ -78,13 +88,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Task removedTask = null;
             try
             {
-                removedTask = column[taskId];
+                removedTask = tasks[taskId];
             }
             catch (KeyNotFoundException)
             {
-                throw new IndexOutOfRangeException(columnName);
+                throw new IndexOutOfRangeException(Name);
             }
-            column.Remove(taskId);
+            tasks.Remove(taskId);
             return removedTask;
         }
 
@@ -98,11 +108,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             try
             {
-                column[taskId].DueDate = DueDate;
+                tasks[taskId].DueDate = DueDate;
             }
             catch (KeyNotFoundException)
             {
-                throw new IndexOutOfRangeException(columnName);
+                throw new IndexOutOfRangeException(Name);
             }
         }
 
@@ -116,11 +126,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             try
             {
-                column[taskId].Title = title;
+                tasks[taskId].Title = title;
             }
             catch (KeyNotFoundException)
             {
-                throw new IndexOutOfRangeException(columnName);
+                throw new IndexOutOfRangeException(Name);
             }
         }
 
@@ -134,26 +144,26 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             try
             {
-                column[taskId].Description = description;
+                tasks[taskId].Description = description;
             }
             catch (KeyNotFoundException)
             {
-                throw new IndexOutOfRangeException(columnName);
+                throw new IndexOutOfRangeException(Name);
             }
         }
 
-        /// <summary>
-        /// Returns all the tasks contained in the column
-        /// </summary>
-        /// <returns>IList of all the tasks in the column</returns>
-        internal IList<Task> GetColumn()
-        {
-            IList<Task> column = new List<Task>();
-            foreach (Task task in this.column.Values)
-            {
-                column.Add(task);
-            }
-            return column;
-        }
+        ///// <summary>
+        ///// Returns all the tasks contained in the column
+        ///// </summary>
+        ///// <returns>IList of all the tasks in the column</returns>
+        //internal IList<Task> GetColumn()
+        //{
+        //    IList<Task> column = new List<Task>();
+        //    foreach (Task task in this.tasks.Values)
+        //    {
+        //        column.Add(task);
+        //    }
+        //    return column;
+        //}
     }
 }

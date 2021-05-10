@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntroSE.Kanban.Backend.DataLayer
+﻿namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DColumn : DTO
     {
@@ -13,14 +7,32 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    _controller.Update()
+                    Update("Creator", value);
                 }
+                _creator = value;
             } }
-        private string _board;
-        private int _ordinal;
-        public DColumn(string creator, string board,string ordinal) :base (new DColumnController, creator + board + ordinal)
-        {
 
+        private string _board;
+        public string Board
+        {
+            get => _board; set
+            {
+                if (Persist)
+                {
+                    Update("Board", value);
+                }
+                _board = value;
+            }
+        }
+
+
+        private readonly int _ordinal;
+        public int Ordinal { get => _ordinal; }
+        public DColumn(string creator, string board,int ordinal) :base (new DColumnController(), creator + board + ordinal)
+        {
+            _creator = creator;
+            _board= board;
+            _ordinal = ordinal;
         }
     }
 }

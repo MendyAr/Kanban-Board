@@ -20,12 +20,21 @@
             ID = id;
         }
 
-        protected void insert()
+        protected void Insert()
         {
-            _controller.insert(this);
+            _controller.Insert(this);
         }
 
-        protected abstract string buildUpdateSqlSyntax(string[] keys, string attributeName, string attributeValue);
+        protected void Update(string attributeName, string attributeValue)
+        {
+            _controller.Update(ID, attributeName, attributeValue);
+        }
+
+        protected void Update(string attributeName, long attributeValue)
+        {
+            _controller.Update(ID, attributeName, attributeValue);
+        }
+
 
     }
 }

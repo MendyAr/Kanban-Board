@@ -27,12 +27,23 @@
 
 
         private readonly int _ordinal;
+
+        private int _limit;
+        public int Limit { get => _limit; set
+            {
+                if (Persist)
+                {
+                    Update("Limit",value);
+                }
+                _limit = value;
+            } }
         public int Ordinal { get => _ordinal; }
-        public DColumn(string creator, string board,int ordinal) :base (new DColumnController(), creator + board + ordinal)
+        public DColumn(string creator, string board,int ordinal, int limit) :base (new DColumnController(), creator + board + ordinal)
         {
             _creator = creator;
             _board= board;
             _ordinal = ordinal;
+            _limit = limit;
         }
     }
 }

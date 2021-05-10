@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
     
     class DColumnController : DalController
     {
+        private DTaskController taskController = new DTaskController();
         public DColumnController() : base("Column")
         {
 
@@ -22,7 +20,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{column.ID}, @{column.Creator}, @{column.Board}, @{column.Ordinal})"
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{column.ID}, @{column.Creator}, @{column.Board}, @{column.Ordinal}, @{column.Limit})"
                 };
                 try
                 {
@@ -30,6 +28,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Parameters.Add(new SQLiteParameter(column.Creator, column.Creator));
                     command.Parameters.Add(new SQLiteParameter(column.Board, column.Board));
                     command.Parameters.Add(new SQLiteParameter(column.Ordinal.ToString(), column.Ordinal));
+                    command.Parameters.Add(new SQLiteParameter(column.Limit.ToString(), column.Limit));
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -47,7 +46,23 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            throw new NotImplementedException();
+            string creator = reader.GetString(1);
+            string boardName = reader.GetString(2);
+            int ordinal = reader.GetInt32(3);
+            int limit = reader.GetInt32(4);
+
+            DColumn result = new DColumn(creator,boardName,ordinal,limit);
+            return result;
+        }
+
+        protected override List<DTO> Select()
+        {
+            List<DColumn> columnsList = base.Select().Cast<DColumn>().ToList();
+            List<DTask> tasksList = taskController.Select().Cast<DTask>().ToList();
+            foreach (DTask task in tasksList)
+            {
+
+            }
         }
     }
 }

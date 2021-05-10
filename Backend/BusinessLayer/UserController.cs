@@ -17,8 +17,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private Dictionary<string, User> users; //key - email, value - user of that email
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
-        private static readonly int PASS_MIN_LENGTH = 4;
-        private static readonly int PASS_MAX_LENGTH = 20;
+        private readonly int PASS_MIN_LENGTH = 4;
+        private readonly int PASS_MAX_LENGTH = 20;
 
         //constructors
         public UserController()

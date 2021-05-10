@@ -23,12 +23,24 @@ namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
 
         internal Column(BColumn bColumn)
         {
-            this.Name = bColumn.ColumnName;
-            this.Limit = bColumn.Limit;
-            this.Tasks = translateTasks(bColumn.Tasks);
+            Name = bColumn.Name;
+            Limit = bColumn.Limit;
+            Tasks = TranslateTasks(bColumn.Tasks);// - preferred solution
+
+            /*
+            //should not be here - start
+            IList<Task> tasks = new List<Task>();
+            foreach (BTask bTask in bColumn.Tasks)
+            {
+                tasks.Add(new Task(bTask));
+            }
+            //end
+
+            Tasks = tasks; 
+            */
         }
 
-        private IList<Task> translateTasks(IList<BTask> bTasks)
+        private static IList<Task> TranslateTasks(IList<BTask> bTasks)
         {
             IList<Task> tasks = new List<Task>();
             foreach (BTask bTask in bTasks)

@@ -22,8 +22,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             UserS = new UserService();
             BoardS = new BoardService();
-            LoadData();
-            
+            Response res = LoadData();
+            if (res.ErrorOccured)
+                throw new Exception(res.ErrorMessage);
+
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Kanban.app booted");
@@ -35,15 +37,23 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
-            UserS.LoadData();
-            BoardS.LoadData();
+            Response res = UserS.LoadData();
+            if (res.ErrorOccured)
+                return new Response(res.ErrorMessage);
+            res = BoardS.LoadData();
+            if (res.ErrorOccured)
+                return new Response(res.ErrorMessage);
         }
 
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            UserS.DeleteData();
-            BoardS.DeleteData();
+            Response res = UserS.DeleteData();
+            if (res.ErrorOccured)
+                return new Response(res.ErrorMessage);
+            res = BoardS.DeleteData();
+            if (res.ErrorOccured)
+                return new Response(res.ErrorMessage);
         }
 
         ///<summary>This method registers a new user to the system.</summary>

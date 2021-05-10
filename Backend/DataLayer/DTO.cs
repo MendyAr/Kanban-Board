@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntroSE.Kanban.Backend.DataLayer
+﻿namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal abstract class DTO
     {
@@ -19,6 +13,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
         }
 
         public abstract void insert(); // insert a new line to matching table
+
+        public void update()
+        {
+
+        }
+
+        protected abstract string buildUpdateSqlSyntax(string[] keys, string attributeName, string attributeValue);
 
     }
 }

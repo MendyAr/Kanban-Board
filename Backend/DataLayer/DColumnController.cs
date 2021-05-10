@@ -44,7 +44,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            throw new NotImplementedException();
+            string creator = reader.GetString(1);
+            string boardName = reader.GetString(2);
+            int ordinal = reader.GetInt32(3);
+            int limit = reader.GetInt32(4);
+
+            DColumn result = new DColumn(creator,boardName,ordinal,limit);
+            return result;
         }
     }
 }

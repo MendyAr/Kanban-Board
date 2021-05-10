@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return result;
         }
 
-        public void Insert(DTO dTO)
+        public override void Insert(DTO dTO)
         {
             DTask tesk = (DTask)dTO;             
             using (var connection = new SQLiteConnection(_connectionString))

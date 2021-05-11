@@ -12,7 +12,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     {
         //fields
         private int taskIdCounter; //will be updated by every task added to the board and so keeping each ID unique
-        private Column[] columns;
+        private IList<Column> columns;
+
+        internal int TaskIdCounter { get => taskIdCounter; }
+        internal IList<string> Columns
+        {
+            get
+            {
+                IList<string> colNames = new List<string>();
+                foreach (Column column in columns)
+                {
+                    colNames.Add(column.Name);
+                }
+                return colNames;
+            }
+        }
 
         //constructor
         /// <summary>
@@ -20,7 +34,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// </summary>
         internal Board()
         {
-            this.columns = new Column[] { new Column("backlog"), new Column("in progress"), new Column("done")};
+            columns = new List<Column>();
+            columns.Insert(0, new Column("backlog"));
+            columns.Insert(1, new Column("in progress")); 
+            columns.Insert(2, new Column("done"));
             taskIdCounter = 0;
         }
 
@@ -33,7 +50,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <returns>name of a column</returns>
         internal string GetColumnName(int columnOrdinal)
         {
-            return columns[columnOrdinal].ColumnName;
+            return columns[columnOrdinal].Name;
         }
 
         /// <summary>

@@ -1,18 +1,18 @@
 ﻿using System;
-using UC = IntroSE.Kanban.Backend.BuisnessLayer.UserController;
-using BUser = IntroSE.Kanban.Backend.BuisnessLayer.User;
+using UC = IntroSE.Kanban.Backend.BusinessLayer.UserController;
+using BUser = IntroSE.Kanban.Backend.BusinessLayer.User;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     internal class UserService
     {
         //fields
-        private UC uc = new UC();
+        private UC uc;
 
         //constructor
-        internal UserService()
+        internal UserService(BusinessLayer.LoginInstance loginInstance)
         {
-            uc = new UC();
+            uc = new UC(loginInstance);
         }
 
         //functions
@@ -73,10 +73,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                BUser loginUser = uc.Login(email, password);
-                User serviceLayerUser = new User(loginUser.Email);
-                Response<User> response = Response<User>.FromValue(serviceLayerUser);
-                return response;             
+                return Response<User>.FromValue(new User(uc.Login(email, password)));
             }
             catch (Exception e)
             {
@@ -84,5 +81,22 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
         }
 
+        /// <summary>        
+        /// Log out an logged in user. 
+        /// </summary>
+        /// <param name="userEmail">The userEmail of the user to log out</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        internal Response Logout(string userEmail)
+        {
+            try
+            {
+                uc.Logout(userEmail);
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
+            }
+        }
     }
 }

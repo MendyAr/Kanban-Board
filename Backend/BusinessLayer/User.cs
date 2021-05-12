@@ -1,7 +1,7 @@
 ﻿using System;
 using IntroSE.Kanban.Backend.DataLayer.DUser;
 
-namespace IntroSE.Kanban.Backend.BuisnessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     internal class User
     {

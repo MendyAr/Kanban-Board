@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IntroSE.Kanban.Backend.BuisnessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     /// <summary>
     /// Class Column stores tasks and allows column operations and manipulation.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using BColumn = IntroSE.Kanban.Backend.BuisnessLayer.Column;
-using BTask = IntroSE.Kanban.Backend.BuisnessLayer.Task;
+using BColumn = IntroSE.Kanban.Backend.BusinessLayer.Column;
+using BTask = IntroSE.Kanban.Backend.BusinessLayer.Task;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {

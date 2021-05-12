@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BBoard = IntroSE.Kanban.Backend.BuisnessLayer.Board;
+using BBoard = IntroSE.Kanban.Backend.BusinessLayer.Board;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {

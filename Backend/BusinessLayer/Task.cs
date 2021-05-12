@@ -1,7 +1,7 @@
 ﻿using IntroSE.Kanban.Backend.DataLayer;
 using System;
 
-namespace IntroSE.Kanban.Backend.BuisnessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     class Task 
     {

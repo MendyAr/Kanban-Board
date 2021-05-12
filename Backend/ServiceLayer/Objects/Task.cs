@@ -21,7 +21,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.emailAssignee = emailAssignee;
         }
 
-        internal Task(BuisnessLayer.Task task)
+        internal Task(BusinessLayer.Task task)
         {
             this.Id = task.TaskId;
             this.CreationTime = task.CreationTime;

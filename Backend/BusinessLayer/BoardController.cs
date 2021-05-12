@@ -5,7 +5,7 @@ using log4net.Config;
 using System.Reflection;
 using System.IO;
 
-namespace IntroSE.Kanban.Backend.BuisnessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     /// <summary>
     /// A collection of all the boards in the system. Manages operationg within specific boards and general board related checks
@@ -16,12 +16,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         //fields
         private Dictionary<string, Dictionary<string, Board>> boards; //first key is userEmail , second key will be the board name
         private Dictionary<string, HashSet<string>> userBoards; //first key is userEmail, second key is a set of all the boards he is a member of
+        private LoginInstance loginInstance;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
-        internal BoardController()
+        internal BoardController(LoginInstance loginInstance)
         {
             boards = new Dictionary<string, Dictionary<string, Board>>();
+            this.loginInstance = loginInstance;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
@@ -44,8 +46,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <returns>IList detailing all the board which the user is a member of</returns>
+        /// <remarks>call validateLogin</remarks>
         public IList<String> GetBoardNames(string userEmail)
         {
+            validateLogin(userEmail, $"GetBoardNames({userEmail})");
             List<String> boards = new List<string>();
             foreach(String board in userBoards[userEmail])
             {
@@ -60,8 +64,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="userEmail">the calling user's email</param>
         /// <param name="boardName">the new board name</param>
         /// <exception cref="ArgumentException">thrown when the board already exists for that user</exception>
+        /// <remarks>call validateLogin</remarks>
         internal void AddBoard(string userEmail, string boardName)
         {
+            validateLogin(userEmail, $"AddBoard({userEmail}, {boardName})");
             if (boards[userEmail].ContainsKey(boardName))
             {
                 log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - already exists");
@@ -78,9 +84,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="userEmail">the calling user's email</param>
         /// <param name="creatorEmail">board's creator - idetifier</param>
         /// <param name="boardName">board's name - identifier</param>
-        /// <
+        /// <remarks>calls validateLogin</remarks>
         internal void JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
+            validateLogin(userEmail, $"JoinBoard({userEmail}, {creatorEmail}, {boardName})");
             if (userBoards[userEmail].Contains($"{creatorEmail}:{boardName}"))
             {
                 throw new Exception($"{userEmail} already memeber of {creatorEmail}:{boardName}");
@@ -96,12 +103,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="email">the calling user's email</param>
         /// <param name="boardName">the deleted board's name</param>
         /// <exception cref="ArgumentException">thrown when trying to delete a non-existing board</exception>
-        /// <remarks>calls checkBoardExistance</remarks>
-        internal void RemoveBoard(string email, string boardName)
+        /// <remarks>calls validateLogin, checkBoardExistance</remarks>
+        internal void RemoveBoard(string userEmail, string boardName)
         {
-            checkBoardExistance(email, boardName, "remove");
-            boards[email].Remove(boardName);
-            log.Info("SUCCESSFULLY removed '" + email + ":" + boardName + "'");
+            validateLogin(userEmail, $"RemoveBoard({userEmail}, {boardName})");
+            checkBoardExistance(userEmail, boardName, "remove");
+            boards[userEmail].Remove(boardName);
+            log.Info($"SUCCESSFULLY removed '{userEmail}:{boardName}'");
         }
 
         /// <summary>
@@ -131,9 +139,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="columnOrdinal">the column</param>
         /// <param name="limit">new and updated limit</param>
         /// <exception cref="ArgumentException">thrown if the new limit isn't legal, if it's impossible to set the limit due to column complications</exception>
-        /// <remarks>calls checkColumnOrdinal, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
         internal void LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
+            validateLogin(userEmail, $"LimitColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {limit})");
             checkMembership(userEmail, creatorEmail, boardName, "LimitColumn");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
@@ -184,9 +193,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <returns></returns>
         /// <exception cref="ArgumentException">throw if one of the task's arguments isn't legal</exception>
         /// <exception cref="OutOfMemoryException">thrown if the column is already at its limit</exception>
-        /// <remarks>calls checkMembership, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin, checkMembership, checkBoardExistance</remarks>
         internal Task AddTask(string userEmail, string creatorEmail, string boardName, DateTime creationTime, string title, string description, DateTime DueDate)
         {
+            validateLogin(userEmail, $"AddTask({userEmail}, {creatorEmail}, {boardName}, {title}");
             checkMembership(userEmail, creatorEmail, boardName, "AddTask");
             checkBoardExistance(creatorEmail, boardName, "access");
             try
@@ -218,9 +228,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="emailAssignee">userEmail of the user to assign to task to</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new DueDate isn't legal</exception>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
-        public void AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
+        internal void AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
+            validateLogin(userEmail, $"AssignTask({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {emailAssignee})");
             checkMembership(userEmail, creatorEmail, boardName, "AssignTask");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
@@ -257,9 +268,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="DueDate">new and updated due date</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new DueDate isn't legal</exception>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime DueDate)
         {
+            validateLogin(userEmail, $"UpdateTaskDueDate({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {DueDate})");
             checkMembership(userEmail, creatorEmail, boardName, "UpdateTaskDueDate");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
@@ -296,9 +308,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="title">new and updated title</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new title isn't legal</exception>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskTitle(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string title)
         {
+            validateLogin(userEmail, $"UpdateTaskTitle({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {title})");
             checkMembership(userEmail, creatorEmail, boardName, "UpdateTaskTitle");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
@@ -335,9 +348,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="description">new and updated description</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new description isn't legal</exception>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
         internal void UpdateTaskDescription(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string description)
         {
+            validateLogin(userEmail, $"UpdateTaskDescription({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {description})");
             checkMembership(userEmail, creatorEmail, boardName, "UpdateTaskDescription");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
@@ -373,9 +387,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="taskId">task's ID</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to advance a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if next column is at it's limit</exception>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
         internal void AdvanceTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
+            validateLogin(userEmail, $"AdvanceTask({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId})");
             checkMembership(userEmail, creatorEmail, boardName, "AdvanceTask");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
@@ -423,9 +438,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <returns>IList of the user's 'In Progress' tasks</returns>
-        /// <remarks>calls concatLists</remarks>
+        /// <remarks>calls validateLogin, concatLists</remarks>
         internal IList<Task> InProgressTasks(string userEmail)
         {
+            validateLogin(userEmail, $"InProgressTasks({userEmail})");
             IList<Task> inProgress = new List<Task>();
             foreach (String board in userBoards[userEmail])
             {
@@ -495,6 +511,19 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (!userBoards[userEmail].Contains($"{creatorEmail}:{boardName}")) {
                 log.Warn($"ACCESS VIOLATION - '{method}' - {userEmail} is not a member of '{creatorEmail}:{boardName}'");
                 throw new AccessViolationException($"{userEmail} is not a member of '{creatorEmail}:{boardName}'");
+            }
+        }
+
+        private void validateLogin(string userEmail, string attempt)
+        {
+            try
+            {
+                loginInstance.ValidateLogin(userEmail);
+            }
+            catch (InvalidOperationException e)
+            {
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{loginInstance.ConnectedEmail}' attempted '{attempt}'");
+                throw new InvalidOperationException(e.Message);
             }
         }
     }

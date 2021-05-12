@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
-using BC = IntroSE.Kanban.Backend.BuisnessLayer.BoardController;
-using BTask = IntroSE.Kanban.Backend.BuisnessLayer.Task;
+using BC = IntroSE.Kanban.Backend.BusinessLayer.BoardController;
+using BTask = IntroSE.Kanban.Backend.BusinessLayer.Task;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -15,9 +15,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private BC bc;
 
         //constructors
-        internal BoardService()
+        internal BoardService(BusinessLayer.LoginInstance loginInstance)
         {
-            bc = new BC();
+            bc = new BC(loginInstance);
         }
 
         //methods 

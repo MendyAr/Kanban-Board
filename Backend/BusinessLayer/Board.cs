@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IntroSE.Kanban.Backend.BuisnessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     /// <summary>
     /// Contains 3 columns: Backlog, In Progress, Done

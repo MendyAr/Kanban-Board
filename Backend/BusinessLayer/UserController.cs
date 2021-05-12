@@ -9,13 +9,14 @@ using System.Text.RegularExpressions;
 using IntroSE.Kanban.Backend.DataLayer.DUserController;
 using IntroSE.Kanban.Backend.DataLayer.DUser;
 
-namespace IntroSE.Kanban.Backend.BuisnessLayer
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     class UserController
     {
         //fields
 
         private Dictionary<string, User> users; //key - email, value - user of that email
+        private LoginInstance loginInstance;
         private DUserController DUC;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
@@ -23,9 +24,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private readonly int PASS_MAX_LENGTH = 20;
 
         //constructors
-        public UserController()
+        public UserController(LoginInstance loginInstance)
         {
             users = new Dictionary<string, User>();
+            this.loginInstance = loginInstance;
             this.DUC = new DUserController();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
@@ -103,23 +105,24 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <summary>
         /// Log in an existing user
         /// </summary>
-        /// <param name="email">The email address of the user to login</param>
+        /// <param name="userEmail">The email address of the user to login</param>
         /// <param name="password">The password of the user to login</param>
         /// <returns cref="User">The User that logged in.</returns>
         /// <exception cref="Exception">thrown when a user with this email doesn't exist or when the password is incorrect.</exception>
-        internal User Login(string email, string password)
+        internal User Login(string userEmail, string password)
         {
-            if (users.ContainsKey(email))
+            loginInstance.Login(userEmail);
+            if (users.ContainsKey(userEmail))
             {
-                User user = users[email];
+                User user = users[userEmail];
                 if (user.validatePassword(password))
                 {
-                    log.Info("login successfully!");
+                    log.Info("SUCCESSFULLY logged in: '" + userEmail + "'");
                     return user;
                 }
-
             }
-            log.Info("Failed to login!");
+            loginInstance.Logout(userEmail);
+            log.Warn($"FAILED log in attempt: '{userEmail}'");
             throw new Exception("Email or Password is invalid");
         }
 
@@ -142,6 +145,23 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (!(addr.Address == email & emailValidator.IsValid(email) & validEmail))
             {
                 throw new Exception("This email address is invalid, please check for spellMistakes");
+            }
+        }
+
+        /// <summary>
+        /// Log out an logged in user. 
+        /// </summary>
+        /// <param name="userEmail">The userEmail of the user to log out</param>
+        internal void Logout(string userEmail)
+        {
+            try
+            {
+                loginInstance.Logout(userEmail);
+                log.Info($"SUCCESSFULLY logged out: '{userEmail}'");
+            }
+            catch (Exception e)
+            {
+                log.Info($"FAILED to logout: '{userEmail}' tried to log out but wasn't logged in");
             }
         }
 

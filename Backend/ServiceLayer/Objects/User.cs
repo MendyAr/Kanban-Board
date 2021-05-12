@@ -1,4 +1,6 @@
-﻿namespace IntroSE.Kanban.Backend.ServiceLayer
+﻿using BUser = IntroSE.Kanban.Backend.BusinessLayer.User;
+
+namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public struct User
     {
@@ -7,6 +9,11 @@
         internal User(string email)
         {
             this.Email = email;
+        }
+
+        internal User(BUser bUser)
+        {
+            Email = bUser.Email;
         }
     }
 }

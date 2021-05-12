@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BBoard = IntroSE.Kanban.Backend.BuisnessLayer.Board;
 
-namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
+namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public struct Board
     {

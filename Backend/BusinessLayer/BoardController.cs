@@ -166,7 +166,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             checkBoardExistance(creatorEmail, boardName, "access");
             try
             {
-                Task task = boards[creatorEmail][boardName].AddTask(userEmail, creationTime, title, description, DueDate);
+                Task task = boards[creatorEmail][boardName].AddTask(creationTime, title, description, DueDate, userEmail, creatorEmail, boardName);
                 log.Info($"SUCCESSFULLY added task '{task.TaskId}' to '{creatorEmail}:{boardName}' by '{userEmail}'");
                 return task;
             }
@@ -198,6 +198,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             validateLogin(userEmail, $"AssignTask({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {taskId}, {emailAssignee})");
             checkMembership(userEmail, creatorEmail, boardName, "AssignTask");
+            checkMembership(emailAssignee, creatorEmail, boardName, "AssignTask");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
             if (columnOrdinal == 2)
@@ -215,10 +216,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 log.Warn($"FAILED to assign task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' to '{emailAssignee}' by '{userEmail}' - Task not found");
                 throw new ArgumentException($"Cannot assign task: A task with ID '{taskId}' does not exist in column '{e.Message}' of board '{creatorEmail}:{boardName}'");
             }
-            catch (Exception e)
+            catch (InvalidOperationException)
             {
-                log.Warn($"FAILED to assign task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' to '{emailAssignee}' by '{userEmail}' - Failed at Task: {e.Message}");
-                throw new ArgumentException($"Cannot update task: {e.Message}");
+                log.Warn($"FAILED to assign task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' to '{emailAssignee}' by '{userEmail}' - user is not the assignee");
+                throw new InvalidOperationException($"Cannot update task: You are not the assignee of the task");
             }
         }
 
@@ -254,6 +255,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Task not found");
                 throw new ArgumentException($"Cannot update task: A task with ID '{taskId}' does not exist in column '{e.Message}' of board '{creatorEmail}:{boardName}'");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - user is not the assignee");
+                throw new InvalidOperationException($"Cannot update task: You are not the assignee of the task");
             }
             catch (Exception e)
             {
@@ -295,6 +301,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Task not found");
                 throw new ArgumentException($"Cannot update task: A task with ID '{taskId}' does not exist in column '{e.Message}' of board '{creatorEmail}:{boardName}'");
             }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - user is not the assignee");
+                throw new InvalidOperationException($"Cannot update task: You are not the assignee of the task");
+            }
             catch (Exception e)
             {
                 log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Failed at Task: {e.Message}");
@@ -334,6 +345,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Task not found");
                 throw new ArgumentException($"Cannot update task: A task with ID '{taskId}' does not exist in column '{e.Message}' of board '{creatorEmail}:{boardName}'");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - user is not the assignee");
+                throw new InvalidOperationException($"Cannot update task: You are not the assignee of the task");
             }
             catch (Exception e)
             {
@@ -378,6 +394,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 log.Warn($"FAILED to advance task '{taskId}' from '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Column '{creatorEmail}:{boardName}[{columnOrdinal + 1}]' is currently at its limit");
                 throw new OutOfMemoryException($"Cannot advance task: Column '{e.Message}' of board '{creatorEmail}:{boardName}' is currently at its limit");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"FAILED to advance task '{taskId}' from '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - user is not the assignee");
+                throw new InvalidOperationException($"Cannot advance task: You are not the assignee of the task");
             }
         }
 

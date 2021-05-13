@@ -389,7 +389,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="boardName">board's name - identifier</param>
         /// <param name="columnOrdinal">column index</param>
         /// <returns>Requested column</returns>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
         internal Column GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
             validateLogin(userEmail, $"GetColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal})");
@@ -397,6 +397,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
             return boards[userEmail][boardName].GetColumn(columnOrdinal);
+        }
+
+        /// <summary>
+        /// Finds and returns specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <returns>Requested Board</returns>
+        /// <remarks>calls validateLogin checkMembership, checkBoardExistance</remarks>
+        internal Board GetBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            validateLogin(userEmail, $"GetBoard({userEmail}, {creatorEmail}, {boardName})");
+            checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
+            checkBoardExistance(creatorEmail, boardName, "access");
+            return boards[userEmail][boardName];
         }
 
         /// <summary>

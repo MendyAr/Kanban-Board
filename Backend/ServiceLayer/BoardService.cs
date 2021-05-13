@@ -225,6 +225,25 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
+        /// Retrieves specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <returns>Response holding: ServiceLayer.Board if succeeded, message detailing error if occured</returns>
+        internal Response<Board> GetBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            try
+            {
+                return Response<Board>.FromValue(new Board(creatorEmail, boardName, bc.GetBoard(userEmail, creatorEmail, boardName)));
+            }
+            catch (Exception e)
+            {
+                return Response<Board>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
         /// creates a new board for the user
         /// </summary>
         /// <param name="userEmail">calling user's email</param>

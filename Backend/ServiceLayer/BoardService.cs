@@ -91,47 +91,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
-        /// gets the limit of a specific column in one of the user's boards
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">email of the board creator - identifier</param>
-        /// <param name="boardName">name of the board - identifier</param>
-        /// <param name="columnOrdinal">number representing a column</param>
-        /// <returns>Response holding: limit if succeeded, message detailing error if occured</returns>
-        internal Response<int> GetColumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
-        {
-            try
-            {
-                int ColumnLimit= bc.GetColumnLimit(userEmail, creatorEmail, boardName, columnOrdinal);
-                return Response<int>.FromValue(ColumnLimit);
-            }
-            catch (Exception e)
-            {
-                return Response<int>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Returns the column's (represented by columnOrdinal) name of a board if such a board exists
-        /// </summary>
-        /// <param name="userEmail"></param>
-        /// <param name="creatorEmail">email of the board creator - identifier</param>
-        /// <param name="boardName">name of the board - identifier</param>
-        /// <param name="columnOrdinal"></param>
-        /// <returns>response holding: column name if succeeded, message detailing error if occured</returns>
-        internal Response<string> GetColumnName(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
-        {
-            try
-            {
-                return Response<string>.FromValue(bc.GetColumnName(userEmail, creatorEmail, boardName, columnOrdinal));
-            }
-            catch (Exception e)
-            {
-                return Response<string>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
         /// Adds new task to a user's board
         /// </summary>
         /// <param name="userEmail">user's email</param>
@@ -246,23 +205,22 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
         
         /// <summary>
-        /// returns all the tasks in a specific column of a board
+        /// Retrieves specific column of a specific board
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">email of the board creator - identifier</param>
-        /// <param name="boardName">name of the board - identifier</param>
-        /// <param name="columnOrdinal">column name</param>
-        /// <returns>Response holding: IList<ServiceLayer.Task> if succeeded, message detailing error if occured</returns>
-        internal Response<IList<Task>> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <param name="columnOrdinal">column index</param>
+        /// <returns>Response holding: ServiceLayer.Column if succeeded, message detailing error if occured</returns>
+        internal Response<Column> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
             try
             {
-                IList<BTask> column = bc.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
-                return Response<IList<Task>>.FromValue(translateList(column));
+                return Response<Column>.FromValue(new Column(bc.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal)));
             }
             catch (Exception e)
             {
-                return Response<IList<Task>>.FromError(e.Message);
+                return Response<Column>.FromError(e.Message);
             }
         }
 

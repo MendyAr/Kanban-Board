@@ -113,24 +113,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         /// <summary>
-        /// gets the name of a specified column
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">board's creator - identifier</param>
-        /// <param name="boardName">board's name - identifier</param>
-        /// <param name="columnOrdinal">the column index</param>
-        /// <returns>the name of the column</returns>
-        /// <exception cref="ArgumentException">throw if the board does now exist</exception>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
-        internal string GetColumnName(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
-        {
-            checkMembership(userEmail, creatorEmail, boardName, "GetColumnName");
-            checkBoardExistance(creatorEmail, boardName, "access");
-            checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
-            return boards[creatorEmail][boardName].GetColumnName(columnOrdinal);
-        }
-
-        /// <summary>
         /// sets a limit to a specific column in a specific board
         /// </summary>
         /// <param name="userEmail">the calling user's email</param>
@@ -161,23 +143,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 log.Warn($"FAILED to set limit for '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Column has more than " + limit + " tasks. Limit: " + limit);
                 throw new ArgumentException($"Cannot set limit: There are more than {limit} tasks in column '{e.Message}' of board '{creatorEmail}:{boardName}'");
             }
-        }
-
-        /// <summary>
-        /// gets the limit set to a specified column
-        /// </summary>
-        /// <param name="userEmail">the calling user's email</param>
-        /// <param name="creatorEmail">board's creator - identifier</param>
-        /// <param name="boardName">board's name - identifier</param>
-        /// <param name="columnOrdinal">index of the column</param>
-        /// <returns>the column limit</returns>
-        /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
-        internal int GetColumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
-        {
-            checkMembership(userEmail, creatorEmail, boardName, "GetColumnLimit");
-            checkBoardExistance(creatorEmail, boardName, "access");
-            checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
-            return boards[creatorEmail][boardName].GetColumnLimit(columnOrdinal);
         }
 
         /// <summary>
@@ -417,16 +382,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         /// <summary>
-        /// gets all the tasks in a specified column
+        /// Finds and returns specific column of a specific board
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <param name="creatorEmail">board's creator - identifier</param>
         /// <param name="boardName">board's name - identifier</param>
         /// <param name="columnOrdinal">column index</param>
-        /// <returns>IList with all the tasks in the column</returns>
+        /// <returns>Requested column</returns>
         /// <remarks>calls checkMembership, checkColumnOrdinal, checkBoardExistance</remarks>
-        internal IList<Task> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        internal Column GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
+            validateLogin(userEmail, $"GetColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal})");
             checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
             checkBoardExistance(creatorEmail, boardName, "access");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);

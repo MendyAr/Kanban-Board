@@ -151,19 +151,5 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 throw new IndexOutOfRangeException(Name);
             }
         }
-
-        ///// <summary>
-        ///// Returns all the tasks contained in the column
-        ///// </summary>
-        ///// <returns>IList of all the tasks in the column</returns>
-        //internal IList<Task> GetColumn()
-        //{
-        //    IList<Task> column = new List<Task>();
-        //    foreach (Task task in this.tasks.Values)
-        //    {
-        //        column.Add(task);
-        //    }
-        //    return column;
-        //}
     }
 }

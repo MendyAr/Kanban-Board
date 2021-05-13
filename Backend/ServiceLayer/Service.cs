@@ -130,22 +130,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return Response<int>.FromError(res.ErrorMessage);
             }
             return Response<int>.FromValue(res.Value.Limit);
-            /*
-            try
-            {
-                validateLogin(userEmail);
-            }
-            catch (NullReferenceException)
-            {
-                return Response<int>.FromError("Can't operate -  Please log in first");
-            }
-            catch (InvalidOperationException)
-            {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumnLimit(" + userEmail + "," + boardName + "," + columnOrdinal + ")");
-                return Response<int>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
-            }
-            return BoardS.GetColumnLimit(userEmail, creatorEmail, boardName, columnOrdinal);
-            */
         }
 
         /// <summary>
@@ -164,22 +148,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return Response<string>.FromError(res.ErrorMessage);
             }
             return Response<string>.FromValue(res.Value.Name);
-            /*
-            try
-            {
-                validateLogin(userEmail);
-            }
-            catch (NullReferenceException)
-            {
-                return Response<string>.FromError("Can't operate -  Please log in first");
-            }
-            catch (InvalidOperationException)
-            {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumnName(" + userEmail + "," + boardName + "," + columnOrdinal + ")");
-                return Response<string>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
-            }
-            return BoardS.GetColumnName(userEmail, creatorEmail, boardName, columnOrdinal);
-            */
         }
 
         /// <summary>
@@ -266,22 +234,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            /*
-            try
+            Response<Column> res = BoardS.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
+            if (res.ErrorOccured)
             {
-                validateLogin(userEmail);
+                return Response<IList<Task>>.FromError(res.ErrorMessage);
             }
-            catch (NullReferenceException)
-            {
-                return Response<IList<Task>>.FromError("Can't operate -  Please log in first");
-            }
-            catch (InvalidOperationException)
-            {
-                log.Warn("OUT OF DOMAIN OPERATION: User '" + ConnectedEmail + "' attempted GetColumn(" + userEmail + "," + boardName + "," + columnOrdinal + ")");
-                return Response<IList<Task>>.FromError("Can't operate -  User '" + userEmail + "' is not logged in");
-            }
-            */
-            return BoardS.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
+            return Response<IList<Task>>.FromValue(res.Value.Tasks);
         }
 
         /// <summary>

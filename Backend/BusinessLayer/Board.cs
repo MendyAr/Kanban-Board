@@ -44,16 +44,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         //methods
 
         /// <summary>
-        /// returns the name of a selected column
-        /// </summary>
-        /// <param name="columnOrdinal">integer representing column</param>
-        /// <returns>name of a column</returns>
-        internal string GetColumnName(int columnOrdinal)
-        {
-            return columns[columnOrdinal].Name;
-        }
-
-        /// <summary>
         /// limits a column within the board
         /// </summary>
         /// <param name="columnOrdinal">represent the limited column</param>
@@ -61,16 +51,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal void LimitColumn(int columnOrdinal, int limit)
         {
             columns[columnOrdinal].Limit = limit;
-        }
-
-        /// <summary>
-        /// Gets the limit of a column within the board
-        /// </summary>
-        /// <param name="columnOrdinal">represent the limited column</param>
-        /// <returns>the column's limit</returns>
-        internal int GetColumnLimit(int columnOrdinal)
-        {
-            return columns[columnOrdinal].Limit;
         }
         
         /// <summary>
@@ -143,13 +123,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
         
         /// <summary>
-        /// returns all the tasks in a requested column
+        /// Returns specific column
         /// </summary>
         /// <param name="columnOrdinal">represents the requested column</param>
-        /// <returns>IList containing all the tasks in the column</returns>
-        internal IList<Task> GetColumn(int columnOrdinal)
+        /// <returns>Requested Column</returns>
+        internal Column GetColumn(int columnOrdinal)
         {
-            return columns[columnOrdinal].GetColumn();
+            return columns[columnOrdinal];
         }
     }
 }

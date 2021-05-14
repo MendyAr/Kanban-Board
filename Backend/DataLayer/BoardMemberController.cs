@@ -53,9 +53,32 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
 
-        public void insert()
+        public void insert(string ID, string userEmail)
         {
-
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID}, @{userEmail})"
+                };
+                try
+                {
+                    command.Parameters.Add(new SQLiteParameter(ID,ID));
+                    command.Parameters.Add(new SQLiteParameter(userEmail, userEmail));
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
         }
 
         public void delete()

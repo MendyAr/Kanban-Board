@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private readonly string _creator;
         private string _boardName;
         private IList<DColumn> columns;
-        private IList<string> members;
+        private HashSet<string> members;
         public string Creator { get => _creator;}
 
 
@@ -27,10 +27,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public IList<DColumn> Columns { get => columns; set => columns = value; }
 
-        public IList<string> Members { get => members; set
-            {
-                
-            } }
+        public HashSet<string> Members { get => members; set => members = value; }
 
         public DBoard (string creator, string boardName) : base(new DBoardController(),creator + boardName)
         {

@@ -7,10 +7,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
     
     class DColumnController : DalController
     {
-        private DTaskController taskController = new DTaskController();
+        private DTaskController taskController;
         public DColumnController() : base("Column")
         {
-
+            taskController = new DTaskController();
         }
         public override void Insert(DTO dTO)
         {
@@ -55,14 +55,43 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return result;
         }
 
-        protected override List<DTO> Select()
+        public List<DTO> Select(string boardCreator, string boardName)
         {
-            List<DColumn> columnsList = base.Select().Cast<DColumn>().ToList();
-            List<DTask> tasksList = taskController.Select().Cast<DTask>().ToList();
-            foreach (DTask task in tasksList)
+            List<DTO> results = new List<DTO>();
+            using (var connection = new SQLiteConnection(_connectionString))
             {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName} WHERE (BoardCreator = @{boardCreator} AND BoardName = @{boardName})";
+
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    command.Parameters.Add(new SQLiteParameter(boardCreator, boardCreator));
+                    command.Parameters.Add(new SQLiteParameter(boardName, boardName));
+                    dataReader = command.ExecuteReader();
+                    
+                    while (dataReader.Read())
+                    {
+                        DColumn column = (DColumn)ConvertReaderToObject(dataReader);
+                        List<DTask> tasks = taskController.Select(boardCreator, boardName,column.Ordinal).Cast<DTask>().ToList();
+                        column.Tasks = tasks;
+                        results.Add(column);
+                    }
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
 
             }
+            return results;
         }
     }
 }

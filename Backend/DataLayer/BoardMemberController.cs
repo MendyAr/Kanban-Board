@@ -18,33 +18,24 @@ namespace IntroSE.Kanban.Backend.DataLayer
             
         }
             
-        public Dictionary<string, HashSet<string>> Select()  // email, set of boards with syntax creatorEmail:boardName
+        public HashSet<string> Select(string ID)  // email, set of boards with syntax creatorEmail:boardName
         {
-            Dictionary<string, HashSet<string>> results = new Dictionary<string, HashSet<string>>();
+            HashSet<string> results = new HashSet<string>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName};";
+                command.CommandText = $"select * from {_tableName} WHERE (ID = @{ID})";
                 SQLiteDataReader dataReader = null;
+
                 try
                 {
                     connection.Open();
                     dataReader = command.ExecuteReader();
+                    command.Parameters.Add(new SQLiteParameter(ID, ID));
 
                     while (dataReader.Read())
                     {
-                        string assign = dataReader.GetString(2);
-                        string board = dataReader.GetString(0) + ":" + dataReader.GetString(1);
-                        if (results.ContainsKey(assign))
-                        {
-                            results[assign].Add(board);
-                        }
-                        else
-                        {
-                            results[assign] = new HashSet<string>();
-                            results[assign].Add(board);
-                        }
-
+                        results.Add(dataReader.GetString(1));
                     }
                 }
                 finally

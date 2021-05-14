@@ -58,14 +58,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }      
         }
 
-        public List<DTO> Select(string boardCreator,string boardName)
-
+        public List<DTO> Select(string boardCreator,string boardName,int ordinal)
         {
             List<DTO> results = new List<DTO>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName} WHERE (BoardCreator = @{boardCreator} AND BoardName = @{boardName})";
+                command.CommandText = $"select * from {_tableName} WHERE (BoardCreator = @{boardCreator} AND BoardName = @{boardName} AND Ordinal = @{ordinal})";
 
                 SQLiteDataReader dataReader = null;
                 try
@@ -73,6 +72,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.Parameters.Add(new SQLiteParameter(boardCreator,boardCreator));
                     command.Parameters.Add(new SQLiteParameter(boardName, boardName));
+                    command.Parameters.Add(new SQLiteParameter(ordinal.ToString(), ordinal));
                     dataReader = command.ExecuteReader();
 
                     while (dataReader.Read())

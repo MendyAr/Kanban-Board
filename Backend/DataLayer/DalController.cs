@@ -82,7 +82,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName};";
+                command.CommandText = $"select * from {_tableName}";
                 SQLiteDataReader dataReader = null;
                 try
                 {

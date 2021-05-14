@@ -1,15 +1,20 @@
 ﻿
 
+using System.Collections.Generic;
+
 namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DBoard : DTO
     {
         
         private readonly string _creator;
+        private string _boardName;
+        private IList<DColumn> columns;
+        private IList<string> members;
         public string Creator { get => _creator;}
 
 
-        private string _boardName;
+        
         public string BoardName { get => _boardName; set 
             {
 
@@ -20,8 +25,12 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _boardName = value;
             } }
 
-        private DColumn[] columns;
-        public DColumn[] Columns { get => columns; }
+        public IList<DColumn> Columns { get => columns; set => columns = value; }
+
+        public IList<string> Members { get => members; set
+            {
+                
+            } }
 
         public DBoard (string creator, string boardName) : base(new DBoardController(),creator + boardName)
         {

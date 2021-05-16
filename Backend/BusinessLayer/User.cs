@@ -1,5 +1,4 @@
-﻿using System;
-using IntroSE.Kanban.Backend.DataLayer.DUser;
+﻿using DUser = IntroSE.Kanban.Backend.DataLayer.DUser;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -10,37 +9,31 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private readonly string email;
         private string password;
 
-        public string Email { get { return email; } }
-        private string Password { get; set; }
+        internal string Email { get => email;  }
 
         //constructor
 
-        public User(string email, string pass)
+        internal User(string email, string password)
         {
-            if (email == null)
-                throw new ArgumentNullException("email can't be null");
-            if (pass == null)
-                throw new ArgumentNullException("password can't be null");
-            
             this.email = email;
-            this.Password = pass;
+            this.password = password;
         }
 
         //constructor for Duser objects
-        public User(DUser)
+        internal User(DUser dUser)
         {
-            this.email = DUser.Email;
-            this.Password = DUser.Password;
+            this.email = dUser.Email;
+            this.password = dUser.Password;
         }
 
         //methods
 
         /// <summary>validate password with the user saved password.</summary>
-        /// <param name="pass">the password given for check.</param>
+        /// <param name="password">the password given for check.</param>
         /// <returns>true/false accordingly.</returns>
-        internal bool validatePassword(string pass)
+        internal bool validatePassword(string password)
         {
-            return Password.Equals(pass);
+            return this.password.Equals(password);
         }
     }
 }

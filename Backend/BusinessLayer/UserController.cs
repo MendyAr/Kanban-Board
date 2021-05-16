@@ -6,8 +6,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using IntroSE.Kanban.Backend.DataLayer.DUserController;
-using IntroSE.Kanban.Backend.DataLayer.DUser;
+using DUserController = IntroSE.Kanban.Backend.DataLayer.DUserController;
+using DUser = IntroSE.Kanban.Backend.DataLayer.DUser;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -108,7 +108,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <exception cref="Exception">thrown when a user with this email doesn't exist or when the password is incorrect.</exception>
         internal User Login(string userEmail, string password)
         {
-            loginInstance.Login(userEmail);
+            loginInstance.Login(userEmail); //login as check if even possible
             if (users.ContainsKey(userEmail))
             {
                 User user = users[userEmail];
@@ -118,7 +118,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     return user;
                 }
             }
-            loginInstance.Logout(userEmail);
+            loginInstance.Logout(userEmail); //logout again if logging in has failed at some point
             log.Warn($"FAILED log in attempt: '{userEmail}'");
             throw new Exception("Email or Password is invalid");
         }

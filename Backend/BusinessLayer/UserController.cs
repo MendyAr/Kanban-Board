@@ -20,8 +20,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private DUserController DUC;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
-        private readonly int PASS_MIN_LENGTH = 4;
-        private readonly int PASS_MAX_LENGTH = 20;
+        private const int PASS_MIN_LENGTH = 4;
+        private const int PASS_MAX_LENGTH = 20;
 
         //constructors
         public UserController(LoginInstance loginInstance)
@@ -66,40 +66,37 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
         }
 
-
-
-
         ///<summary>Registers a new user to the system.</summary>
-        ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
+        ///<param name="userEmail">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
-        ///<returns cref="User">The User created by the registration.</returns>
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
-        internal void Register(string email, string password)
+        ///<returns>The User created by the registration.</returns>
+        internal void Register(string userEmail, string password)
         {
             try
             {
-                if (users.ContainsKey(email))
+                if (users.ContainsKey(userEmail))
                 {
-                    log.Warn("FAILED register attempt: '" + email + "' already exists");
+                    log.Warn($"FAILED register attempt: '{userEmail}' already exists");
                     throw new Exception("A user already exist with this Email address");
                 }
 
-                ValidateEmail(email);
+                validateEmail(userEmail);
                 validatePasswordRules(password);
             }
             catch (ArgumentNullException)
             {
-                log.Info("FAILED register attempt: '" + "null email " + "' an email cannot be null" );
-                throw new Exception("an email cannot be null");
+                log.Info("FAILED register attempt: an email cannot be null");
+                throw new Exception("An email cannot be null");
             }
             catch (Exception e)
             {
-                log.Info("FAILED register attempt: '" + email + "' " + e.Message);
+                log.Info($"FAILED register attempt: '{userEmail}' {e.Message}");
                 throw new Exception(e.Message);
             }
-            User newUser = new User(email, password);
-            this.users.Add(email, newUser);
-            log.Info("SUCCESSFULLY registered attempt: '" + email + "'");
+            User newUser = new User(userEmail, password);
+            this.users.Add(userEmail, newUser);
+            log.Info($"SUCCESSFULLY registered attempt: '{userEmail}'");
         }
 
         /// <summary>
@@ -127,28 +124,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         /// <summary>
-        /// check if the input string match an email structure.
-        /// </summary>
-        /// <param name="email">the input email.</param>
-        ///<exception cref="Exception">thrown when email is null or not in email structure.</exception>
-        private void ValidateEmail(string email)
-        {
-            if (email == null)
-            {
-                throw new Exception("Email cannot be null");
-            }
-
-            var emailValidator = new EmailAddressAttribute();
-            Regex rg = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
-            bool validEmail = rg.IsMatch(email);
-            var addr = new System.Net.Mail.MailAddress(email);
-            if (!(addr.Address == email & emailValidator.IsValid(email) & validEmail))
-            {
-                throw new Exception("This email address is invalid, please check for spellMistakes");
-            }
-        }
-
-        /// <summary>
         /// Log out an logged in user. 
         /// </summary>
         /// <param name="userEmail">The userEmail of the user to log out</param>
@@ -162,6 +137,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             catch (Exception e)
             {
                 log.Info($"FAILED to logout: '{userEmail}' tried to log out but wasn't logged in");
+                throw new Exception(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// check if the input string match an email structure.
+        /// </summary>
+        /// <param name="email">the input email.</param>
+        ///<exception cref="Exception">thrown when email is null or not in email structure.</exception>
+        private void validateEmail(string email)
+        {
+            if (email == null)
+            {
+                throw new Exception("Email cannot be null");
+            }
+
+            var emailValidator = new EmailAddressAttribute();
+            Regex rg = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+            bool validEmail = rg.IsMatch(email);
+            var addr = new System.Net.Mail.MailAddress(email);
+            if (!(addr.Address == email & emailValidator.IsValid(email) & validEmail))
+            {
+                throw new Exception("This email address is invalid, please check for spellMistakes");
             }
         }
 

@@ -449,7 +449,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             foreach (String board in userBoards[userEmail])
             {
                 string[] boardDetails = board.Split(':');
-                concatLists(inProgress, boards[boardDetails[0]][boardDetails[1]].GetColumn(1));
+                concatLists(inProgress, boards[boardDetails[0]][boardDetails[1]].GetColumnTasks(1));
             }
             return inProgress;
         }

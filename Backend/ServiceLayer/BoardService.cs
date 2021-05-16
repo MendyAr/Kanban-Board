@@ -310,8 +310,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                IList<BTask> inProgress = bc.InProgressTasks(usereEmail);
-                return Response<IList<Task>>.FromValue(translateList(inProgress));
+                return Response<IList<Task>>.FromValue(translateList(bc.InProgressTasks(usereEmail)));
             }
             catch (Exception e)
             {
@@ -351,8 +350,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                IList<String> boardNames = bc.GetBoardNames(userEmail);
-                return Response<IList<String>>.FromValue(boardNames);
+                return Response<IList<String>>.FromValue(bc.GetBoardNames(userEmail));
             }
             catch (Exception e)
             {

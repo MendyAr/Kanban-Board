@@ -104,8 +104,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                BTask newTask= bc.AddTask(userEmail, creatorEmail, boardName, creationTime, title, description, DueDate);
-                return Response<Task>.FromValue(new Task(newTask));
+                return Response<Task>.FromValue(new Task(bc.AddTask(userEmail, creatorEmail, boardName, creationTime, title, description, DueDate)));
             }
             catch (Exception e)
             {
@@ -293,7 +292,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                bc.RemoveBoard(creatorEmail, boardName);
+                bc.RemoveBoard(userEmail, creatorEmail, boardName);
                 return new Response();
             }
             catch (Exception e)

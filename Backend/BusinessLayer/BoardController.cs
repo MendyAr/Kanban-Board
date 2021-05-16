@@ -117,17 +117,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="boardName">the deleted board's name</param>
         /// <exception cref="ArgumentException">thrown when trying to delete a non-existing board</exception>
         /// <remarks>calls validateLogin, checkBoardExistance</remarks>
-        internal void RemoveBoard(string userEmail, string boardName)
+        internal void RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
-            validateLogin(userEmail, $"RemoveBoard({userEmail}, {boardName})");
-            if (checkBoardExistance(userEmail, boardName)) {
-                boards[userEmail].Remove(boardName);
-                log.Info($"SUCCESSFULLY removed '{userEmail}:{boardName}'");
+            validateLogin(userEmail, $"RemoveBoard({userEmail}, {creatorEmail}, {boardName})");
+            if (userEmail.Equals(creatorEmail))
+            {
+                log.Warn($"OUT OF DOMAIN OPERATION: User '{loginInstance.ConnectedEmail}' attempted 'RemoveBoard({userEmail}, {creatorEmail}, {boardName})'");
+                throw new InvalidOperationException("Can't remove boards you that weren't created by you");
+            }
+            else if (checkBoardExistance(creatorEmail, boardName)) {
+                boards[creatorEmail].Remove(boardName);
+                log.Info($"SUCCESSFULLY removed '{creatorEmail}:{boardName}'");
             }
             else
             {
-                log.Info($"FAILED to remove '{userEmail}:{boardName}' - board doesn't exist");
-                throw new ArgumentException($"Can't remove '{userEmail}:{boardName}' - board doesn't exists");
+                log.Info($"FAILED to remove '{creatorEmail}:{boardName}' - board doesn't exist");
+                throw new ArgumentException($"Can't remove '{creatorEmail}:{boardName}' - board doesn't exists");
             }
         }
 

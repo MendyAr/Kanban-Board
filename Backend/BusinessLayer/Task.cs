@@ -25,7 +25,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal DateTime DueDate { get => dueDate;  
             set 
             {
-                ValidateDueDate(value);
+                validateDueDate(value);
                 dTask.DueDate = value;
                 dueDate = value; 
             } 
@@ -33,7 +33,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal string Title { get => title; 
             set
             {
-                ValidateTitle(value);
+                validateTitle(value);
                 dTask.Title = value;
                 title = value;
 
@@ -42,7 +42,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal string Description { get => description; 
             set
             {
-                ValidateDescription(value);
+                validateDescription(value);
                 dTask.Description = value;
                 description = value;
             }
@@ -73,11 +73,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             this.taskId = taskId;
             this.creationTime = creationTime;
-            ValidateDueDate(dueDate);
+            validateDueDate(dueDate);
             this.dueDate = dueDate;
-            ValidateTitle(title);
+            validateTitle(title);
             this.title= title;
-            ValidateDescription(description);
+            validateDescription(description);
             this.description = description;
             this.assignee = assignee;
             dTask = new DTask(taskId, creationTime, title, description, dueDate, assignee, 0, boardCreator, boardName);
@@ -103,11 +103,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         //methods
 
+        /// <summary>
+        /// Sends a message to dTask to advance column-wise
+        /// </summary>
+        internal void Advance()
+        {
+            dTask.Ordinal = dTask.Ordinal + 1;
+        }
+
         ///<summary>Validates the property of a given description.</summary>
         ///<param name="description">The description given to the Task</param>
         ///<exception cref="ArgumentNullException">Thrown if given description is null</exception>
         ///<exception cref="FormatException">Thrown if the description doesn't fit limits</exception>
-        private void ValidateDescription(string description)
+        private void validateDescription(string description)
         {
             if (description == null)
             {
@@ -128,7 +136,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ///<param name="title">The title given to the Task</param>
         ///<exception cref="ArgumentNullException">Thrown if given title is null</exception>
         ///<exception cref="FormatException">Thrown if the title doesn't fit limits</exception>
-        private void ValidateTitle(string title)
+        private void validateTitle(string title)
         {
             if(title == null)
             {
@@ -148,7 +156,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="dueDate">The dueDate given to the Task</param>
         /// <exception cref="ArgumentNullException">Thrown when dueDate is null object </exception> 
         /// <exception cref="FormatException"> Thrown when the dueDate is earlier then now. </exception>
-        private void ValidateDueDate(DateTime dueDate)
+        private void validateDueDate(DateTime dueDate)
         {
             if (dueDate == null)
             {
@@ -158,14 +166,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 throw new ArgumentException("This due date time already past");
             }
-        }
-
-        /// <summary>
-        /// Sends a message to dTask to advance column-wise
-        /// </summary>
-        internal void Advance()
-        {
-            dTask.Ordinal = dTask.Ordinal + 1;
         }
     }
 }

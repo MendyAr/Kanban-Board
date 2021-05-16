@@ -151,5 +151,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             return columns[columnOrdinal];
         }
+
+        /// <summary>
+        /// Returns all the tasks of spcified column
+        /// </summary>
+        /// <param name="columnOrdinal">represents the requested column</param>
+        /// <returns>IList<Task> containing all the tasks</Task></returns>
+        internal IList<Task> GetColumnTasks(int columnOrdinal)
+        {
+            return columns[columnOrdinal].Tasks;
+        }
     }
 }

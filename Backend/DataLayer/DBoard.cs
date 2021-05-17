@@ -27,7 +27,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public HashSet<string> Members { get => members; set => members = value; }
 
-        public DBoard (string creatorEmail, string boardName) : base(new DBoardController(new DColumnController(),new BoardMemberController()),creatorEmail + boardName)
+        public DBoard (string creatorEmail, string boardName) : base(new DBoardController(),creatorEmail + boardName)
         {
             this._creatorEmail = creatorEmail;
             this._boardName = boardName;

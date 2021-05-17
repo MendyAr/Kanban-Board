@@ -9,10 +9,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
         DColumnController _columnController;
         BoardMemberController _boardMemberController;
 
-        public DBoardController(DColumnController columnController, BoardMemberController boardMemberController) : base("Board")
+        public DBoardController() : base("Board")
         {
-            _columnController = columnController;
-            _boardMemberController = boardMemberController;
+            _columnController = new DColumnController();
+            _boardMemberController = new BoardMemberController();
         }
 
         public override void Insert(DTO dTO)

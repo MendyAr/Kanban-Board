@@ -98,7 +98,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             description = dTask.Description;
             assignee = dTask.Assignee;
             this.dTask = dTask;
-            dTask.Persist = true;
+            this.dTask.Persist = true;
         }
 
         //methods

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
+using DColumn = IntroSE.Kanban.Backend.DataLayer.DColumn;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -11,8 +13,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     internal class Board
     {
         //fields
-        private int taskIdCounter; //will be updated by every task added to the board and so keeping each ID unique
-        private IList<Column> columns;
+        private int taskIdCounter = 0; //will be updated by every task added to the board and so keeping each ID unique
+        private IList<Column> columns = new List<Column>();
+
+        private DBoard dBoard; //parallel DTO
 
         internal int TaskIdCounter { get => taskIdCounter; }
         internal IList<string> Columns
@@ -32,13 +36,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <summary>
         /// creates a new Board object
         /// </summary>
-        internal Board()
+        internal Board(string creatorEmail, string boardName)
         {
-            columns = new List<Column>();
-            columns.Insert(0, new Column("backlog"));
-            columns.Insert(1, new Column("in progress")); 
-            columns.Insert(2, new Column("done"));
-            taskIdCounter = 0;
+            columns.Insert(0, new Column("backlog", creatorEmail, boardName, 0));
+            columns.Insert(1, new Column("in progress", creatorEmail, boardName, 1)); 
+            columns.Insert(2, new Column("done", creatorEmail, boardName, 2));
+            dBoard = new DBoard(creatorEmail, boardName);
+            dBoard.Insert();
+            dBoard.Persist = true;
+        }
+
+        internal Board(DBoard dBoard)
+        {
+            columns.Insert(0, new Column(dBoard.Columns[0]));
+            columns.Insert(1, new Column(dBoard.Columns[1])); 
+            columns.Insert(2, new Column(dBoard.Columns[2]));
+            taskIdCounter = dBoard.numberOfTasks();
+            this.dBoard = dBoard;
+            this.dBoard.Persist = true;
         }
 
         //methods

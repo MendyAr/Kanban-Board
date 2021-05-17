@@ -81,7 +81,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - already exists");
                 throw new ArgumentException($"Board '{userEmail}:{boardName}' already exist");
             }
-            boards[userEmail][boardName] = new Board();
+            boards[userEmail][boardName] = new Board(userEmail, boardName);
             JoinBoard(userEmail, userEmail, boardName);
             log.Info($"SUCCESSFULLY created '{userEmail}:{boardName}'");
         }

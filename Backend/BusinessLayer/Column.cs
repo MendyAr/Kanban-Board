@@ -75,7 +75,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 tasks[dTask.TaskId] = new Task(dTask);
             }
             this.dColumn = dColumn;
-            dColumn.Persist = true;
+            this.dColumn.Persist = true;
         }
 
         //methods

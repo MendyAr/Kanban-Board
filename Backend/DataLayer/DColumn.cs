@@ -4,30 +4,30 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DColumn : DTO
     {
-        private string _creator;
-        private string _board;
+        private string _creatorEmail;
+        private string _boardName;
         private readonly int _ordinal;
         private int _limit;
         private List<DTask> _tasks;
 
-        public string Creator { get => _creator; set
+        public string CreatorEmail { get => _creatorEmail; set
             {
                 if (Persist)
                 {
                     Update("Creator", value);
                 }
-                _creator = value;
+                _creatorEmail = value;
             } }
 
-        public string Board
+        public string BoardName
         {
-            get => _board; set
+            get => _boardName; set
             {
                 if (Persist)
                 {
                     Update("Board", value);
                 }
-                _board = value;
+                _boardName = value;
             }
         }
 
@@ -45,10 +45,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _tasks = value;
             } }
 
-        public DColumn(string creator, string board,int ordinal, int limit) :base (new DColumnController(), creator + board + ordinal)
+        public DColumn(string creatorEmail, string boardName,int ordinal, int limit) :base (new DColumnController(), creatorEmail + boardName + ordinal)
         {
-            _creator = creator;
-            _board= board;
+            _creatorEmail = creatorEmail;
+            _boardName= boardName;
             _ordinal = ordinal;
             _limit = limit;
         }

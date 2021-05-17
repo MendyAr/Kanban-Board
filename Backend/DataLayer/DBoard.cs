@@ -7,11 +7,11 @@ namespace IntroSE.Kanban.Backend.DataLayer
     class DBoard : DTO
     {
         
-        private readonly string _creator;
+        private readonly string _creatorEmail;
         private string _boardName;
         private IList<DColumn> columns;
         private HashSet<string> members;
-        public string Creator { get => _creator;}
+        public string CreatorEmail { get => _creatorEmail;}
  
         public string BoardName { get => _boardName; set 
             {
@@ -27,9 +27,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public HashSet<string> Members { get => members; set => members = value; }
 
-        public DBoard (string creator, string boardName) : base(new DBoardController(new DColumnController(),new BoardMemberController()),creator + boardName)
+        public DBoard (string creatorEmail, string boardName) : base(new DBoardController(new DColumnController(),new BoardMemberController()),creatorEmail + boardName)
         {
-            this._creator = creator;
+            this._creatorEmail = creatorEmail;
             this._boardName = boardName;
             columns = new DColumn[3];
         }

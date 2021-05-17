@@ -23,12 +23,12 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{board.ID}, @{board.Creator}, @{board.BoardName})"
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{board.ID}, @{board.CreatorEmail}, @{board.BoardName})"
                 };
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(board.ID, board.ID));
-                    command.Parameters.Add(new SQLiteParameter(board.Creator, board.Creator));
+                    command.Parameters.Add(new SQLiteParameter(board.CreatorEmail, board.CreatorEmail));
                     command.Parameters.Add(new SQLiteParameter(board.BoardName, board.BoardName));
 
                     connection.Open();
@@ -53,7 +53,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             foreach(DTO dto in results)
             {
                 DBoard board = (DBoard) dto;
-                IList<DColumn> columns = _columnController.Select(board.Creator, board.BoardName).Cast<DColumn>().ToList();
+                IList<DColumn> columns = _columnController.Select(board.CreatorEmail, board.BoardName).Cast<DColumn>().ToList();
                 board.Columns= columns;
                 board.Members = _boardMemberController.Select(board.ID);
                 results.Add(board); 

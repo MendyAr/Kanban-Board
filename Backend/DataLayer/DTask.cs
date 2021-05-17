@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DTask : DTO
     {
-        
         private readonly int taskId;
+        private string title;
+        private string description;
+        private readonly DateTime creationTime;
+        private DateTime dueDate;
+        private string assignee;
+        private int _ordinal;
+        private string _boardCreator;
+        private string _boardName;
+
         public int TaskId
         { get { return taskId; } }
-
-
-        private string title;
+        
         public string Title
         {
             get { return title; }
@@ -27,9 +29,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 title = value;
             }
         }
-
-
-        private string description;
+       
         public string Description
         {
             get { return description; }
@@ -43,13 +43,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 description = value;
             }
         }
-
-
-        private readonly DateTime creationTime;
+      
         public DateTime CreationTime { get { return creationTime; } }
-
-
-        private DateTime dueDate;
+      
         public DateTime DueDate
         {
             get { return dueDate; }
@@ -63,9 +59,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 dueDate = value;
             }
         }
-
-
-        private string assignee;
+        
         public string Assignee { get { return assignee; } 
             set
             {
@@ -75,8 +69,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 assignee = value;
             } }
-
-        private int _ordinal;
+     
         public int Ordinal
         {
             get => _ordinal; set
@@ -88,9 +81,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _ordinal = value;
             }
         }
-
-
-        private string _boardCreator;
+      
         public string BoardCreator { get => _boardCreator; set
             {
                 if (Persist)
@@ -99,8 +90,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 _boardCreator = value;
             } }
-
-        private string _boardName;
+        
         public string BoardName
         {
             get => _boardName; set
@@ -112,7 +102,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _boardName = value;
             }
         }
-
 
         public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(new DTaskController(),boardCreator+boardName+taskId)
         {

@@ -19,7 +19,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             int ordinal = reader.GetInt32(7);
             string boardCreator = reader.GetString(8);
             string boardName = reader.GetString(9);
-
             DTask result = new DTask(taskId,creationTime,title,description,dueDate,assignee,ordinal,boardCreator,boardName);
             return result;
         }
@@ -78,8 +77,11 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     while (dataReader.Read())
                     {
                         results.Add(ConvertReaderToObject(dataReader));
-
                     }
+                }
+                catch
+                {
+                    // log
                 }
                 finally
                 {
@@ -91,7 +93,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return results;
         }

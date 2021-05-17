@@ -3,6 +3,8 @@
     internal abstract class DTO
     {
         protected string _id;
+        protected DalController _controller;
+
         public string ID { get => _id; set {
                 if (Persist)
                 {
@@ -10,9 +12,8 @@
                 }
                 _id = value;
             } }
-        public bool Persist { get; set; }
-        
-        protected DalController _controller;
+        public bool Persist { get; set; }        
+       
         protected DTO(DalController controller, string id)
         {
             _controller = controller;
@@ -32,9 +33,9 @@
 
         protected void Update(string attributeName, long attributeValue)
         {
-            _controller.Update(ID, attributeName, attributeValue);
+            bool changeSuccessfully = _controller.Update(ID, attributeName, attributeValue);
+            if (!changeSuccessfully)
+                throw new System.Exception($"update of attribute {attributeName} has failed, where ID = {ID} (where value is {attributeValue}");
         }
-
-
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    
     class DColumnController : DalController
     {
         private DTaskController taskController;

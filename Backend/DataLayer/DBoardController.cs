@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -64,11 +61,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
             return results;
         }
-    
-            
 
-
-        protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
+           protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
         {
             string creator = reader.GetString(1);
             string name = reader.GetString(2);

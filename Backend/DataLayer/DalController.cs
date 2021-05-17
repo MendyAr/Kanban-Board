@@ -2,7 +2,6 @@
 using System.Data.SQLite;
 using System.IO;
 
-
 namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal abstract class DalController
@@ -28,7 +27,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 };
                 try
                 {
-
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
                     res = command.ExecuteNonQuery();
@@ -57,11 +55,16 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     Connection = connection,
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={id}"
                 };
+
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
                     connection.Open();
                     command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    // log
                 }
                 finally
                 {
@@ -69,7 +72,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Close();
 
                 }
-
             }
             return res > 0;
         }
@@ -92,7 +94,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     while (dataReader.Read())
                     {
                         results.Add(ConvertReaderToObject(dataReader));
-
                     }
                 }
                 finally
@@ -101,7 +102,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     {
                         dataReader.Close();
                     }
-
                     command.Dispose();
                     connection.Close();
                 }
@@ -133,12 +133,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return res > 0;
         }
 
         public abstract void Insert(DTO dTO);
-
     }
 }

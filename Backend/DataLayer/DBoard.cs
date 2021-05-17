@@ -12,9 +12,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private IList<DColumn> columns;
         private HashSet<string> members;
         public string Creator { get => _creator;}
-
-
-        
+ 
         public string BoardName { get => _boardName; set 
             {
 
@@ -29,11 +27,16 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public HashSet<string> Members { get => members; set => members = value; }
 
-        public DBoard (string creator, string boardName) : base(new DBoardController(),creator + boardName)
+        public DBoard (string creator, string boardName) : base(new DBoardController(new DColumnController(),new BoardMemberController()),creator + boardName)
         {
             this._creator = creator;
             this._boardName = boardName;
             columns = new DColumn[3];
+        }
+
+        public int numberOfTasks()
+        {
+            return columns[0].Tasks.Count + columns[1].Tasks.Count + columns[2].Tasks.Count;
         }
     }
 }

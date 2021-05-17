@@ -19,13 +19,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{column.ID}, @{column.Creator}, @{column.Board}, @{column.Ordinal}, @{column.Limit})"
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{column.ID}, @{column.CreatorEmail}, @{column.BoardName}, @{column.Ordinal}, @{column.Limit})"
                 };
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(column.ID, column.ID));
-                    command.Parameters.Add(new SQLiteParameter(column.Creator, column.Creator));
-                    command.Parameters.Add(new SQLiteParameter(column.Board, column.Board));
+                    command.Parameters.Add(new SQLiteParameter(column.CreatorEmail, column.CreatorEmail));
+                    command.Parameters.Add(new SQLiteParameter(column.BoardName, column.BoardName));
                     command.Parameters.Add(new SQLiteParameter(column.Ordinal.ToString(), column.Ordinal));
                     command.Parameters.Add(new SQLiteParameter(column.Limit.ToString(), column.Limit));
                     connection.Open();
@@ -88,7 +88,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return results;
         }

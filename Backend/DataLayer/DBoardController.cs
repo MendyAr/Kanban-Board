@@ -49,45 +49,22 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        public List<DTO> select(string boardCreator, string boardName)
+        public override List<DTO> Select()
         {
-            List<DTO> results = new List<DTO>();
-            using (var connection = new SQLiteConnection(_connectionString))
+            List<DTO> results = base.Select(); 
+
+            foreach(DTO dto in results)
             {
-                SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName} WHERE (Creator = @{boardCreator} AND Name = @{boardName})";
-
-                SQLiteDataReader dataReader = null;
-                try
-                {
-                    connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(boardCreator, boardCreator));
-                    command.Parameters.Add(new SQLiteParameter(boardName, boardName));
-                    dataReader = command.ExecuteReader();
-
-                    while (dataReader.Read())
-                    {
-                        DBoard board = (DBoard)ConvertReaderToObject(dataReader);
-                        IList<DColumn> columns = _columnController.Select(boardCreator, boardName).Cast<DColumn>().ToList();
-                        board.Columns= columns;
-                        board.Members = _boardMemberController.Select(board.ID);
-                        results.Add(board);
-                    }
-                }
-                finally
-                {
-                    if (dataReader != null)
-                    {
-                        dataReader.Close();
-                    }
-
-                    command.Dispose();
-                    connection.Close();
-                }
-
+                DBoard board = (DBoard) dto;
+                IList<DColumn> columns = _columnController.Select(board.Creator, board.BoardName).Cast<DColumn>().ToList();
+                board.Columns= columns;
+                board.Members = _boardMemberController.Select(board.ID);
+                results.Add(board); 
             }
+
             return results;
         }
+    
             
 
 

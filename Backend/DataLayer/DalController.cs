@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         protected readonly string _tableName;
         public DalController(string tableName)
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanbas.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = tableName;
         }
@@ -78,7 +78,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
 
         public virtual List<DTO> Select()
-
         {
             List<DTO> results = new List<DTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -95,6 +94,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     {
                         results.Add(ConvertReaderToObject(dataReader));
                     }
+                }
+                catch
+                {
+                    //log
                 }
                 finally
                 {
@@ -135,6 +138,35 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
             }
             return res > 0;
+        }
+
+        public void Delete()
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName}";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
         }
 
         public abstract void Insert(DTO dTO);

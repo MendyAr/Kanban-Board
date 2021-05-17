@@ -12,7 +12,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public BoardMemberController()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanbas.db"));
             this._connectionString = $"Data Source={path}; Version=3;";            
         }
             
@@ -50,7 +50,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
 
-        public void insert(string ID, string userEmail)
+        public void Insert(string ID, string userEmail)
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -79,8 +79,33 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        public void delete()
+        public void Delete()
         {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName}";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
         }
     }
 }

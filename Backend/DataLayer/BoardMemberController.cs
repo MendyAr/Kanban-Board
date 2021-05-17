@@ -2,20 +2,18 @@
 using System.Data.SQLite;
 using System.IO;
 
-
 namespace IntroSE.Kanban.Backend.DataLayer
 {
     class BoardMemberController 
 
     {
         private readonly string _connectionString;
-        private static readonly string _tableName = "BoardMember";
+        private const string _tableName = "BoardMember";
 
         public BoardMemberController()
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
-            this._connectionString = $"Data Source={path}; Version=3;";
-            
+            this._connectionString = $"Data Source={path}; Version=3;";            
         }
             
         public HashSet<string> Select(string ID)  // email, set of boards with syntax creatorEmail:boardName
@@ -48,7 +46,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return results;
         }
@@ -62,6 +59,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     Connection = connection,
                     CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID}, @{userEmail})"
                 };
+
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(ID,ID));
@@ -83,7 +81,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public void delete()
         {
-
         }
     }
 }

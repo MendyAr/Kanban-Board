@@ -5,6 +5,11 @@ namespace IntroSE.Kanban.Backend.DataLayer
     class DColumn : DTO
     {
         private string _creator;
+        private string _board;
+        private readonly int _ordinal;
+        private int _limit;
+        private List<DTask> _tasks;
+
         public string Creator { get => _creator; set
             {
                 if (Persist)
@@ -14,7 +19,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _creator = value;
             } }
 
-        private string _board;
         public string Board
         {
             get => _board; set
@@ -27,10 +31,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-
-        private readonly int _ordinal;
-
-        private int _limit;
         public int Limit { get => _limit; set
             {
                 if (Persist)
@@ -41,11 +41,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
             } }
         public int Ordinal { get => _ordinal; }
 
-        private List<DTask> _tasks;
-
         public List<DTask> Tasks { get => _tasks; set {
                 _tasks = value;
             } }
+
         public DColumn(string creator, string board,int ordinal, int limit) :base (new DColumnController(), creator + board + ordinal)
         {
             _creator = creator;

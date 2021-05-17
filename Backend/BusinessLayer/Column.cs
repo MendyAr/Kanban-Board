@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DColumn = IntroSE.Kanban.Backend.DataLayer.DColumn;
+using DTask = IntroSE.Kanban.Backend.DataLayer.DTask;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -13,6 +15,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private string name;
         private Dictionary<int, Task> tasks = new Dictionary<int, Task>(); //key - task's ID
         private int limit = -1; //ranges from -1 (unlimited) to any positive number (actual limit)
+
+        private DColumn dColumn; //parallel DTO
 
         internal string Name { get => name;}
         internal int Limit
@@ -39,9 +43,39 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         //constructors
-        internal Column(string Name)
+        internal Column(string name, string creatorEmail, string boardName, int columnOrdinal)
         {
-            this.name = Name;
+            this.name = name;
+            dColumn = new DColumn(creatorEmail, boardName, columnOrdinal, -1);
+            dColumn.Insert();
+            dColumn.Persist = true;
+        }
+
+        /// <summary>
+        /// Recreates Column from DTO
+        /// </summary>
+        /// <param name="dColumn">DTO representing the column</param>
+        internal Column(DColumn dColumn)
+        {
+            limit = dColumn.Limit;
+            switch (dColumn.Ordinal)
+            {
+                case 0:
+                    name = "backlog";
+                    break;
+                case 1: 
+                    name = "in progress";
+                    break;
+                default:
+                    name = "done";
+                    break;
+            }
+            foreach (DTask dTask in dColumn.Tasks)
+            {
+                tasks[dTask.TaskId] = new Task(dTask);
+            }
+            this.dColumn = dColumn;
+            dColumn.Persist = true;
         }
 
         //methods

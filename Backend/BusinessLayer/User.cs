@@ -9,7 +9,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private readonly string email;
         private string password;
 
-        internal string Email { get => email;  }
+        internal string Email { get => email; }
+        private string Password { get => password; }
 
         //constructor
 
@@ -33,7 +34,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <returns>true/false accordingly.</returns>
         internal bool validatePassword(string password)
         {
-            return this.password.Equals(password);
+            return this.Password.Equals(password);
         }
     }
 }

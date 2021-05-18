@@ -36,18 +36,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
-            Response res = UserS.LoadData();
-            if (res.ErrorOccured)
-            {
-                log.Error("Failed to load users data!");
-                return new Response(res.ErrorMessage);
-            }
-            res = BoardS.LoadData();
-            if (res.ErrorOccured) 
-            {
-                log.Error("Failed to load boards and tasks data!");
-                return new Response(res.ErrorMessage);
-            }
+            Response usersRes = UserS.LoadData();
+            Response boardsRes = BoardS.LoadData();
+            if (usersRes.ErrorOccured && boardsRes.ErrorOccured)
+                return new Response(usersRes.ErrorMessage + "\n" + boardsRes.ErrorMessage);
+            if (usersRes.ErrorOccured)
+                return usersRes;
+            if (boardsRes.ErrorOccured)
+                return boardsRes;
+            return new Response();
+
         }
 
         ///<summary>Removes all persistent data.</summary>

@@ -4,6 +4,8 @@ using log4net;
 using log4net.Config;
 using System.Reflection;
 using System.IO;
+using DBC = IntroSE.Kanban.Backend.DataLayer.DBoardController;
+using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -29,6 +31,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         //methods
+
+        internal void LoadData()
+        {
+            //register all users
+            DBC DBC = new DBC(new DataLayer.DColumnController(), new DataLayer.BoardMemberController());
+            IList<DBoard> dBoards = (IList<DBoard>)DBC.Select();
+            foreach (DBoard dBoard in dBoards)
+            {
+                dBoard.
+            }
+        }
 
         /// <summary>
         /// creates a new entry for a newly registered user

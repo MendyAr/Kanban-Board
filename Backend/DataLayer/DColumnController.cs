@@ -11,38 +11,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             taskController = new DTaskController();
         }
-        public override void Insert(DTO dTO)
-        {
-            DColumn column = (DColumn)dTO;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{column.ID}, @{column.CreatorEmail}, @{column.BoardName}, @{column.Ordinal}, @{column.Limit})"
-                };
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter(column.ID, column.ID));
-                    command.Parameters.Add(new SQLiteParameter(column.CreatorEmail, column.CreatorEmail));
-                    command.Parameters.Add(new SQLiteParameter(column.BoardName, column.BoardName));
-                    command.Parameters.Add(new SQLiteParameter(column.Ordinal.ToString(), column.Ordinal));
-                    command.Parameters.Add(new SQLiteParameter(column.Limit.ToString(), column.Limit));
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch
-                {
-                    //log
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }
-        }
-
         protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
         {
             string creator = reader.GetString(1);

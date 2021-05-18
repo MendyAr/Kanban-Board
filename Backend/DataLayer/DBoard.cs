@@ -1,6 +1,7 @@
 ﻿
 
 using System.Collections.Generic;
+using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -27,7 +28,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public HashSet<string> Members { get => members; set => members = value; }
 
-        public DBoard (string creatorEmail, string boardName) : base(new DBoardController(),creatorEmail + boardName)
+        public DBoard (string creatorEmail, string boardName) : base(creatorEmail + boardName,"Board")
         {
             this._creatorEmail = creatorEmail;
             this._boardName = boardName;
@@ -37,6 +38,19 @@ namespace IntroSE.Kanban.Backend.DataLayer
         public int numberOfTasks()
         {
             return columns[0].Tasks.Count + columns[1].Tasks.Count + columns[2].Tasks.Count;
+        }
+
+        protected override SQLiteCommand InsertCommand(SQLiteConnection connection)
+        {
+            SQLiteCommand command = new SQLiteCommand
+            {
+                Connection = connection,
+                CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID}, @{CreatorEmail}, @{BoardName})"
+            };
+            command.Parameters.Add(new SQLiteParameter(ID, ID));
+            command.Parameters.Add(new SQLiteParameter(CreatorEmail,CreatorEmail));
+            command.Parameters.Add(new SQLiteParameter(BoardName, BoardName));
+            return command;
         }
     }
 }

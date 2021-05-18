@@ -23,40 +23,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return result;
         }
 
-        public override void Insert(DTO dTO)
-        {
-            DTask tesk = (DTask)dTO;             
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{tesk.ID},@{tesk.TaskId}, @{tesk.CreationTime.ToString()}, @{tesk.Title}, @{tesk.Description}, @{tesk.DueDate.ToString()}, @{tesk.Assignee})" 
-                };
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter(tesk.ID, tesk.ID));
-                    command.Parameters.Add(new SQLiteParameter(tesk.TaskId.ToString(), tesk.TaskId));
-                    command.Parameters.Add(new SQLiteParameter(tesk.CreationTime.ToString(), tesk.CreationTime));
-                    command.Parameters.Add(new SQLiteParameter(tesk.Title, tesk.Title));
-                    command.Parameters.Add(new SQLiteParameter(tesk.Description, tesk.Description));
-                    command.Parameters.Add(new SQLiteParameter(tesk.DueDate.ToString(), tesk.DueDate));
-                    command.Parameters.Add(new SQLiteParameter(tesk.Assignee, tesk.Assignee));
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch
-                {
-                    //log
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }      
-        }
-
         public List<DTO> Select(string boardCreator,string boardName,int ordinal)
         {
             List<DTO> results = new List<DTO>();
@@ -97,5 +63,4 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
     }
-    
 }

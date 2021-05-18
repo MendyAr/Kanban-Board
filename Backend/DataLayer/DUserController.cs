@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Data.SQLite;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class DUserController
+    class DUserController : DalController
     {
+
+        internal DUserController() : base ("User")
+        {}
+
+        override protected DTO ConvertReaderToObject(SQLiteDataReader reader)
+        {
+
+        }
+
+
+        override public void Insert(DTO dTO)
+        {
+
+        }
     }
 }

@@ -50,8 +50,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
 
-        public void Insert(string ID, string userEmail)
+        public bool Insert(string ID, string userEmail)
         {
+            int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand
@@ -65,7 +66,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Parameters.Add(new SQLiteParameter(ID,ID));
                     command.Parameters.Add(new SQLiteParameter(userEmail, userEmail));
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    result = command.ExecuteNonQuery();
                 }
                 catch
                 {
@@ -77,6 +78,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Close();
                 }
             }
+            return result > 0;
         }
 
         public void Delete()

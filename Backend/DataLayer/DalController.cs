@@ -78,7 +78,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
         }
     }

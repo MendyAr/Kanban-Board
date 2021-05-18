@@ -51,24 +51,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
-        /// registers the user at the board controller
-        /// </summary>
-        /// <param name="userEmail">the newly registered user's email</param>
-        /// <returns>Response containing message detailing the error - if occured</returns>
-        internal Response Register(string userEmail)
-        {
-            try
-            {
-                bc.Register(userEmail);
-                return new Response();
-            }
-            catch(Exception e)
-            {
-                return new Response(e.Message);
-            }
-        }
-
-        /// <summary>
         /// limits specific column in one of the user's boards
         /// </summary>
         /// <param name="userEmail">calling user's email</param>

@@ -73,10 +73,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<returns cref="Response">The response of the action</returns>
         public Response Register(string userEmail, string password)
         {
-            Response userRegisterResponse = UserS.Register(userEmail, password);
-            if (!userRegisterResponse.ErrorOccured)
-                userRegisterResponse = BoardS.Register(userEmail);
-            return userRegisterResponse;
+            return UserS.Register(userEmail, password);
         }
 
         /// <summary>

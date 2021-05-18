@@ -23,23 +23,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal BoardController(LoginInstance loginInstance)
         {
             boards = new Dictionary<string, Dictionary<string, Board>>();
+            userBoards = new Dictionary<string, HashSet<string>>();
             this.loginInstance = loginInstance;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
         //methods
-
-        /// <summary>
-        /// creates a new entry for a newly registered user
-        /// </summary>
-        /// <param name="userEmail">the newly registered user's email</param>
-        internal void Register(string userEmail)
-        {
-            boards[userEmail] = new Dictionary<string, Board>();
-            userBoards[userEmail] = new HashSet<string>();
-            log.Info($"SUCCESSFULLY created new entry for user: '{userEmail}'");
-        }
 
         /// <summary>
         /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
@@ -51,16 +41,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             validateLogin(userEmail, $"GetBoardNames({userEmail})");
             List<String> boards = new List<string>();
-            foreach(String board in userBoards[userEmail])
+            if (userBoards.ContainsKey(userEmail))
             {
-                string[] boardDetails = board.Split(':');
-                if (checkBoardExistance(boardDetails[0], boardDetails[1]))
+                foreach (String board in userBoards[userEmail])
                 {
-                    boards.Add(boardDetails[1]);
-                }
-                else
-                {
-                    userBoards[userEmail].Remove(board);
+                    string[] boardDetails = board.Split(':');
+                    if (checkBoardExistance(boardDetails[0], boardDetails[1]))
+                    {
+                        boards.Add(boardDetails[1]);
+                    }
+                    else
+                    {
+                        userBoards[userEmail].Remove(board);
+                    }
                 }
             }
             return boards;
@@ -76,6 +69,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal void AddBoard(string userEmail, string boardName)
         {
             validateLogin(userEmail, $"AddBoard({userEmail}, {boardName})");
+            if (!boards.ContainsKey(userEmail)) //create new entry if needed
+            {
+                boards[userEmail] = new Dictionary<string, Board>();
+            }
             if (boards[userEmail].ContainsKey(boardName))
             {
                 log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - already exists");
@@ -96,16 +93,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal void JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
             validateLogin(userEmail, $"JoinBoard({userEmail}, {creatorEmail}, {boardName})");
-            if (!checkBoardExistance(creatorEmail, boardName))
+            if (!checkBoardExistance(creatorEmail, boardName)) //check board existance
             {
                 log.Info($"FAILED to sign'{userEmail}' to '{creatorEmail}:{boardName}' - board doesn't exist");
                 throw new ArgumentException($"Can't sign '{userEmail}' to '{creatorEmail}:{boardName}' - board doesn't exist");
             }
-            if (userBoards[userEmail].Contains($"{creatorEmail}:{boardName}"))
+            if (!userBoards.ContainsKey(userEmail)) //create new entry if needed
+            {
+                userBoards[userEmail] = new HashSet<string>();
+            }
+            if (userBoards[userEmail].Contains($"{creatorEmail}:{boardName}")) //check if already member
             {
                 throw new Exception($"'{userEmail}' already memeber of board '{creatorEmail}:{boardName}'");
             }
             userBoards[userEmail].Add($"{creatorEmail}:{boardName}");
+            boards[creatorEmail][boardName].AddMember(userEmail);
             log.Info($"SUCCESSFULLY signed '{userEmail}' to '{creatorEmail}:{boardName}'");
         }
 
@@ -123,9 +125,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (userEmail.Equals(creatorEmail))
             {
                 log.Warn($"OUT OF DOMAIN OPERATION: User '{loginInstance.ConnectedEmail}' attempted 'RemoveBoard({userEmail}, {creatorEmail}, {boardName})'");
-                throw new InvalidOperationException("Can't remove boards you that weren't created by you");
+                throw new InvalidOperationException("Can't remove boards you that wasn't created by you");
             }
             else if (checkBoardExistance(creatorEmail, boardName)) {
+                boards[creatorEmail][boardName].Delete();
                 boards[creatorEmail].Remove(boardName);
                 log.Info($"SUCCESSFULLY removed '{creatorEmail}:{boardName}'");
             }
@@ -461,20 +464,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             validateLogin(userEmail, $"InProgressTasks({userEmail})");
             IList<Task> inProgress = new List<Task>();
-            foreach (String board in userBoards[userEmail])
+            if (userBoards.ContainsKey(userEmail))
             {
-                string[] boardDetails = board.Split(':');
-                if (checkBoardExistance(boardDetails[0], boardDetails[1]))
+                foreach (String board in userBoards[userEmail])
                 {
-                    foreach (Task task in boards[boardDetails[0]][boardDetails[1]].GetColumnTasks(1))
+                    string[] boardDetails = board.Split(':');
+                    if (checkBoardExistance(boardDetails[0], boardDetails[1]))
                     {
-                        if (task.Assignee.Equals(userEmail))
-                            inProgress.Add(task);
+                        foreach (Task task in boards[boardDetails[0]][boardDetails[1]].GetColumnTasks(1))
+                        {
+                            if (task.Assignee.Equals(userEmail))
+                                inProgress.Add(task);
+                        }
                     }
-                }
-                else
-                {
-                    userBoards[userEmail].Remove(board);
+                    else
+                    {
+                        userBoards[userEmail].Remove(board);
+                    }
                 }
             }
             return inProgress;
@@ -504,7 +510,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <returns>true if the board exists, false if it doesn't</returns>
         private bool checkBoardExistance(string creatorEmail, string boardName)
         {
-            if (creatorEmail == null || boardName == null || !boards[creatorEmail].ContainsKey(boardName))
+            if (creatorEmail == null || boardName == null || !boards.ContainsKey(creatorEmail) || !boards[creatorEmail].ContainsKey(boardName))
             {
                 return false;
             }

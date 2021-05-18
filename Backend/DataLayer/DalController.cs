@@ -15,68 +15,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             this._tableName = tableName;
         }
 
-        public bool Update(string id, string attributeName, string attributeValue)
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand{
-                    Connection = connection,
-                    // make madeCommand not abstract 
-                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={id}"
-                };
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch
-                {
-                    //log
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }
-
-        public bool Update(string id, string attributeName, long attributeValue)
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={id}"
-                };
-
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch
-                {
-                    // log
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-
-                }
-            }
-            return res > 0;
-        }
-
-
         public virtual List<DTO> Select()
         {
             List<DTO> results = new List<DTO>();
@@ -115,31 +53,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         protected abstract DTO ConvertReaderToObject(SQLiteDataReader reader);
 
-        public bool Delete(DTO DTOObj)
-        {
-            int res = -1;
-
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"delete from {_tableName} where id={DTOObj.ID}"
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }
-            return res > 0;
-        }
-
         public void Delete()
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -168,7 +81,5 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
             }
         }
-
-        public abstract void Insert(DTO dTO);
     }
 }

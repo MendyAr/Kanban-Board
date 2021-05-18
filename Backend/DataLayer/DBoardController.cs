@@ -15,37 +15,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             _boardMemberController = new BoardMemberController();
         }
 
-        public override void Insert(DTO dTO)
-        {
-            DBoard board = (DBoard)dTO;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{board.ID}, @{board.CreatorEmail}, @{board.BoardName})"
-                };
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter(board.ID, board.ID));
-                    command.Parameters.Add(new SQLiteParameter(board.CreatorEmail, board.CreatorEmail));
-                    command.Parameters.Add(new SQLiteParameter(board.BoardName, board.BoardName));
-
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-                catch
-                {
-                    //log
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }
-        }
-
+        
         public override List<DTO> Select()
         {
             List<DTO> results = base.Select(); 

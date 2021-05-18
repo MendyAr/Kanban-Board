@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -13,10 +14,11 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private int _ordinal;
         private string _boardCreator;
         private string _boardName;
+        private const string _tableName = "Task";
 
         public int TaskId
         { get { return taskId; } }
-        
+
         public string Title
         {
             get { return title; }
@@ -29,7 +31,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 title = value;
             }
         }
-       
+
         public string Description
         {
             get { return description; }
@@ -38,14 +40,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                   Update("Description", value);
+                    Update("Description", value);
                 }
                 description = value;
             }
         }
-      
+
         public DateTime CreationTime { get { return creationTime; } }
-      
+
         public DateTime DueDate
         {
             get { return dueDate; }
@@ -59,8 +61,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 dueDate = value;
             }
         }
-        
-        public string Assignee { get { return assignee; } 
+
+        public string Assignee
+        {
+            get { return assignee; }
             set
             {
                 if (Persist)
@@ -68,8 +72,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     Update("Assignee", value);
                 }
                 assignee = value;
-            } }
-     
+            }
+        }
+
         public int Ordinal
         {
             get => _ordinal; set
@@ -81,16 +86,19 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _ordinal = value;
             }
         }
-      
-        public string BoardCreator { get => _boardCreator; set
+
+        public string BoardCreator
+        {
+            get => _boardCreator; set
             {
                 if (Persist)
                 {
                     Update("BoardCreator", value);
                 }
                 _boardCreator = value;
-            } }
-        
+            }
+        }
+
         public string BoardName
         {
             get => _boardName; set
@@ -103,7 +111,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        public DTask(int taskId, DateTime creationTime, string title, string description,  DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(new DTaskController(),boardCreator+boardName+taskId)
+        public DTask(int taskId, DateTime creationTime, string title, string description, DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(boardCreator + boardName + taskId, _tableName)
         {
             this.taskId = taskId;
             Title = title;
@@ -114,6 +122,27 @@ namespace IntroSE.Kanban.Backend.DataLayer
             Ordinal = ordinal;
             BoardCreator = boardCreator;
             BoardName = boardName;
+        }
+
+        protected override SQLiteCommand InsertCommand(SQLiteConnection connection)
+        {
+            SQLiteCommand command = new SQLiteCommand
+            {
+                Connection = connection,
+                CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID},@{TaskId}, @{CreationTime.ToString()}, @{Title}, @{Description}, @{DueDate.ToString()}, @{Assignee}, @{Ordinal}, {BoardCreator}, {BoardName})"
+            };
+            command.Parameters.Add(new SQLiteParameter(ID, ID));
+            command.Parameters.Add(new SQLiteParameter(TaskId.ToString(),TaskId));
+            command.Parameters.Add(new SQLiteParameter(CreationTime.ToString(), CreationTime));
+            command.Parameters.Add(new SQLiteParameter(Title,Title));
+            command.Parameters.Add(new SQLiteParameter(Description, Description));
+            command.Parameters.Add(new SQLiteParameter(DueDate.ToString(), DueDate));
+            command.Parameters.Add(new SQLiteParameter(Assignee, Assignee));
+            command.Parameters.Add(new SQLiteParameter(Ordinal.ToString(), Ordinal));
+            command.Parameters.Add(new SQLiteParameter(BoardCreator,BoardCreator));
+            command.Parameters.Add(new SQLiteParameter(BoardName, BoardName));
+
+            return command;
         }
     }
 }

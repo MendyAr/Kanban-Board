@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿using System;
+using System.Data.SQLite;
 using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataLayer
@@ -90,7 +91,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={id}"
+                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={_id}"
                 };
 
                 try
@@ -112,6 +113,39 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
             return res > 0;
         }
+
+        protected bool Update(string attributeName, DateTime attributeValue)
+        {
+            int res = -1;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={_id}"
+                };
+
+                try
+                {
+                    command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    // log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+
+                }
+            }
+            return res > 0;
+        }
+
+
 
         protected abstract SQLiteCommand InsertCommand(SQLiteConnection connection);
 

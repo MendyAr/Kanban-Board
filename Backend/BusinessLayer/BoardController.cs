@@ -36,6 +36,57 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         //methods
 
+        internal void LoadData()
+        {
+            string errorMsg = null;
+            DBC DBC = new DBC();
+            
+            IList<DBoard> dBoards = null;
+            try
+            {
+                dBoards = (IList<DBoard>)DBC.Select();
+            }
+            catch (Exception e)
+            {
+                log.Fatal($"Failed to load data - {e.Message}");
+                throw new Exception(e.Message);
+            }
+
+            foreach (DBoard dBoard in dBoards) 
+            {
+                string creatorEmail = dBoard.CreatorEmail;
+                string boardName = dBoard.BoardName;
+
+                //load the board
+                if (!boards.ContainsKey(creatorEmail))
+                {
+                    boards[creatorEmail] = new Dictionary<string, Board>();
+                }
+                if (boards[creatorEmail].ContainsKey(boardName))
+                {
+                    log.Fatal($"FAILED to load board '{creatorEmail}:{boardName}' - board already exists");
+                    errorMsg = errorMsg + $"Couldn't load board '{creatorEmail}:{boardName}' - board already exists\n";
+                }
+                else
+                {
+                    boards[creatorEmail][boardName] = new Board(dBoard);
+                }
+
+                //load board's members
+                foreach (string member in dBoard.Members)
+                {
+                    if (!userBoards.ContainsKey(member))
+                    {
+                        userBoards[member] = new HashSet<string>();
+                    }
+                    userBoards[member].Add($"{creatorEmail}:{boardName}");
+                }
+            }
+
+            if (errorMsg != null)
+                throw new Exception(errorMsg);
+        }
+
         /// <summary>
         /// Loads all Boards and memberships from DAL
         /// </summary>

@@ -19,6 +19,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private Dictionary<string, Dictionary<string, Board>> boards; //first key is userEmail , second key will be the board name
         private Dictionary<string, HashSet<string>> userBoards; //first key is userEmail, second key is a set of all the boards he is a member of
         private LoginInstance loginInstance;
+
+        private DBC dBoardController = new DBC(); //parallel DController
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
@@ -33,15 +36,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         //methods
 
+        /// <summary>
+        /// Loads all Boards and memberships from DAL
+        /// </summary>
+        /// <exception cref="Exception">Thrown exception if some boards couldn't be loaded</exception>
         internal void LoadData()
         {
             string errorMsg = null;
-            DBC DBC = new DBC();
             
             IList<DBoard> dBoards = null;
             try
             {
-                dBoards = (IList<DBoard>)DBC.Select();
+                dBoards = (IList<DBoard>)dBoardController.Select();
             }
             catch (Exception e)
             {

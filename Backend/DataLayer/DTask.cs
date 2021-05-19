@@ -3,8 +3,10 @@ using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class DTask : DTO
+    internal class DTask : DTO
     {
+        // properties
+
         private readonly int taskId;
         private string title;
         private string description;
@@ -14,25 +16,32 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private int _ordinal;
         private string _boardCreator;
         private string _boardName;
-        private const string _tableName = "Task";
 
-        public int TaskId
+        private const string TITLE = "Title";
+        private const string DESCRIPTION = "Description";
+        private const string DUE_DATE = "DueDate";
+        private const string ASSIGNEE = "Assignee";
+        private const string ORDINAL = "Ordinal";
+        private const string BOARD_CREATOR = "BoardCreator";
+        private const string BOARD_NAME = "BoardName";
+
+        internal int TaskId
         { get { return taskId; } }
 
-        public string Title
+        internal string Title
         {
             get { return title; }
             set
             {
                 if (Persist)
                 {
-                    Update("Title", value);
+                    Update(TITLE, value);
                 }
                 title = value;
             }
         }
 
-        public string Description
+        internal string Description
         {
             get { return description; }
             set
@@ -40,15 +49,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                    Update("Description", value);
+                    Update(DESCRIPTION, value);
                 }
                 description = value;
             }
         }
 
-        public DateTime CreationTime { get { return creationTime; } }
+        internal DateTime CreationTime { get { return creationTime; } }
 
-        public DateTime DueDate
+        internal DateTime DueDate
         {
             get { return dueDate; }
             set
@@ -56,62 +65,63 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                    Update("DueDate", value.ToString());
+                    Update(DUE_DATE, value.ToString());
                 }
                 dueDate = value;
             }
         }
 
-        public string Assignee
+        internal string Assignee
         {
             get { return assignee; }
             set
             {
                 if (Persist)
                 {
-                    Update("Assignee", value);
+                    Update(ASSIGNEE, value);
                 }
                 assignee = value;
             }
         }
 
-        public int Ordinal
+        internal int Ordinal
         {
             get => _ordinal; set
             {
                 if (Persist)
                 {
-                    Update("Ordinal", value);
+                    Update(ORDINAL, value);
                 }
                 _ordinal = value;
             }
         }
 
-        public string BoardCreator
+        internal string BoardCreator
         {
             get => _boardCreator; set
             {
                 if (Persist)
                 {
-                    Update("BoardCreator", value);
+                    Update(BOARD_CREATOR, value);
                 }
                 _boardCreator = value;
             }
         }
 
-        public string BoardName
+        internal string BoardName
         {
             get => _boardName; set
             {
                 if (Persist)
                 {
-                    Update("BoardName", value);
+                    Update(BOARD_NAME, value);
                 }
                 _boardName = value;
             }
         }
 
-        internal DTask(int taskId, DateTime creationTime, string title, string description, DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(boardCreator + boardName + taskId, _tableName)
+        // constructor
+        internal DTask(int taskId, DateTime creationTime, string title, string description, DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(boardCreator + boardName + taskId, "Task")
         {
             this.taskId = taskId;
             Title = title;
@@ -124,6 +134,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             BoardName = boardName;
         }
 
+        // method
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)
         {
             SQLiteCommand command = new SQLiteCommand

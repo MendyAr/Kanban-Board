@@ -2,13 +2,13 @@
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class DUserController : DalController
+    internal class DUserController : DalController <DUser>
     {
 
         internal DUserController() : base("User")
         { }
 
-        protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
+        protected override DUser ConvertReaderToObject(SQLiteDataReader reader)
         {
             string email = reader.GetString(1);
             string password = reader.GetString(2);

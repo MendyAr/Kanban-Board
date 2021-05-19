@@ -47,7 +47,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             IList<DBoard> dBoards = null;
             try
             {
-                dBoards = (IList<DBoard>)dBoardController.Select();
+                dBoards = dBoardController.Select();
             }
             catch (Exception e)
             {

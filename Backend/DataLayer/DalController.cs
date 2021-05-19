@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    internal abstract class DalController
+    internal abstract class DalController <T> where T : DTO
     {
         protected readonly string _connectionString;
         protected readonly string _tableName;
@@ -24,9 +24,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
-        internal virtual List<DTO> Select()
+        internal virtual List<T> Select()
         {
-            List<DTO> results = new List<DTO>();
+            List<T> results = new List<T>();
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
@@ -86,6 +86,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        protected abstract DTO ConvertReaderToObject(SQLiteDataReader reader);
+        protected abstract T ConvertReaderToObject(SQLiteDataReader reader);
     }
 }

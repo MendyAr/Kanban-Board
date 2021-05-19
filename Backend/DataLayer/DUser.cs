@@ -2,7 +2,7 @@
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class DUser : DTO
+    internal class DUser : DTO
     {
         // properties
         private readonly string email;

@@ -17,7 +17,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         private Dictionary<string, User> users; //key - email, value - user of that email
         private LoginInstance loginInstance;
-        private DUserController dUserController;
+
+        private DUserController dUserController; //parallel DController
+        
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
         private const int PASS_MIN_LENGTH = 4;
@@ -72,13 +74,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ///<summary>Removes all persistent users data.</summary>
         internal void DeleteData()
         {
+            users = new Dictionary<string, User>();
+            if (loginInstance.ConnectedEmail != null)
+            {
+                loginInstance.Logout(loginInstance.ConnectedEmail);
+            }
             try
             {
-                DuserController.Delete();
+                dUserController.DeleteAll();
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                log.Fatal($"FAILED to delete user data - {e.Message}");
+                throw new Exception("Failed to delete user data");
             }
         }
 

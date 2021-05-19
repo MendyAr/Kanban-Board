@@ -9,12 +9,12 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal abstract class DTO
     {
-        internal string _id;
+        private string _id;
         protected readonly string _connectionString;
         protected readonly string _tableName;
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        protected string ID
+        internal string ID
         {
             get => _id; set
             {
@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        protected bool Persist { get; set; }
+        internal bool Persist { get; set; }
 
         internal DTO(string id, string tableName)
         {
@@ -40,7 +40,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
-        protected bool Insert()
+        internal bool Insert()
         {
             int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))

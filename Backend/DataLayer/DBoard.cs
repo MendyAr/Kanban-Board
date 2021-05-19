@@ -60,7 +60,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             if (addSuccessfully)
                 Members.Add(memberEmail);
             else
-                throw new System.Exception($"failed in adding {memberEmail} to be member of {BoardName} (of {CreatorEmail})")
+                throw new System.Exception($"failed in adding {memberEmail} to be member of {BoardName} (of {CreatorEmail})");
         }
     }
 }

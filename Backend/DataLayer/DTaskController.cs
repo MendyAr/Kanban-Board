@@ -62,5 +62,30 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
             return results;
         }
+
+        internal void DeleteBoardtask(string creatorEmail, string boardName)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName} WHERE (BoardCreator = @{creatorEmail} AND BoardName=@{boardName}";
+                command.Parameters.Add(new SQLiteParameter(creatorEmail, creatorEmail));
+                command.Parameters.Add(new SQLiteParameter(boardName, boardName));
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+        }
     }
 }

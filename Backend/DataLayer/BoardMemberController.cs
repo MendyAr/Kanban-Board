@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 
@@ -50,6 +51,53 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
 
+        internal void DeleteAll()
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName}";
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+        }
+
+        internal void DeleteBoardMembers(string creatorEmail, string boardName)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName} WHERE ID = @{creatorEmail + boardName}";
+                command.Parameters.Add(new SQLiteParameter(creatorEmail + boardName, creatorEmail + boardName));
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+        }
         public bool Insert(string ID, string userEmail)
         {
             int result = -1;
@@ -63,7 +111,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter(ID,ID));
+                    command.Parameters.Add(new SQLiteParameter(ID, ID));
                     command.Parameters.Add(new SQLiteParameter(userEmail, userEmail));
                     connection.Open();
                     result = command.ExecuteNonQuery();

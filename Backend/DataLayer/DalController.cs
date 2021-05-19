@@ -53,17 +53,17 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         protected abstract DTO ConvertReaderToObject(SQLiteDataReader reader);
 
-        public void Delete()
+        public virtual void DeleteAll()
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
                 command.CommandText = $"DELETE FROM {_tableName}";
-                SQLiteDataReader dataReader = null;
+                
                 try
                 {
                     connection.Open();
-                    dataReader = command.ExecuteReader();
+                    command.ExecuteNonQuery();
                 }
                 catch
                 {
@@ -71,10 +71,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 finally
                 {
-                    if (dataReader != null)
-                    {
-                        dataReader.Close();
-                    }
                     command.Dispose();
                     connection.Close();
                 }

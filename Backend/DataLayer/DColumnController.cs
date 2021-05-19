@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 
@@ -6,10 +7,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     class DColumnController : DalController
     {
-        private DTaskController taskController;
+        private DTaskController _taskController;
         public DColumnController() : base("Column")
         {
-            taskController = new DTaskController();
+            _taskController = new DTaskController();
         }
         protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
         {
@@ -41,7 +42,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     while (dataReader.Read())
                     {
                         DColumn column = (DColumn)ConvertReaderToObject(dataReader);
-                        List<DTask> tasks = taskController.Select(boardCreator, boardName,column.Ordinal).Cast<DTask>().ToList();
+                        List<DTask> tasks = _taskController.Select(boardCreator, boardName,column.Ordinal).Cast<DTask>().ToList();
                         column.Tasks = tasks;
                         results.Add(column);
                     }
@@ -58,6 +59,38 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
             }
             return results;
+        }
+
+        public override void DeleteAll()
+        {
+            base.DeleteAll();
+            _taskController.DeleteAll();
+        }
+
+        internal void DeleteBoardColumns(string creatorEmail, string boardName)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName} WHERE (Creator = @{creatorEmail} AND Board=@{boardName}";
+                command.Parameters.Add(new SQLiteParameter(creatorEmail, creatorEmail));
+                command.Parameters.Add(new SQLiteParameter(boardName,boardName));
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            _taskController.DeleteBoardtask(creatorEmail, boardName);
         }
     }
 }

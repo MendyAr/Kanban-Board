@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using DUserController = IntroSE.Kanban.Backend.DataLayer.DUserController;
 using DUser = IntroSE.Kanban.Backend.DataLayer.DUser;
+using DTO = IntroSE.Kanban.Backend.DataLayer.DTO;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -17,7 +18,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         private Dictionary<string, User> users; //key - email, value - user of that email
         private LoginInstance loginInstance;
-        private DUserController DUC;
+        private DUserController DuserController;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
         private const int PASS_MIN_LENGTH = 4;
@@ -28,7 +29,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             users = new Dictionary<string, User>();
             this.loginInstance = loginInstance;
-            this.DUC = new DUserController();
+            this.DuserController = new DUserController();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
@@ -40,10 +41,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             try
             {
-                List<DUser> Dusers = DUserController.LoadData();
+                List<DTO> Dusers = DuserController.Select();
                 foreach (DUser Duser in Dusers)
                 {
-                    User user = new User(Duser);
+                    User user = new User((DUser)Duser);
                     users[user.Email] = user;
                 }
             }
@@ -58,7 +59,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             try
             {
-                DUserController.DeleteData();
+                DuserController.Delete();
             }
             catch (Exception e)
             {
@@ -196,3 +197,5 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
     }
 }
+
+

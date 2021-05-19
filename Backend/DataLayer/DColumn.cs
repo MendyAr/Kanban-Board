@@ -57,7 +57,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        public DColumn(string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, _tableName)
+        internal DColumn(string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, _tableName)
         {
             _creatorEmail = creatorEmail;
             _boardName = boardName;

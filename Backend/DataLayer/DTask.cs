@@ -111,7 +111,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        public DTask(int taskId, DateTime creationTime, string title, string description, DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(boardCreator + boardName + taskId, _tableName)
+        internal DTask(int taskId, DateTime creationTime, string title, string description, DateTime dueDate, string assignee, int ordinal, string boardCreator, string boardName) : base(boardCreator + boardName + taskId, _tableName)
         {
             this.taskId = taskId;
             Title = title;

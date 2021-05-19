@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return result;
         }
 
-        public List<DTO> Select(string boardCreator, string boardName)
+        internal List<DTO> Select(string boardCreator, string boardName)
         {
             List<DTO> results = new List<DTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -61,7 +61,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
 
-        public override void DeleteAll()
+        internal override void DeleteAll()
         {
             base.DeleteAll();
             _taskController.DeleteAll();

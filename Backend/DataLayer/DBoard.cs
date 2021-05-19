@@ -27,7 +27,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public HashSet<string> Members { get => members; set => members = value; }
 
-        public DBoard (string creatorEmail, string boardName) : base(creatorEmail + boardName,"Board")
+        internal DBoard (string creatorEmail, string boardName) : base(creatorEmail + boardName,"Board")
         {
             this._creatorEmail = creatorEmail;
             this._boardName = boardName;
@@ -36,7 +36,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             _boardMemberController = new BoardMemberController();
         }
 
-        public int numberOfTasks()
+        internal int numberOfTasks()
         {
             return columns[0].Tasks.Count + columns[1].Tasks.Count + columns[2].Tasks.Count;
         }
@@ -54,7 +54,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return command;
         }
 
-        public void AddMember (string memberEmail)
+        internal void AddMember (string memberEmail)
         {
             bool addSuccessfully = _boardMemberController.Insert(ID, memberEmail);
             if (addSuccessfully)

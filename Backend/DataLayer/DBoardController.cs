@@ -9,14 +9,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
         DColumnController _columnController;
         BoardMemberController _boardMemberController;
 
-        public DBoardController() : base("Board")
+        internal DBoardController() : base("Board")
         {
             _columnController = new DColumnController();
             _boardMemberController = new BoardMemberController();
         }
 
         
-        public override List<DTO> Select()
+        internal override List<DTO> Select()
         {
             List<DTO> results = base.Select(); 
 
@@ -25,7 +25,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 DBoard board = (DBoard) dto;
                 IList<DColumn> columns = _columnController.Select(board.CreatorEmail, board.BoardName).Cast<DColumn>().ToList();
                 board.Columns= columns;
-                board.Members = _boardMemberController.Select(board.ID);
+                board.Members = _boardMemberController.Select(board._id);
                 results.Add(board); 
             }
 
@@ -39,14 +39,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
         return new DBoard(creator, name);
         }
 
-        public override void DeleteAll()
+        internal override void DeleteAll()
         {
             base.DeleteAll();
             _columnController.DeleteAll();
             _boardMemberController.DeleteAll();
         }
 
-        public void DeleteBoard(string creatorEmail, string boardName)
+        internal void DeleteBoard(string creatorEmail, string boardName)
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {

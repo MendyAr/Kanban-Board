@@ -36,35 +36,29 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
-            Response res = UserS.LoadData();
-            if (res.ErrorOccured)
-            {
-                log.Error("Failed to load users data!");
-                return new Response(res.ErrorMessage);
-            }
-            res = BoardS.LoadData();
-            if (res.ErrorOccured) 
-            {
-                log.Error("Failed to load boards and tasks data!");
-                return new Response(res.ErrorMessage);
-            }
+            Response usersRes = UserS.LoadData();
+            Response boardsRes = BoardS.LoadData();
+            if (usersRes.ErrorOccured && boardsRes.ErrorOccured)
+                return new Response(usersRes.ErrorMessage + "\n" + boardsRes.ErrorMessage);
+            if (usersRes.ErrorOccured)
+                return usersRes;
+            if (boardsRes.ErrorOccured)
+                return boardsRes;
+            return new Response();
         }
 
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            Response res = UserS.DeleteData();
-            if (res.ErrorOccured)
-            {
-                log.Error("Failed to delete users data!");
-                return new Response(res.ErrorMessage);
-            }
-            res = BoardS.DeleteData();
-            if (res.ErrorOccured)
-            {
-                log.Error("Failed to delete boards and tasks data!");
-                return new Response(res.ErrorMessage);
-            }
+            Response usersRes = UserS.DeleteData();
+            Response boardsRes = BoardS.DeleteData();
+            if (usersRes.ErrorOccured && boardsRes.ErrorOccured)
+                return new Response(usersRes.ErrorMessage + "\n" + boardsRes.ErrorMessage);
+            if (usersRes.ErrorOccured)
+                return usersRes;
+            if (boardsRes.ErrorOccured)
+                return boardsRes;
+            return new Response();
         }
 
         ///<summary>This method registers a new user to the system.</summary>
@@ -231,12 +225,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            Response<Column> res = BoardS.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
-            if (res.ErrorOccured)
-            {
-                return Response<IList<Task>>.FromError(res.ErrorMessage);
-            }
-            return Response<IList<Task>>.FromValue(res.Value.Tasks);
+            return BoardS.GetColumnTasks(userEmail, creatorEmail, boardName, columnOrdinal);
         }
 
         /// <summary>

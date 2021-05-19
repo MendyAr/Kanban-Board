@@ -8,9 +8,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         public readonly string Name;
         public readonly int Limit;
-        public readonly IList<Task> Tasks;
+        public readonly IList<string> Tasks;
 
-        internal Column(string Name, int Limit, IList<Task> Tasks)
+        internal Column(string Name, int Limit, IList<string> Tasks)
         {
             this.Name = Name;
             this.Limit = Limit;
@@ -21,29 +21,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             Name = bColumn.Name;
             Limit = bColumn.Limit;
-            Tasks = TranslateTasks(bColumn.Tasks);// - preferred solution
-
-            /*
-            //should not be here - start
-            IList<Task> tasks = new List<Task>();
+            IList<string> tasks = new List<string>();
             foreach (BTask bTask in bColumn.Tasks)
             {
-                tasks.Add(new Task(bTask));
+                tasks.Add(bTask.TaskId + " - " + bTask.Title);
             }
-            //end
-
             Tasks = tasks; 
-            */
-        }
-
-        private static IList<Task> TranslateTasks(IList<BTask> bTasks)
-        {
-            IList<Task> tasks = new List<Task>();
-            foreach (BTask bTask in bTasks)
-            {
-                tasks.Add(new Task(bTask));
-            }
-            return tasks;
         }
     }
 }

@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using DUserController = IntroSE.Kanban.Backend.DataLayer.DUserController;
 using DUser = IntroSE.Kanban.Backend.DataLayer.DUser;
-using DTO = IntroSE.Kanban.Backend.DataLayer.DTO;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -18,7 +17,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         private Dictionary<string, User> users; //key - email, value - user of that email
         private LoginInstance loginInstance;
-        private DUserController DuserController;
+
+        private DUserController dUserController; //parallel DController
+        
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
         private const int PASS_MIN_LENGTH = 4;
@@ -29,7 +30,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             users = new Dictionary<string, User>();
             this.loginInstance = loginInstance;
-            this.DuserController = new DUserController();
+            this.dUserController = new DUserController();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
@@ -39,31 +40,53 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ///<summary>This method loads the users data from the persistance </summary>
         internal void LoadData()
         {
+            string errorMsg = null;
+            IList<DUser> dUsers = null;
             try
             {
-                List<DTO> Dusers = DuserController.Select();
-                foreach (DUser Duser in Dusers)
-                {
-                    User user = new User((DUser)Duser);
-                    users[user.Email] = user;
-                }
+                dUsers = (IList<DUser>)dUserController.Select();
             }
             catch (Exception e)
             {
+                log.Fatal($"Failed to load data - {e.Message}");
                 throw new Exception(e.Message);
             }
+
+            foreach (DUser dUser in dUsers) 
+            {
+                string email = dUser.Email;
+                //load the board
+                if (users.ContainsKey(email))
+                {
+                    log.Fatal($"FAILED to load user '{email}' - user already exists");
+                    errorMsg = errorMsg + $"Couldn't load user '{email}' - user already exists\n";
+                }
+                else
+                {
+                    users[email] = new User(dUser);
+                }
+            }
+
+            if (errorMsg != null)
+                throw new Exception(errorMsg);
         }
 
         ///<summary>Removes all persistent users data.</summary>
         internal void DeleteData()
         {
+            users = new Dictionary<string, User>();
+            if (loginInstance.ConnectedEmail != null)
+            {
+                loginInstance.Logout(loginInstance.ConnectedEmail);
+            }
             try
             {
-                DuserController.DeleteAll();
+                dUserController.DeleteAll();
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                log.Fatal($"FAILED to delete user data - {e.Message}");
+                throw new Exception("Failed to delete user data");
             }
         }
 

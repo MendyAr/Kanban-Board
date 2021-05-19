@@ -4,6 +4,8 @@ using log4net;
 using log4net.Config;
 using System.Reflection;
 using System.IO;
+using DBC = IntroSE.Kanban.Backend.DataLayer.DBoardController;
+using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -17,6 +19,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private Dictionary<string, Dictionary<string, Board>> boards; //first key is userEmail , second key will be the board name
         private Dictionary<string, HashSet<string>> userBoards; //first key is userEmail, second key is a set of all the boards he is a member of
         private LoginInstance loginInstance;
+
+        private DBC dBoardController = new DBC(); //parallel DController
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
@@ -30,6 +35,78 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         //methods
+
+        /// <summary>
+        /// Loads all Boards and memberships from DAL
+        /// </summary>
+        /// <exception cref="Exception">Thrown exception if some boards couldn't be loaded</exception>
+        internal void LoadData()
+        {
+            string errorMsg = null;
+            
+            IList<DBoard> dBoards = null;
+            try
+            {
+                dBoards = (IList<DBoard>)dBoardController.Select();
+            }
+            catch (Exception e)
+            {
+                log.Fatal($"Failed to load data - {e.Message}");
+                throw new Exception(e.Message);
+            }
+
+            foreach (DBoard dBoard in dBoards) 
+            {
+                string creatorEmail = dBoard.CreatorEmail;
+                string boardName = dBoard.BoardName;
+
+                //load the board
+                if (!boards.ContainsKey(creatorEmail))
+                {
+                    boards[creatorEmail] = new Dictionary<string, Board>();
+                }
+                if (boards[creatorEmail].ContainsKey(boardName))
+                {
+                    log.Fatal($"FAILED to load board '{creatorEmail}:{boardName}' - board already exists");
+                    errorMsg = errorMsg + $"Couldn't load board '{creatorEmail}:{boardName}' - board already exists\n";
+                }
+                else
+                {
+                    boards[creatorEmail][boardName] = new Board(dBoard);
+                }
+
+                //load board's members
+                foreach (string member in dBoard.Members)
+                {
+                    if (!userBoards.ContainsKey(member))
+                    {
+                        userBoards[member] = new HashSet<string>();
+                    }
+                    userBoards[member].Add($"{creatorEmail}:{boardName}");
+                }
+            }
+
+            if (errorMsg != null)
+                throw new Exception(errorMsg);
+        }
+
+        /// <summary>
+        /// Deletes all board data
+        /// </summary>
+        internal void DeleteData()
+        {
+            boards = new Dictionary<string, Dictionary<string, Board>>();
+            userBoards = new Dictionary<string, HashSet<string>>();
+            try
+            {
+                dBoardController.DeleteAll();
+            }
+            catch (Exception e)
+            {
+                log.Fatal($"FAILED to delete board data - {e.Message}");
+                throw new Exception("Failed to delete board data");
+            }
+        }
 
         /// <summary>
         /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
@@ -128,7 +205,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 throw new InvalidOperationException("Can't remove boards you that wasn't created by you");
             }
             else if (checkBoardExistance(creatorEmail, boardName)) {
-                boards[creatorEmail][boardName].Delete();
+                try
+                {
+                    dBoardController.DeleteBoard(creatorEmail,boardName);
+                }
+                catch (Exception e)
+                {
+                    log.Fatal($"FAILED to delete board '{creatorEmail}:{boardName}' from db - {e.Message}");
+                }
                 boards[creatorEmail].Remove(boardName);
                 log.Info($"SUCCESSFULLY removed '{creatorEmail}:{boardName}'");
             }
@@ -437,6 +521,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
             checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
             return boards[userEmail][boardName].GetColumn(columnOrdinal);
+        }
+
+        /// <summary>
+        /// Finds and returns all tasks in specific column of a specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <param name="columnOrdinal">column index</param>
+        /// <returns>IList of tasks of requested column</returns>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal</remarks>
+        internal IList<Task> GetColumnTasks(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            validateLogin(userEmail, $"GetColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal})");
+            checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
+            checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
+            return boards[userEmail][boardName].GetColumnTasks(columnOrdinal);
         }
 
         /// <summary>

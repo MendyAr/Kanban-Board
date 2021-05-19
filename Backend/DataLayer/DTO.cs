@@ -9,7 +9,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal abstract class DTO
     {
-        protected string _id;
+        internal string _id;
         protected readonly string _connectionString;
         protected readonly string _tableName;
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

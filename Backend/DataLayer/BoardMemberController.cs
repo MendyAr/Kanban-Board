@@ -11,13 +11,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private readonly string _connectionString;
         private const string _tableName = "BoardMember";
 
-        public BoardMemberController()
+        internal BoardMemberController()
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
             this._connectionString = $"Data Source={path}; Version=3;";            
         }
-            
-        public HashSet<string> Select(string ID)  // email, set of boards with syntax creatorEmail:boardName
+
+        internal HashSet<string> Select(string ID)  // email, set of boards with syntax creatorEmail:boardName
         {
             HashSet<string> results = new HashSet<string>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -98,7 +98,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
             }
         }
-        public bool Insert(string ID, string userEmail)
+        internal bool Insert(string ID, string userEmail)
         {
             int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -129,7 +129,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return result > 0;
         }
 
-        public void Delete()
+        internal void Delete()
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {

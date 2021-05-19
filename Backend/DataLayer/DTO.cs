@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
+using log4net;
+using log4net.Config;
+using System.Reflection;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -9,26 +12,35 @@ namespace IntroSE.Kanban.Backend.DataLayer
         protected string _id;
         protected readonly string _connectionString;
         protected readonly string _tableName;
+        protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public string ID { get => _id; set {
+        protected string ID
+        {
+            get => _id; set
+            {
                 if (Persist)
                 {
                   Update("ID", value);
                 }
                 _id = value;
-            } }
-        public bool Persist { get; set; }        
-       
-        protected DTO(string id, string tableName)
+            }
+        }
+
+        protected bool Persist { get; set; }
+
+        internal DTO(string id, string tableName)
         {
             Persist= false;
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanbas.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = tableName;
             ID = id;
+
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
-        public bool Insert()
+        protected bool Insert()
         {
             int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -39,9 +51,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     result = command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                        $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -69,9 +82,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Update on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                        $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -100,9 +114,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    // log
+                    log.Error($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                        $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -131,9 +146,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    // log
+                    log.Error($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                        $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {

@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using log4net;
+using log4net.Config;
+using System.Reflection;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -8,14 +12,19 @@ namespace IntroSE.Kanban.Backend.DataLayer
     {
         protected readonly string _connectionString;
         protected readonly string _tableName;
-        public DalController(string tableName)
+        protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        internal DalController(string tableName)
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanbas.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = tableName;
+
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
-        public virtual List<DTO> Select()
+        internal virtual List<DTO> Select()
         {
             List<DTO> results = new List<DTO>();
             using (var connection = new SQLiteConnection(_connectionString))
@@ -33,9 +42,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         results.Add(ConvertReaderToObject(dataReader));
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Select on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                        $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -51,9 +61,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             return results;
         }
 
-        protected abstract DTO ConvertReaderToObject(SQLiteDataReader reader);
-
-        public virtual void DeleteAll()
+        internal virtual void DeleteAll()
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -65,9 +73,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"DeleteAll on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                        $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -76,5 +85,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
             }
         }
+
+        protected abstract DTO ConvertReaderToObject(SQLiteDataReader reader);
     }
 }

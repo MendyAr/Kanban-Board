@@ -524,6 +524,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         /// <summary>
+        /// Finds and returns all tasks in specific column of a specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <param name="columnOrdinal">column index</param>
+        /// <returns>IList of tasks of requested column</returns>
+        /// <remarks>calls validateLogin, checkMembership, checkColumnOrdinal</remarks>
+        internal IList<Task> GetColumnTasks(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            validateLogin(userEmail, $"GetColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal})");
+            checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
+            checkColumnOrdinal(creatorEmail, boardName, columnOrdinal);
+            return boards[userEmail][boardName].GetColumnTasks(columnOrdinal);
+        }
+
+        /// <summary>
         /// Finds and returns specific board
         /// </summary>
         /// <param name="userEmail">calling user's email</param>

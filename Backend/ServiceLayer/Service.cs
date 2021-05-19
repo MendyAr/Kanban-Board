@@ -225,12 +225,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            Response<Column> res = BoardS.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
-            if (res.ErrorOccured)
-            {
-                return Response<IList<Task>>.FromError(res.ErrorMessage);
-            }
-            return Response<IList<Task>>.FromValue(res.Value.Tasks);
+            return BoardS.GetColumnTasks(userEmail, creatorEmail, boardName, columnOrdinal);
         }
 
         /// <summary>

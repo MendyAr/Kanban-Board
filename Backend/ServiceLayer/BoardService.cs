@@ -204,6 +204,26 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return Response<Column>.FromError(e.Message);
             }
         }
+        
+        /// <summary>
+        /// Retrieves all tasks within specific column of a specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <param name="columnOrdinal">column index</param>
+        /// <returns>Response holding: all tasks if succeeded, message detailing error if occured</returns>
+        internal Response<IList<Task>> GetColumnTasks(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            try
+            {
+                return Response<IList<Task>>.FromValue(translateList(bc.GetColumnTasks(userEmail, creatorEmail, boardName, columnOrdinal)));
+            }
+            catch (Exception e)
+            {
+                return Response<IList<Task>>.FromError(e.Message);
+            }
+        }
 
         /// <summary>
         /// Retrieves specific board
@@ -288,11 +308,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <returns>Response holding: IList containing all of the user's 'In Progress' tasks if succeeded, a message detailing the error if occured</returns>
-        internal Response<IList<Task>> InProgressTasks(string usereEmail)
+        internal Response<IList<Task>> InProgressTasks(string userEmail)
         {
             try
             {
-                return Response<IList<Task>>.FromValue(translateList(bc.InProgressTasks(usereEmail)));
+                return Response<IList<Task>>.FromValue(translateList(bc.InProgressTasks(userEmail)));
             }
             catch (Exception e)
             {

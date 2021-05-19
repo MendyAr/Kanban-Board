@@ -1,21 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class BoardMemberController 
-
+    internal class BoardMemberController 
     {
+
+        // properties
+
         private readonly string _connectionString;
         private const string _tableName = "BoardMember";
+
+        // constructor
 
         internal BoardMemberController()
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
             this._connectionString = $"Data Source={path}; Version=3;";            
         }
+
+
+        // methods
 
         internal HashSet<string> Select(string ID)  // email, set of boards with syntax creatorEmail:boardName
         {

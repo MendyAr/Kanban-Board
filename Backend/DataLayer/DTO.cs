@@ -9,6 +9,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal abstract class DTO
     {
+
+        // properties
+
         private string _id;
         protected readonly string _connectionString;
         protected readonly string _tableName;
@@ -28,6 +31,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         internal bool Persist { get; set; }
 
+
+        // constructor
+
         internal DTO(string id, string tableName)
         {
             Persist= false;
@@ -39,6 +45,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
+
+
+        // methods
 
         internal bool Insert()
         {

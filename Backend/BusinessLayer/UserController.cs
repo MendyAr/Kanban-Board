@@ -44,7 +44,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             IList<DUser> dUsers = null;
             try
             {
-                dUsers = (IList<DUser>)dUserController.Select();
+                dUsers = dUserController.Select();
             }
             catch (Exception e)
             {

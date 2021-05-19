@@ -3,53 +3,59 @@ using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class DColumn : DTO
+    internal class DColumn : DTO
     {
+        // properties
+
         private string _creatorEmail;
         private string _boardName;
         private readonly int _ordinal;
         private int _limit;
         private List<DTask> _tasks;
-        private const string _tableName = "Column";
 
-        public string CreatorEmail
+        private const string CREATOR = "Creator";
+        private const string BOARD = "Board";
+        private const string LIMIT = "Limit";
+
+
+        internal string CreatorEmail
         {
             get => _creatorEmail; set
             {
                 if (Persist)
                 {
-                    Update("Creator", value);
+                    Update(CREATOR, value);
                 }
                 _creatorEmail = value;
             }
         }
 
-        public string BoardName
+        internal string BoardName
         {
             get => _boardName; set
             {
                 if (Persist)
                 {
-                    Update("Board", value);
+                    Update(BOARD, value);
                 }
                 _boardName = value;
             }
         }
 
-        public int Limit
+        internal int Limit
         {
             get => _limit; set
             {
                 if (Persist)
                 {
-                    Update("Limit", value);
+                    Update(LIMIT, value);
                 }
                 _limit = value;
             }
         }
-        public int Ordinal { get => _ordinal; }
+        internal int Ordinal { get => _ordinal; }
 
-        public List<DTask> Tasks
+        internal List<DTask> Tasks
         {
             get => _tasks; set
             {
@@ -57,13 +63,19 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
-        internal DColumn(string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, _tableName)
+
+        // constructor
+
+        internal DColumn(string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, "Column")
         {
             _creatorEmail = creatorEmail;
             _boardName = boardName;
             _ordinal = ordinal;
             _limit = limit;
         }
+
+
+        // method
 
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)
         {

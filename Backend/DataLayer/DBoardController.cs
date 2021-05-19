@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
-    class DBoardController : DalController
+    internal class DBoardController : DalController <DBoard>
     {
         DColumnController _columnController;
         BoardMemberController _boardMemberController;
@@ -16,27 +16,19 @@ namespace IntroSE.Kanban.Backend.DataLayer
         }
 
         
-        internal override List<DTO> Select()
+        internal override List<DBoard> Select()
         {
-            List<DTO> results = base.Select(); 
+            List<DBoard> results = base.Select(); 
 
-            foreach(DTO dto in results)
+            foreach(DBoard dBoard in results)
             {
-                DBoard board = (DBoard) dto;
-                IList<DColumn> columns = _columnController.Select(board.CreatorEmail, board.BoardName).Cast<DColumn>().ToList();
-                board.Columns= columns;
-                board.Members = _boardMemberController.Select(board._id);
-                results.Add(board); 
+                IList<DColumn> columns = _columnController.Select(dBoard.CreatorEmail, dBoard.BoardName).Cast<DColumn>().ToList();
+                dBoard.Columns= columns;
+                dBoard.Members = _boardMemberController.Select(dBoard.ID);
+                results.Add(dBoard); 
             }
 
             return results;
-        }
-
-        protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
-        {
-        string creator = reader.GetString(1);
-        string name = reader.GetString(2);
-        return new DBoard(creator, name);
         }
 
         internal override void DeleteAll()
@@ -70,6 +62,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
             _boardMemberController.DeleteBoardMembers(creatorEmail, boardName);
             _columnController.DeleteBoardColumns(creatorEmail, boardName);
+        }
+
+        protected override DBoard ConvertReaderToObject(SQLiteDataReader reader)
+        {
+            string creator = reader.GetString(1);
+            string name = reader.GetString(2);
+            return new DBoard(creator, name);
         }
     }
 }

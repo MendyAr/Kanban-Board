@@ -4,6 +4,8 @@ using log4net;
 using log4net.Config;
 using System.Reflection;
 using System.IO;
+using DBC = IntroSE.Kanban.Backend.DataLayer.DBoardController;
+using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -17,6 +19,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private Dictionary<string, Dictionary<string, Board>> boards; //first key is userEmail , second key will be the board name
         private Dictionary<string, HashSet<string>> userBoards; //first key is userEmail, second key is a set of all the boards he is a member of
         private LoginInstance loginInstance;
+
+        private DBC dBoardController = new DBC(); //parallel DController
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
@@ -30,6 +35,111 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         //methods
+
+        internal void LoadData()
+        {
+            string errorMsg = null;
+            DBC DBC = new DBC();
+            
+            IList<DBoard> dBoards = null;
+            try
+            {
+                dBoards = (IList<DBoard>)DBC.Select();
+            }
+            catch (Exception e)
+            {
+                log.Fatal($"Failed to load data - {e.Message}");
+                throw new Exception(e.Message);
+            }
+
+            foreach (DBoard dBoard in dBoards) 
+            {
+                string creatorEmail = dBoard.CreatorEmail;
+                string boardName = dBoard.BoardName;
+
+                //load the board
+                if (!boards.ContainsKey(creatorEmail))
+                {
+                    boards[creatorEmail] = new Dictionary<string, Board>();
+                }
+                if (boards[creatorEmail].ContainsKey(boardName))
+                {
+                    log.Fatal($"FAILED to load board '{creatorEmail}:{boardName}' - board already exists");
+                    errorMsg = errorMsg + $"Couldn't load board '{creatorEmail}:{boardName}' - board already exists\n";
+                }
+                else
+                {
+                    boards[creatorEmail][boardName] = new Board(dBoard);
+                }
+
+                //load board's members
+                foreach (string member in dBoard.Members)
+                {
+                    if (!userBoards.ContainsKey(member))
+                    {
+                        userBoards[member] = new HashSet<string>();
+                    }
+                    userBoards[member].Add($"{creatorEmail}:{boardName}");
+                }
+            }
+
+            if (errorMsg != null)
+                throw new Exception(errorMsg);
+        }
+
+        /// <summary>
+        /// Loads all Boards and memberships from DAL
+        /// </summary>
+        /// <exception cref="Exception">Thrown exception if some boards couldn't be loaded</exception>
+        internal void LoadData()
+        {
+            string errorMsg = null;
+            
+            IList<DBoard> dBoards = null;
+            try
+            {
+                dBoards = (IList<DBoard>)dBoardController.Select();
+            }
+            catch (Exception e)
+            {
+                log.Fatal($"Failed to load data - {e.Message}");
+                throw new Exception(e.Message);
+            }
+
+            foreach (DBoard dBoard in dBoards) 
+            {
+                string creatorEmail = dBoard.CreatorEmail;
+                string boardName = dBoard.BoardName;
+
+                //load the board
+                if (!boards.ContainsKey(creatorEmail))
+                {
+                    boards[creatorEmail] = new Dictionary<string, Board>();
+                }
+                if (boards[creatorEmail].ContainsKey(boardName))
+                {
+                    log.Fatal($"FAILED to load board '{creatorEmail}:{boardName}' - board already exists");
+                    errorMsg = errorMsg + $"Couldn't load board '{creatorEmail}:{boardName}' - board already exists\n";
+                }
+                else
+                {
+                    boards[creatorEmail][boardName] = new Board(dBoard);
+                }
+
+                //load board's members
+                foreach (string member in dBoard.Members)
+                {
+                    if (!userBoards.ContainsKey(member))
+                    {
+                        userBoards[member] = new HashSet<string>();
+                    }
+                    userBoards[member].Add($"{creatorEmail}:{boardName}");
+                }
+            }
+
+            if (errorMsg != null)
+                throw new Exception(errorMsg);
+        }
 
         /// <summary>
         /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.

@@ -45,24 +45,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (boardsRes.ErrorOccured)
                 return boardsRes;
             return new Response();
-
         }
 
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            Response res = UserS.DeleteData();
-            if (res.ErrorOccured)
-            {
-                log.Error("Failed to delete users data!");
-                return new Response(res.ErrorMessage);
-            }
-            res = BoardS.DeleteData();
-            if (res.ErrorOccured)
-            {
-                log.Error("Failed to delete boards and tasks data!");
-                return new Response(res.ErrorMessage);
-            }
+            Response usersRes = UserS.DeleteData();
+            Response boardsRes = BoardS.DeleteData();
+            if (usersRes.ErrorOccured && boardsRes.ErrorOccured)
+                return new Response(usersRes.ErrorMessage + "\n" + boardsRes.ErrorMessage);
+            if (usersRes.ErrorOccured)
+                return usersRes;
+            if (boardsRes.ErrorOccured)
+                return boardsRes;
+            return new Response();
         }
 
         ///<summary>This method registers a new user to the system.</summary>

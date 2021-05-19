@@ -28,7 +28,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.Title = task.Title;
             this.Description = task.Description;
             this.DueDate = task.DueDate;
-            this.emailAssignee = task.emailAssignee;
+            this.emailAssignee = task.Assignee;
         }
     }
 }

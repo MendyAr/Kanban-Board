@@ -8,9 +8,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         private readonly string email;
         private string password;
+        DUser Duser;
 
         internal string Email { get => email; }
         private string Password { get => password; }
+
 
         //constructor
 
@@ -18,13 +20,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             this.email = email;
             this.password = password;
+            Duser = new DUser(Email, Password);
         }
 
         //constructor for Duser objects
-        internal User(DUser dUser)
+        internal User(DUser Duser)
         {
-            this.email = dUser.Email;
-            this.password = dUser.Password;
+            this.email = Duser.Email;
+            this.password = Duser.Password;
+            this.Duser = Duser;
+
         }
 
         //methods
@@ -38,3 +43,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
     }
 }
+
+
+

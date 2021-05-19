@@ -13,7 +13,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         public BoardMemberController()
         {
-            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanbas.db"));
+            string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
             this._connectionString = $"Data Source={path}; Version=3;";            
         }
             

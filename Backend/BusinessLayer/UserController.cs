@@ -59,7 +59,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             try
             {
-                DuserController.Delete();
+                DuserController.DeleteAll();
             }
             catch (Exception e)
             {

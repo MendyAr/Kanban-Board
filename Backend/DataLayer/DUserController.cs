@@ -1,7 +1,4 @@
-﻿
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.IO;
+﻿using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -11,17 +8,11 @@ namespace IntroSE.Kanban.Backend.DataLayer
         internal DUserController() : base("User")
         { }
 
-
-
-
-        override public void Insert(DTO dTO)
+        protected override DTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-
-        }
-
-        override protected DTO ConvertReaderToObject(SQLiteDataReader reader)
-        {
-
+            string email = reader.GetString(1);
+            string password = reader.GetString(2);
+            return new DUser(email, password);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
-using DColumn = IntroSE.Kanban.Backend.DataLayer.DColumn;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -57,6 +56,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         //methods
+
+        /// <summary>
+        /// Adds new member to DTO
+        /// </summary>
+        /// <param name="member">new member's email</param>
+        internal void AddMember(string memberEmail)
+        {
+            dBoard.AddMember(memberEmail);
+        }
 
         /// <summary>
         /// limits a column within the board

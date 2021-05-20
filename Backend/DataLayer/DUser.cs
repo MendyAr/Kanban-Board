@@ -18,8 +18,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             this.email = email;
             this.password = password;
-            Insert();
-            Persist = true;
         }
 
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)

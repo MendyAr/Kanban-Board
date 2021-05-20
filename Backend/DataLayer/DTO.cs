@@ -52,6 +52,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         internal bool Insert()
         {
+            bool duplicate = false;
             int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -63,13 +64,16 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                    log.Fatal($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
                         $" the SQLite exception massage was: {e.Message}");
+                    duplicate = true;
                 }
                 finally
                 {
                     command.Dispose();
                     connection.Close();
+                    if (duplicate)
+                        throw new InvalidOperationException();
                 }
             }
             return result > 0;
@@ -94,8 +98,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error($"Update on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                    log.Fatal($"Update on table {_tableName} failed, tried command: {command.CommandText},\n" +
                         $" the SQLite exception massage was: {e.Message}");
+                    
                 }
                 finally
                 {

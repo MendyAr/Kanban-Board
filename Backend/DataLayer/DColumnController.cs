@@ -38,9 +38,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     while (dataReader.Read())
                     {
                         DColumn column = ConvertReaderToObject(dataReader);
-                        List<DTask> tasks = _taskController.Select(boardCreator, boardName,column.Ordinal).ToList();
-                        column.Tasks = tasks;
-                        results.Add(column);
+                        column.Tasks = _taskController.Select(boardCreator, boardName, column.Ordinal).ToList();
                     }
                 }
                 catch

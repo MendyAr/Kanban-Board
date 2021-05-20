@@ -153,7 +153,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             if (boards[userEmail].ContainsKey(boardName))
             {
-                log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - already exists");
+                log.Warn($"FAILED to create board '{userEmail}:{boardName}' - already exists");
                 throw new ArgumentException($"Board '{userEmail}:{boardName}' already exist");
             }
             try
@@ -162,7 +162,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (InvalidOperationException)
             {
-                log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - exists in DataBase but not in BusinessLayer");
+                log.Warn($"FAILED to create board '{userEmail}:{boardName}' - exists in DataBase but not in BusinessLayer");
                 throw new Exception($"Can't create board '{userEmail}:{boardName}' - this board already exists in the DataBase, please LoadData before continueing");
             }
             JoinBoard(userEmail, userEmail, boardName);

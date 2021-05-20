@@ -169,7 +169,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             if (email == null)
             {
-                log.Info("FAILED register attempt: null email");
                 throw new ArgumentNullException("Email cannot be null");
             }
 

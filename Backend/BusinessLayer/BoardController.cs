@@ -123,7 +123,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 foreach (String board in userBoards[userEmail])
                 {
-                    string[] boardDetails = board.Split(':');
+                    string[] boardDetails = board.Split(':', 2);
                     if (checkBoardExistance(boardDetails[0], boardDetails[1]))
                     {
                         boards.Add(boardDetails[1]);
@@ -583,7 +583,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 foreach (String board in userBoards[userEmail])
                 {
-                    string[] boardDetails = board.Split(':');
+                    string[] boardDetails = board.Split(':', 2);
                     if (checkBoardExistance(boardDetails[0], boardDetails[1]))
                     {
                         foreach (Task task in boards[boardDetails[0]][boardDetails[1]].GetColumnTasks(1))

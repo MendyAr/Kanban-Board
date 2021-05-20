@@ -208,7 +208,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal void RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
             validateLogin(userEmail, $"RemoveBoard({userEmail}, {creatorEmail}, {boardName})");
-            if (userEmail.Equals(creatorEmail))
+            if (!userEmail.Equals(creatorEmail))
             {
                 log.Warn($"OUT OF DOMAIN OPERATION: User '{loginInstance.ConnectedEmail}' attempted 'RemoveBoard({userEmail}, {creatorEmail}, {boardName})'");
                 throw new InvalidOperationException("Can't remove boards you that wasn't created by you");

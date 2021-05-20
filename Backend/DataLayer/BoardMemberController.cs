@@ -37,9 +37,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter(CAL_ID, ID));
                     connection.Open();
                     dataReader = command.ExecuteReader();
-                    command.Parameters.Add(new SQLiteParameter(CAL_ID, ID));
 
                     while (dataReader.Read())
                     {

@@ -43,6 +43,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         results.Add(column);
                     }
                 }
+                catch
+                {
+                    //log
+                }
                 finally
                 {
                     if (dataReader != null)

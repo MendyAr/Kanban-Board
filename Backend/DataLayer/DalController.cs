@@ -45,7 +45,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error($"Select on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                    log.Fatal($"Select on table {_tableName} failed, tried command: {command.CommandText},\n" +
                         $" the SQLite exception massage was: {e.Message}");
                 }
                 finally
@@ -76,7 +76,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error($"DeleteAll on table {_tableName} failed, tried command: {command.CommandText},\n" +
+                    log.Fatal($"DeleteAll on table {_tableName} failed, tried command: {command.CommandText},\n" +
                         $" the SQLite exception massage was: {e.Message}");
                 }
                 finally

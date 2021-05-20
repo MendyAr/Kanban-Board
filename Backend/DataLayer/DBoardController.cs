@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 IList<DColumn> columns = _columnController.Select(dBoard.CreatorEmail, dBoard.BoardName).Cast<DColumn>().ToList();
                 dBoard.Columns= columns;
-                dBoard.Members = _boardMemberController.Select(dBoard.ID);
+                dBoard.Members = _boardMemberController.Select(dBoard.Id);
                 results.Add(dBoard); 
             }
 
@@ -43,8 +43,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"DELETE FROM {_tableName} WHERE ID = @{creatorEmail + boardName}";
-                command.Parameters.Add(new SQLiteParameter(creatorEmail +boardName, creatorEmail + boardName));
+                command.CommandText = $"DELETE FROM {_tableName} WHERE {COL_ID} = @{COL_ID}";
+                command.Parameters.Add(new SQLiteParameter(COL_ID, creatorEmail + boardName));
                 try
                 {
                     connection.Open();

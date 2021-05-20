@@ -7,6 +7,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
         // properties
         private readonly string email;
         private string password;
+        private const string COL_EMAIL = "Email";
+        private const string COL_PASSWORD = "Password";
 
         internal string Email { get { return email; } }
         internal string Password { get { return password; } }
@@ -25,11 +27,11 @@ namespace IntroSE.Kanban.Backend.DataLayer
             SQLiteCommand command = new SQLiteCommand
             {
                 Connection = connection,
-                CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID}, @{Email}, @{Password})"
+                CommandText = $"INSERT INTO {_tableName}  VALUES (@{COL_ID}, @{COL_EMAIL}, @{COL_PASSWORD})"
             };
-            command.Parameters.Add(new SQLiteParameter(ID, ID));
-            command.Parameters.Add(new SQLiteParameter(Email, Email));
-            command.Parameters.Add(new SQLiteParameter(Password, Password));
+            command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
+            command.Parameters.Add(new SQLiteParameter(COL_EMAIL, Email));
+            command.Parameters.Add(new SQLiteParameter(COL_PASSWORD, Password));
 
             return command;
         }

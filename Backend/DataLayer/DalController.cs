@@ -13,6 +13,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         protected readonly string _connectionString;
         protected readonly string _tableName;
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        protected const string COL_ID = "ID";
 
         internal DalController(string tableName)
         {

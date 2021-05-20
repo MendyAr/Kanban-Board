@@ -17,13 +17,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private string _boardCreator;
         private string _boardName;
 
-        private const string TITLE = "Title";
-        private const string DESCRIPTION = "Description";
-        private const string DUE_DATE = "DueDate";
-        private const string ASSIGNEE = "Assignee";
-        private const string ORDINAL = "Ordinal";
-        private const string BOARD_CREATOR = "BoardCreator";
-        private const string BOARD_NAME = "BoardName";
+        private const string COL_TASK_ID = "TaskId";
+        private const string COL_TITLE = "Title";
+        private const string COL_DESCRIPTION = "Description";
+        private const string COL_CREATIONTIME = "CreationTime";
+        private const string COL_DUE_DATE = "DueDate";
+        private const string COL_ASSIGNEE = "Assignee";
+        private const string COL_ORDINAL = "Ordinal";
+        private const string COL_CREATOR_EMAIL = "BoardCreator";
+        private const string COL_BOARD_NAME = "BoardName";
 
         internal int TaskId
         { get { return taskId; } }
@@ -35,7 +37,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(TITLE, value);
+                    Update(COL_TITLE, value);
                 }
                 title = value;
             }
@@ -49,7 +51,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                    Update(DESCRIPTION, value);
+                    Update(COL_DESCRIPTION, value);
                 }
                 description = value;
             }
@@ -65,7 +67,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 if (Persist)
                 {
-                    Update(DUE_DATE, value.ToString());
+                    Update(COL_DUE_DATE, value.ToString());
                 }
                 dueDate = value;
             }
@@ -78,7 +80,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(ASSIGNEE, value);
+                    Update(COL_ASSIGNEE, value);
                 }
                 assignee = value;
             }
@@ -90,7 +92,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(ORDINAL, value);
+                    Update(COL_ORDINAL, value);
                 }
                 _ordinal = value;
             }
@@ -102,7 +104,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(BOARD_CREATOR, value);
+                    Update(COL_CREATOR_EMAIL, value);
                 }
                 _boardCreator = value;
             }
@@ -114,7 +116,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(BOARD_NAME, value);
+                    Update(COL_BOARD_NAME, value);
                 }
                 _boardName = value;
             }
@@ -140,18 +142,18 @@ namespace IntroSE.Kanban.Backend.DataLayer
             SQLiteCommand command = new SQLiteCommand
             {
                 Connection = connection,
-                CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID},@{TaskId}, @{CreationTime.ToString()}, @{Title}, @{Description}, @{DueDate.ToString()}, @{Assignee}, @{Ordinal}, {BoardCreator}, {BoardName})"
+                CommandText = $"INSERT INTO {_tableName}  VALUES (@{COL_ID},@{COL_TASK_ID}, @{COL_CREATIONTIME}, @{COL_TITLE}, @{COL_DESCRIPTION}, @{COL_DUE_DATE}, @{COL_ASSIGNEE}, @{COL_ORDINAL}, {COL_CREATOR_EMAIL}, {COL_BOARD_NAME})"
             };
-            command.Parameters.Add(new SQLiteParameter(ID, ID));
-            command.Parameters.Add(new SQLiteParameter(TaskId.ToString(),TaskId));
-            command.Parameters.Add(new SQLiteParameter(CreationTime.ToString(), CreationTime));
-            command.Parameters.Add(new SQLiteParameter(Title,Title));
-            command.Parameters.Add(new SQLiteParameter(Description, Description));
-            command.Parameters.Add(new SQLiteParameter(DueDate.ToString(), DueDate));
-            command.Parameters.Add(new SQLiteParameter(Assignee, Assignee));
-            command.Parameters.Add(new SQLiteParameter(Ordinal.ToString(), Ordinal));
-            command.Parameters.Add(new SQLiteParameter(BoardCreator,BoardCreator));
-            command.Parameters.Add(new SQLiteParameter(BoardName, BoardName));
+            command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
+            command.Parameters.Add(new SQLiteParameter(COL_TASK_ID,TaskId));
+            command.Parameters.Add(new SQLiteParameter(COL_CREATIONTIME, CreationTime));
+            command.Parameters.Add(new SQLiteParameter(COL_TITLE,Title));
+            command.Parameters.Add(new SQLiteParameter(COL_DESCRIPTION, Description));
+            command.Parameters.Add(new SQLiteParameter(COL_DUE_DATE, DueDate));
+            command.Parameters.Add(new SQLiteParameter(COL_ASSIGNEE, Assignee));
+            command.Parameters.Add(new SQLiteParameter(COL_ORDINAL, Ordinal));
+            command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, BoardCreator));
+            command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, BoardName));
 
             return command;
         }

@@ -156,7 +156,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - already exists");
                 throw new ArgumentException($"Board '{userEmail}:{boardName}' already exist");
             }
-            boards[userEmail][boardName] = new Board(userEmail, boardName);
+            try
+            {
+                boards[userEmail][boardName] = new Board(userEmail, boardName);
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"FAILED to create board: '{userEmail}:{boardName}' - exists in DataBase but not in BusinessLayer");
+                throw new Exception($"Can't create board '{userEmail}:{boardName}' - this board already exists in the DataBase, please LoadData before continueing");
+            }
             JoinBoard(userEmail, userEmail, boardName);
             log.Info($"SUCCESSFULLY created '{userEmail}:{boardName}'");
         }
@@ -284,6 +292,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 log.Warn($"FAILED to add task '{title}' to '{creatorEmail}:{boardName}[{0}]' by '{userEmail}' - Column is at it's limit");
                 throw new OutOfMemoryException($"Cannot add task '{title}': Column '{e.Message}' of board '{creatorEmail}:{boardName}' is currently at its limit");
+            }
+            catch (InvalidOperationException)
+            {
+                log.Warn($"FAILED to add task '{title} to '{userEmail}:{boardName}' - taskID exists in DataBase but not in BusinessLayer");
+                throw new Exception($"Cannot ad task '{title}' to board '{userEmail}:{boardName}' - taskID collides with an existing task within the DataBase, please LoadData before continueing");
             }
             catch (Exception e)
             {

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using log4net;
-using log4net.Config;
-using System.Reflection;
-using System.IO;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -13,7 +9,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         //fields
         private readonly UserService UserS;
         private readonly BoardService BoardS;
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
         public Service()
@@ -21,13 +16,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             BusinessLayer.LoginInstance loginInstance = new BusinessLayer.LoginInstance();
             UserS = new UserService(loginInstance);
             BoardS = new BoardService(loginInstance);
-            Response res = LoadData();
-            if (res.ErrorOccured)
-                throw new Exception(res.ErrorMessage);
-
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-            log.Info("Kanban.app booted");
         }
 
         //methods

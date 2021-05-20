@@ -22,10 +22,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
             foreach(DBoard dBoard in results)
             {
-                IList<DColumn> columns = _columnController.Select(dBoard.CreatorEmail, dBoard.BoardName).Cast<DColumn>().ToList();
-                dBoard.Columns= columns;
+                dBoard.Columns = _columnController.Select(dBoard.CreatorEmail, dBoard.BoardName).Cast<DColumn>().ToList();
                 dBoard.Members = _boardMemberController.Select(dBoard.Id);
-                results.Add(dBoard); 
             }
 
             return results;

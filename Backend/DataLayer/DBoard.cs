@@ -52,11 +52,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         internal void AddMember (string memberEmail)
         {
-            bool addSuccessfully = _boardMemberController.Insert(Id, memberEmail);
-            if (addSuccessfully)
-                Members.Add(memberEmail);
-            else
-                throw new System.Exception($"failed in adding {memberEmail} to be member of {BoardName} (of {CreatorEmail})");
+             _boardMemberController.Insert(Id, memberEmail);
+             Members.Add(memberEmail);
         }
 
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)

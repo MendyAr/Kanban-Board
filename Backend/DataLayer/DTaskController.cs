@@ -6,6 +6,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal class DTaskController : DalController <DTask>
     {
+        private const string COL_ORDINAL = "Ordinal";
+        private const string COL_CREATOR_EMAIL = "BoardCreator";
+        private const string COL_BOARD_NAME = "BoardName";
         //constructor
 
         internal DTaskController() : base("Task")
@@ -19,15 +22,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName} WHERE (BoardCreator = @{boardCreator} AND BoardName = @{boardName} AND Ordinal = @{ordinal})";
+                command.CommandText = $"select * from {_tableName} WHERE ({COL_CREATOR_EMAIL} = @{COL_CREATOR_EMAIL} AND {COL_BOARD_NAME} = @{COL_BOARD_NAME} AND {COL_ORDINAL} = @{COL_ORDINAL})";
 
                 SQLiteDataReader dataReader = null;
                 try
                 {
                     connection.Open();
-                    command.Parameters.Add(new SQLiteParameter(boardCreator,boardCreator));
-                    command.Parameters.Add(new SQLiteParameter(boardName, boardName));
-                    command.Parameters.Add(new SQLiteParameter(ordinal.ToString(), ordinal));
+                    command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, boardCreator));
+                    command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, boardName));
+                    command.Parameters.Add(new SQLiteParameter(COL_ORDINAL, ordinal));
                     dataReader = command.ExecuteReader();
 
                     while (dataReader.Read())
@@ -58,9 +61,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"DELETE FROM {_tableName} WHERE (BoardCreator = @{creatorEmail} AND BoardName=@{boardName}";
-                command.Parameters.Add(new SQLiteParameter(creatorEmail, creatorEmail));
-                command.Parameters.Add(new SQLiteParameter(boardName, boardName));
+                command.CommandText = $"DELETE FROM {_tableName} WHERE ({COL_CREATOR_EMAIL} = @{COL_CREATOR_EMAIL} AND {COL_BOARD_NAME} = @{COL_BOARD_NAME})";
+                command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, creatorEmail));
+                command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, boardName));
                 try
                 {
                     connection.Open();

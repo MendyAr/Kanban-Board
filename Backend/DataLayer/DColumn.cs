@@ -13,9 +13,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private int _limit;
         private List<DTask> _tasks;
 
-        private const string CREATOR = "Creator";
-        private const string BOARD = "Board";
-        private const string LIMIT = "Limit";
+        private const string COL_CREATOR_EMAIL = "Creator";
+        private const string COL_BOARD_NAME = "Board";
+        private const string COL_LIMIT = "Limit";
+        private const string COL_ORDINAL = "Ordinal";
 
 
         internal string CreatorEmail
@@ -24,7 +25,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(CREATOR, value);
+                    Update(COL_CREATOR_EMAIL, value);
                 }
                 _creatorEmail = value;
             }
@@ -36,7 +37,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(BOARD, value);
+                    Update(COL_BOARD_NAME, value);
                 }
                 _boardName = value;
             }
@@ -48,7 +49,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             {
                 if (Persist)
                 {
-                    Update(LIMIT, value);
+                    Update(COL_LIMIT, value);
                 }
                 _limit = value;
             }
@@ -82,13 +83,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
             SQLiteCommand command = new SQLiteCommand
             {
                 Connection = connection,
-                CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID}, @{CreatorEmail}, @{BoardName}, @{Ordinal}, @{Limit})"
+                CommandText = $"INSERT INTO {_tableName}  VALUES (@{COL_ID}, @{COL_CREATOR_EMAIL}, @{COL_BOARD_NAME}, @{COL_ORDINAL}, @{COL_LIMIT})"
             };
-            command.Parameters.Add(new SQLiteParameter(ID, ID));
-            command.Parameters.Add(new SQLiteParameter(CreatorEmail, CreatorEmail));
-            command.Parameters.Add(new SQLiteParameter(BoardName, BoardName));
-            command.Parameters.Add(new SQLiteParameter(Ordinal.ToString(), Ordinal));
-            command.Parameters.Add(new SQLiteParameter(Limit.ToString(),Limit));
+            command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
+            command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, CreatorEmail));
+            command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, BoardName));
+            command.Parameters.Add(new SQLiteParameter(COL_ORDINAL, Ordinal));
+            command.Parameters.Add(new SQLiteParameter(COL_LIMIT, Limit));
             return command;
         }
     }

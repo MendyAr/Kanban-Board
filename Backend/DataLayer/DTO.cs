@@ -13,17 +13,18 @@ namespace IntroSE.Kanban.Backend.DataLayer
         // properties
 
         private string _id;
+        protected const string COL_ID = "ID";
         protected readonly string _connectionString;
         protected readonly string _tableName;
         protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        internal string ID
+        internal string Id
         {
             get => _id; set
             {
                 if (Persist)
                 {
-                  Update("ID", value);
+                  Update(COL_ID, value);
                 }
                 _id = value;
             }
@@ -40,7 +41,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = tableName;
-            ID = id;
+            Id = id;
 
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
@@ -82,12 +83,12 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection, 
-                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id=@{_id}"
+                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID}=@{COL_ID}"
                 };
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
-                    command.Parameters.Add(new SQLiteParameter(_id, _id));
+                    command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
@@ -114,12 +115,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={_id}"
+                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID} = @{COL_ID}"
                 };
 
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -146,12 +148,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where id={_id}"
+                    CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID} =@ {COL_ID}"
                 };
 
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter(attributeName, attributeValue));
+                    command.Parameters.Add(new SQLiteParameter(COL_ID,Id));
                     connection.Open();
                     command.ExecuteNonQuery();
                 }

@@ -11,6 +11,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         private readonly string _connectionString;
         private const string _tableName = "BoardMember";
+        private const string CAL_ID = "ID";
+        private const string CAL_USER = "User";
 
         // constructor
 
@@ -29,14 +31,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName} WHERE (ID = @{ID})";
+                command.CommandText = $"select * from {_tableName} WHERE ({CAL_ID} = @{CAL_ID})";
                 SQLiteDataReader dataReader = null;
 
                 try
                 {
                     connection.Open();
                     dataReader = command.ExecuteReader();
-                    command.Parameters.Add(new SQLiteParameter(ID, ID));
+                    command.Parameters.Add(new SQLiteParameter(CAL_ID, ID));
 
                     while (dataReader.Read())
                     {
@@ -86,10 +88,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"DELETE FROM {_tableName} WHERE ID = @{creatorEmail + boardName}";
-                command.Parameters.Add(new SQLiteParameter(creatorEmail + boardName, creatorEmail + boardName));
+                command.CommandText = $"DELETE FROM {_tableName} WHERE {CAL_ID} = @{CAL_ID}";
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter(CAL_ID, creatorEmail + boardName));
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -112,13 +114,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{ID}, @{userEmail})"
+                    CommandText = $"INSERT INTO {_tableName}  VALUES (@{CAL_ID}, @{CAL_USER})"
                 };
 
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter(ID, ID));
-                    command.Parameters.Add(new SQLiteParameter(userEmail, userEmail));
+                    command.Parameters.Add(new SQLiteParameter(CAL_ID, ID));
+                    command.Parameters.Add(new SQLiteParameter(CAL_USER, userEmail));
                     connection.Open();
                     result = command.ExecuteNonQuery();
                 }

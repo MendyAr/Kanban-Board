@@ -643,7 +643,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <remarks>calls checkBoardExistance</remarks>
         private void checkMembership(string userEmail, string creatorEmail, string boardName, string method)
         {
-            if (!userBoards[userEmail].Contains($"{creatorEmail}:{boardName}") || !checkBoardExistance(creatorEmail, boardName)) {
+            if (!userBoards.ContainsKey(userEmail) || !userBoards[userEmail].Contains($"{creatorEmail}:{boardName}") || !checkBoardExistance(creatorEmail, boardName)) {
                 userBoards[userEmail].Remove($"{creatorEmail}:{boardName}");
                 log.Warn($"ACCESS VIOLATION - '{method}' - {userEmail} is not a member of '{creatorEmail}:{boardName}'");
                 throw new AccessViolationException($"{userEmail} is not a member of '{creatorEmail}:{boardName}'");

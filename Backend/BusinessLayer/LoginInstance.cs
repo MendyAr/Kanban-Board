@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             if (connectedEmail == null)
                 throw new NullReferenceException("Can't operate -  Please log in first");
-            if (!userEmail.Equals(connectedEmail))
+            if (!connectedEmail.Equals(userEmail))
                 throw new InvalidOperationException($"Can't operate -  User '{userEmail}' is not logged in");
         }
 

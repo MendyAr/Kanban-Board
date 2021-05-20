@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 
@@ -112,6 +113,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         }
         internal bool Insert(string ID, string userEmail)
         {
+            bool failed = false;
             int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -131,12 +133,16 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 catch
                 {
                     //log
+                    failed = true;
                 }
                 finally
                 {
                     command.Dispose();
                     connection.Close();
+                    if (failed)
+                        throw new InvalidOperationException();
                 }
+                
             }
             return result > 0;
         }

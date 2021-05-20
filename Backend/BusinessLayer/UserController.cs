@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private LoginInstance loginInstance;
 
         private DUserController dUserController; //parallel DController
-        
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         //password limiters
         private const int PASS_MIN_LENGTH = 4;
@@ -52,7 +52,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 throw new Exception(e.Message);
             }
 
-            foreach (DUser dUser in dUsers) 
+            foreach (DUser dUser in dUsers)
             {
                 string email = dUser.Email;
                 //load the board
@@ -95,31 +95,25 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ///<param name="password">the user password.</param>
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
         ///<returns>The User created by the registration.</returns>
+        ///<remarks>calls validateEmail, validatePasswordRules</remarks>
         internal void Register(string userEmail, string password)
         {
+            if (users.ContainsKey(userEmail))
+            {
+                log.Warn($"FAILED register attempt: '{userEmail}' already exists");
+                throw new Exception("A user already exist with this Email address");
+            }
+            validateEmail(userEmail);
+            validatePasswordRules(password);
             try
             {
-                if (users.ContainsKey(userEmail))
-                {
-                    log.Warn($"FAILED register attempt: '{userEmail}' already exists");
-                    throw new Exception("A user already exist with this Email address");
-                }
-
-                validateEmail(userEmail);
-                validatePasswordRules(password);
+                users[userEmail] = new User(userEmail, password);
             }
-            catch (ArgumentNullException)
+            catch (InvalidOperationException)
             {
-                log.Info("FAILED register attempt: an email cannot be null");
-                throw new Exception("An email cannot be null");
+                log.Warn($"FAILED to create user '{userEmail}' - exists in DataBase but not in BusinessLayer");
+                throw new Exception($"Can't create user '{userEmail}' - this user already exists in the DataBase, please LoadData before continuing");
             }
-            catch (Exception e)
-            {
-                log.Info($"FAILED register attempt: '{userEmail}' {e.Message}");
-                throw new Exception(e.Message);
-            }
-            User newUser = new User(userEmail, password);
-            this.users.Add(userEmail, newUser);
             log.Info($"SUCCESSFULLY registered attempt: '{userEmail}'");
         }
 
@@ -169,12 +163,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// check if the input string match an email structure.
         /// </summary>
         /// <param name="email">the input email.</param>
-        ///<exception cref="Exception">thrown when email is null or not in email structure.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the given email is null</exception>
+        /// <exception cref="ArgumentException">Thown if email is invalid</exception>
         private void validateEmail(string email)
         {
             if (email == null)
             {
-                throw new Exception("Email cannot be null");
+                log.Info("FAILED register attempt: null email");
+                throw new ArgumentNullException("Email cannot be null");
             }
 
             var emailValidator = new EmailAddressAttribute();
@@ -183,7 +179,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             var addr = new System.Net.Mail.MailAddress(email);
             if (!(addr.Address == email & emailValidator.IsValid(email) & validEmail))
             {
-                throw new Exception("This email address is invalid, please check for spellMistakes");
+                throw new ArgumentException("This email address is invalid, please check for spellMistakes");
             }
         }
 
@@ -191,32 +187,35 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// check the structure of the password.
         /// </summary>
         /// <param name="pass">password to check.</param>
-        /// <exception cref="Exception">thrown when the password doesn't apply the structure rules.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the password is null</exception>
+        /// <exception cref="ArgumentException">Throw if the password is invalid</exception>
         private void validatePasswordRules(string pass)
         {
-            if (pass == null)   //check null input
-                throw new Exception("password is null");
+            if (pass == null)
+            { //check null input
+                throw new ArgumentNullException("password is null");
+            }
 
             //check length
             if (pass.Length < PASS_MIN_LENGTH)
-                throw new Exception("password too short");
+                throw new ArgumentException("password too short");
             if (pass.Length > PASS_MAX_LENGTH)
-                throw new Exception("password too long");
+                throw new ArgumentException("password too long");
 
 
             char[] numbers = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             if (pass.IndexOfAny(numbers) == -1)         // check contain a number
-                throw new Exception("the password doesn't contain a number");
+                throw new ArgumentException("the password doesn't contain a number");
 
             char[] lowerCase = { 'a','b','c','d','e','f','g','h','i','j','k','l','m',
                                 'n','o','p','q','r','s','t','u','v','w','x','y','z'};
             if (pass.IndexOfAny(lowerCase) == -1)       // check contain a lower case letter
-                throw new Exception("the password doesn't contain a lowercase letter");
+                throw new ArgumentException("the password doesn't contain a lowercase letter");
 
             char[] upperCase = { 'A','B','C','D','E','F','G','H','I','J','K','L','M',
                                 'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
             if (pass.IndexOfAny(upperCase) == -1)       // check contain an upper case letter
-                throw new Exception("the password doesn't contain a upper case letter");
+                throw new ArgumentException("the password doesn't contain a upper case letter");
         }
     }
 }

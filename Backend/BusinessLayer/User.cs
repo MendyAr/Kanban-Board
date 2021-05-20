@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         private readonly string email;
         private string password;
-        DUser Duser;
+        DUser dUser;
 
         internal string Email { get => email; }
         private string Password { get => password; }
@@ -20,7 +20,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             this.email = email;
             this.password = password;
-            Duser = new DUser(Email, Password);
+            dUser = new DUser(Email, Password);
+            dUser.Insert();
+            dUser.Persist = true;
         }
 
         //constructor for Duser objects
@@ -28,8 +30,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             this.email = Duser.Email;
             this.password = Duser.Password;
-            this.Duser = Duser;
-
+            this.dUser = Duser;
+            dUser.Persist = true;
         }
 
         //methods

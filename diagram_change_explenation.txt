@@ -27,7 +27,7 @@ SColumn:
 bussinesLayer:
 
 genenral:
-1. add to BBoard,BTask,BColumn,BUser a Data Layer object field who is represent them - we wanted to make it easy and efficient to update the databass about changes in specific objects 
+1. add to BBoard,BTask,BColumn,BUser a Data Layer object field who is represent them - we wanted to make it easy and efficient to update the database about changes in specific objects 
 
 loggin instance:
 1. add object - we needed to hold the loggin user in a place that both UserController and BoardController will have access to
@@ -35,31 +35,31 @@ loggin instance:
 
 
 BoardController
-1. remove registrer() - boardController does not need if a new User is Resgisterd
+1. remove register() - boardController does not need if a new User is Resgisterd
 
 
 
 BBoard:
 1. remove GetColumnName() - After Having SColumn no need of this function
-2. add GetColumnTasks() - help function for inProgress test and to get data for the Service Layer (roi you may change it)
+2. add GetColumnTasks() - help function for inProgressTasks and GetColumnTasks for BoardService
 
 
 BColumn
-1. remove GetColumn - After Having SColumn no need of this function
-2. add Validate Assignee() - for some action we need to verify that a youser is the assignee of a task
+1. remove GetColumn - instead added readonly field Tasks or we can send the object as is
+2. add Validate Assignee() - for some action we need to verify that a user is the assignee of a task
 
 BTask
 1. add assignee - a task should know its assignee
 
 
 UserController:
-1. add Logout() - we decided that the UserController should maintain the loggin and logout user
+1. add Logout() and redesign Login() - since UserController holds user logic it will use LoginInstance method to manipulate it accordingly
 
 
 Dal Layer:
 
 general Chenges:
-1.Add fileds to objects that extends DTO, the fields are the data that represents themself - a DTO object should know the data of the object it is represent and we use those fields to presist the data.
+1.Add fields to objects that extends DTO, the fields are the data that represents themself - a DTO object should know the data of the object it is represent and we use those fields to presist the data.
 2. 
 
 

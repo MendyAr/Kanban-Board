@@ -1,37 +1,96 @@
+general changes :
+1. Add the following function to the right Object:
+- add JoinBoard() 
+- add AssignTask() 
+- add GetBoardNames() 
+- add LoadData()  
+- add DeleteData()
+- add Logout() -
+explanation - a must functions for the new Requirements
+
 serviceLayer:
 
-Adding UserService and Board service- we decided that we need to separate the functionality of service to improve the cohesion and to handle our 2 main entites of businessLayer (User,Board)
+service (object):
+1. Remove connectedEmail  - the service should not have logic 
+2. remove validateLogin() - the service should not have logic 
+
+STask:
+1. add assignee - a task should knows its assignee 
+
+SBoard:
+1. add  Object - 
+
+SColumn:
+1. add  Object -
 
 
 bussinesLayer:
 
+genenral:
+1. add to BBoard,BTask,BColumn,BUser a Data Layer object field who is represent them - we wanted to make it easy and efficient to update the databass about changes in specific objects 
+
+loggin instance:
+1. add object - we needed to hold the loggin user in a place that both UserController and BoardController will have access to
+
+
+
 BoardController
-1. Adding BoardController- we realise that it is more logical and efficient to have an entitie that will handle all the existing boards and will be responsible for logical rules that depends on few boards. other then that by doing that we lower the coupling of Board and User, so now User want change the behavior of Board.
+1. remove registrer() - boardController does not need if a new User is Resgisterd
 
-Board:
-1.Add GetColumnName-since we added class Column, we realized utilizing the column field + all the tests running through all the chain of objects we decided to chain GetColumn as well
-2.Add LimitColumn-need a function to execute the the demand of letting the user change the amount of Task that can be in a Column.
-3.Add GetColumnLimit - since we added class Column, we realized utilizing the column field + all the tests running through all the chain of objects we decided to chain GetColumn as well
-4.AddTask - this function replase createTask of the old Diagram, and the signature had change so we will be able to get to our wanted Task.
-5.Change signature of Update Functions- we needed more information to get to specific Task. we need to know the taskID and the columnOrdinal.
-6.AdvanceTask- this function replace moveTask of the old Diagram, the signature change because we needed more information to get to specific Task. we need to know the taskID and the columnOrdinal.
 
-Column
-1. Adding Column- Initially we thought of using 3 dictionaries for each column but found out we checked the columnOrdinal way too much, creating an array of columns and accessing it with columnOrdinal was easier and better
 
-Task
-1.Adding validators to Task- we want to restrict and manipulate if needed the option for title,description and dueDate.
-2.Adding max and min static variable- if in the future we will want to change the rules of a specific filed it will be easy. 
-3.Adding taskId - important to have a key for each Task, so when needed we will be able to get to him easily and change only the wanted Task
+BBoard:
+1. remove GetColumnName() - Roi
+2. add get ColumnTasks() - Roi
+
+
+BColumn
+1. remove GetColumn - Roi
+2. add Validate Assignee() - for some action we need to verify that a youser is the assignee of a task
+
+BTask
+1. add assignee - a task should know its assignee
+
 
 UserController:
-1.Add EmailExist - when register we want to check that no email as this already enrolled, and when login to verify that this email is enrolled, may use us in future changes and requirements
-2.Add ValidateEmail - we need to make sure that the input of an email is indeed an email.
-3.Adding max and min static variable- if in the future we will want to change the rules of a specific filed it will be easy. 
-4.Adding validatePasswordRules - when register or log in we want to check that the given password answer on the rules that we difine for a valid password.
+1. add Logout() - we decided that the UserController should maintain the loggin and logout user
 
-User:
 
-1.Remove logout function - we decided that it is much more efficient and lower the coupling to save the log in user in the Servece, so the log out will only be to change the field in Service and has no relation to User
-2.Remove Board and Task functions - we decided to have a BoardController that will manipulate and no need to this function in User.
-3.moving validatePasswordRules to UserController - we dicided that is more logical to have email rules and password rules in the same plase to cohesion so we moved it to UserController
+Dal Layer:
+
+general Chenges:
+1.Add fileds to objects that extends DTO, the fields are the data that represents themself - a DTO object should know the data of the object it is represent and we use those fields to presist the data.
+2. 
+
+
+DBoardController:
+1. add DeleteBoard - the board controller should know to delete a certain board from the databass
+2. add _boardMemberController - necessary because changes in boards may make changes in its members (board's members)
+3. add _columnController - necessary because changes in boards may make changes in columns (board's columns)
+
+
+DTaskController:
+1. add Select (string creatorEmail,string boardName,int ordinal) - we want to load the tasks of a specific column.
+2. add DeleteBoardTask - we want to delete the data of tasks who belongsto a specific board.
+
+
+DTO:
+1. add object - few objects of this layer has common functioallites and characteristics and we. Those who represent objects of the BL, and we wanted to give them access to the databass so they can presist the data that change/add to the program of thier corresponding BL object
+
+
+DalController:
+1. add object - we wanted an object that each of them will be responsible for get and change persist data of a certain table
+
+BoardMemberController:
+1. add object - we added a table that saves the relation between board and the users who enroll to it, so we needed a controller to get and change persist data of the table "BoardMember"
+
+
+DColumn:
+1. add object - we decided that we need to have a object in the DL that will represent the BColumn
+
+DColumnController:
+1. add object - we added a table that saves the data of each Column, so we needed a controller to get and change persist data of the table "Column"
+
+
+
+

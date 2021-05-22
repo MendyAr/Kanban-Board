@@ -18,10 +18,10 @@ STask:
 1. add assignee - a task should knows its assignee 
 
 SBoard:
-1. add  Object - 
+1. add  Object - we need an object to represent BBoard in the Service Layer
 
 SColumn:
-1. add  Object -
+1. add  Object - we need an object to represent BColumn in the Service Layer
 
 
 bussinesLayer:
@@ -40,12 +40,12 @@ BoardController
 
 
 BBoard:
-1. remove GetColumnName() - Roi
-2. add get ColumnTasks() - Roi
+1. remove GetColumnName() - After Having SColumn no need of this function
+2. add GetColumnTasks() - help function for inProgress test and to get data for the Service Layer (roi you may change it)
 
 
 BColumn
-1. remove GetColumn - Roi
+1. remove GetColumn - After Having SColumn no need of this function
 2. add Validate Assignee() - for some action we need to verify that a youser is the assignee of a task
 
 BTask

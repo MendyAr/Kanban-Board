@@ -42,6 +42,7 @@ BoardController
 BBoard:
 1. remove GetColumnName() - After Having SColumn no need of this function
 2. add GetColumnTasks() - help function for inProgressTasks and GetColumnTasks for BoardService
+3. add AddMember() - updates DBoard of a new member
 
 
 BColumn

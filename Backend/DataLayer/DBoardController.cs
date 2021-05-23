@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 
@@ -6,8 +7,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 {
     internal class DBoardController : DalController <DBoard>
     {
+        
+        // fields
+
         DColumnController _columnController;
         BoardMemberController _boardMemberController;
+
+        // constructor
 
         internal DBoardController() : base("Board")
         {
@@ -16,6 +22,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
         }
 
         
+        // methods
+
         internal override List<DBoard> Select()
         {
             List<DBoard> results = base.Select(); 
@@ -48,9 +56,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to delete board '{boardName}' of '{creatorEmail}', tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {

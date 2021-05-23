@@ -55,7 +55,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             foreach (DUser dUser in dUsers)
             {
                 string email = dUser.Email;
-                //load the board
                 if (users.ContainsKey(email))
                 {
                     log.Fatal($"FAILED to load user '{email}' - user already exists");

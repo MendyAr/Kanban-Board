@@ -5,6 +5,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
     internal class DUser : DTO
     {
         // properties
+
         private readonly string email;
         private string password;
         private const string COL_EMAIL = "Email";
@@ -14,11 +15,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
         internal string Password { get { return password; } }
 
         // constructor
+
         internal DUser(string email, string password) : base(email, "User")
         {
             this.email = email;
             this.password = password;
         }
+
+
+        // method
 
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)
         {

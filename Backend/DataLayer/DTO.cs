@@ -50,23 +50,22 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         // methods
 
-        internal bool Insert()
+        internal void Insert()
         {
             bool duplicate = false;
             int result = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = InsertCommand(connection);
+                command = InsertCommand(connection);
                 try             
                 {
                     connection.Open();
-                    result = command.ExecuteNonQuery();
+                    res = command.ExecuteNonQuery();
                 }
                 catch (Exception e)
                 {
-                    log.Fatal($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
-                        $" the SQLite exception massage was: {e.Message}");
-                    duplicate = true;
+                    log.Error($"Failed to insert data to the DB, tried command: {command.CommandText},\n" +
+                         $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -76,15 +75,17 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         throw new InvalidOperationException();
                 }
             }
-            return result > 0;
+            if (res <= 0)
+                throw new Exception($"SQLite Insert query '{command.CommandText}' returned {res}.");
         }
 
-        protected bool Update(string attributeName, string attributeValue)
+        protected void Update(string attributeName, string attributeValue)
         {
             int res = -1;
+            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                command = new SQLiteCommand
                 {
                     Connection = connection, 
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID}=@{COL_ID}"
@@ -98,9 +99,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Fatal($"Update on table {_tableName} failed, tried command: {command.CommandText},\n" +
-                        $" the SQLite exception massage was: {e.Message}");
-                    
+                    log.Error($"Failed to update data in the DB, tried command: {command.CommandText},\n" +
+                         $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -109,15 +109,17 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
 
             }
-            return res > 0;
+            if (res <= 0)
+                throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
         }
 
-        protected bool Update(string attributeName, long attributeValue)
+        protected void Update(string attributeName, long attributeValue)
         {
             int res = -1;
+            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID} = @{COL_ID}"
@@ -132,8 +134,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
-                        $" the SQLite exception massage was: {e.Message}");
+                    log.Error($"Failed to update data in the DB, tried command: {command.CommandText},\n" +
+                         $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -142,15 +144,17 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 }
             }
-            return res > 0;
+            if (res <= 0)
+                throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
         }
 
-        protected bool Update(string attributeName, DateTime attributeValue)
+        protected void Update(string attributeName, DateTime attributeValue)
         {
             int res = -1;
+            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                SQLiteCommand command = new SQLiteCommand
+                command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID} =@ {COL_ID}"
@@ -165,8 +169,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error($"Insert on table {_tableName} failed, tried command: {command.CommandText},\n" +
-                        $" the SQLite exception massage was: {e.Message}");
+                    log.Error($"Failed to update data in the DB, tried command: {command.CommandText},\n" +
+                         $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -175,9 +179,9 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 }
             }
-            return res > 0;
+            if (res <= 0)
+                throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
         }
-
 
 
         protected abstract SQLiteCommand InsertCommand(SQLiteConnection connection);

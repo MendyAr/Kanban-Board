@@ -38,9 +38,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         results.Add(ConvertReaderToObject(dataReader));
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    // log
+                    log.Error($"Failed to load data from the DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -69,9 +70,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to delete board's tasks from the DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {

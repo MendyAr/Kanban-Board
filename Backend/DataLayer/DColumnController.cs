@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 
@@ -34,17 +35,18 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, boardCreator));
                     command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, boardName));
                     dataReader = command.ExecuteReader();
-                    
+
                     while (dataReader.Read())
                     {
                         DColumn column = ConvertReaderToObject(dataReader);
-                        column.Tasks = _taskController.Select(boardCreator, boardName, column.Ordinal).ToList(); ;
+                        column.Tasks = _taskController.Select(boardCreator, boardName, column.Ordinal);
                         results.Add(column);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to load data from DB, tried command: {command.CommandText},\n" +
+                         $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -79,9 +81,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to delete board's columns from DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {

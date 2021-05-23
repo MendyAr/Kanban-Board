@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using log4net;
+using log4net.Config;
+using System.Reflection;
 
 namespace IntroSE.Kanban.Backend.DataLayer
 {
@@ -14,13 +17,17 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private const string _tableName = "BoardMember";
         private const string CAL_ID = "ID";
         private const string CAL_USER = "User";
+        protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // constructor
 
         internal BoardMemberController()
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "kanban.db"));
-            this._connectionString = $"Data Source={path}; Version=3;";            
+            this._connectionString = $"Data Source={path}; Version=3;";
+
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
         }
 
 
@@ -46,9 +53,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         results.Add(dataReader.GetString(1));
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to load data from the DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -76,9 +84,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to Delete '{_tableName}' from the DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -100,9 +109,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to Delete board members from the DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -111,10 +121,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
             }
         }
-        internal bool Insert(string ID, string userEmail)
+        internal void Insert(string ID, string userEmail)
         {
             bool failed = false;
-            int result = -1;
+            int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand
@@ -128,12 +138,14 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     command.Parameters.Add(new SQLiteParameter(CAL_ID, ID));
                     command.Parameters.Add(new SQLiteParameter(CAL_USER, userEmail));
                     connection.Open();
-                    result = command.ExecuteNonQuery();
+                    res = command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
                     //log
                     failed = true;
+                    log.Error($"Failed to Insert to the DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {
@@ -143,8 +155,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         throw new InvalidOperationException();
                 }
                 
+                if (res <= 0)
+                    throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
             }
-            return result > 0;
+
         }
 
         internal void Delete()
@@ -159,9 +173,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     connection.Open();
                     dataReader = command.ExecuteReader();
                 }
-                catch
+                catch (Exception e)
                 {
-                    //log
+                    log.Error($"Failed to delete from DB, tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
                 }
                 finally
                 {

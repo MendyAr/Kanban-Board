@@ -26,12 +26,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         }
 
         //constructor for Duser objects
-        internal User(DUser Duser)
+        internal User(DUser dUser)
         {
-            this.email = Duser.Email;
-            this.password = Duser.Password;
-            this.dUser = Duser;
-            dUser.Persist = true;
+            email = dUser.Email;
+            password = dUser.Password;
+            this.dUser = dUser;
+            this.dUser.Persist = true;
+
         }
 
         //methods

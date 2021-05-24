@@ -53,7 +53,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
         internal void Insert()
         {
             bool duplicate = false;
-            int result = -1;
+            int res = -1;
+            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 command = InsertCommand(connection);

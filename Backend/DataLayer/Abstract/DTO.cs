@@ -50,14 +50,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         // methods
 
-        internal void Insert()
+        internal bool Insert()
         {
             bool duplicate = false;
             int res = -1;
-            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                command = InsertCommand(connection);
+                SQLiteCommand command = InsertCommand(connection);
                 try             
                 {
                     connection.Open();
@@ -76,17 +75,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         throw new InvalidOperationException();
                 }
             }
-            if (res <= 0)
-                throw new Exception($"SQLite Insert query '{command.CommandText}' returned {res}.");
+            return res > 0;
         }
 
-        protected void Update(string attributeName, string attributeValue)
+        protected bool Update(string attributeName, string attributeValue)
         {
             int res = -1;
-            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                command = new SQLiteCommand
+                SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection, 
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID}=@{COL_ID}"
@@ -110,17 +107,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
 
             }
-            if (res <= 0)
-                throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
+            return res > 0;
         }
 
-        protected void Update(string attributeName, long attributeValue)
+        protected bool Update(string attributeName, long attributeValue)
         {
             int res = -1;
-            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                command = new SQLiteCommand
+                SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID} = @{COL_ID}"
@@ -145,17 +140,15 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 }
             }
-            if (res <= 0)
-                throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
+            return res > 0;
         }
 
-        protected void Update(string attributeName, DateTime attributeValue)
+        protected bool Update(string attributeName, DateTime attributeValue)
         {
             int res = -1;
-            SQLiteCommand command;
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                command = new SQLiteCommand
+                SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
                     CommandText = $"update {_tableName} set [{attributeName}]=@{attributeName} where {COL_ID} =@ {COL_ID}"
@@ -180,8 +173,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
                 }
             }
-            if (res <= 0)
-                throw new Exception($"SQLite Update query '{command.CommandText}' returned {res}.");
+            return res > 0;
         }
 
 

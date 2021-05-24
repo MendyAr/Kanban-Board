@@ -158,7 +158,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 columns[columnOrdinal + 1].AddTask(task); //adds the task to the next column
                 task.Advance();
             }
-            catch (OutOfMemoryException e) //if the next column is already at its limit
+            catch (Exception e) //if the next column is already at its limit
             {
                 columns[columnOrdinal].AddTask(task); //returns the task to its original column
                 throw new OutOfMemoryException(e.Message); //sends forward the same exception

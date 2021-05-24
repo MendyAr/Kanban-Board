@@ -61,7 +61,6 @@ Dal Layer:
 
 general Chenges:
 1.Add fields to objects that extends DTO, the fields are the data that represents themself - a DTO object should know the data of the object it is represent and we use those fields to presist the data.
-2. 
 
 
 DBoardController:
@@ -76,7 +75,7 @@ DTaskController:
 
 
 DTO:
-1. add object - few objects of this layer has common functioallites and characteristics and we. Those who represent objects of the BL, and we wanted to give them access to the databass so they can presist the data that change/add to the program of thier corresponding BL object
+1. add object - few objects of this layer has common functioallites and characteristics, Those who represent objects of the BL, and we wanted to give them access to the databass so they can presist the data that change/add to the program of thier corresponding BL object
 
 
 DalController:

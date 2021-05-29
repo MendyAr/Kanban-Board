@@ -7,17 +7,27 @@ namespace IntroSE.Kanban.Backend.DataLayer
     {
         // properties
 
+        private string _name;
         private string _creatorEmail;
         private string _boardName;
-        private readonly int _ordinal;
+        private int _ordinal;
         private int _limit;
         private List<DTask> _tasks;
 
+        private const string COL_NAME = "Creator";
         private const string COL_CREATOR_EMAIL = "Creator";
         private const string COL_BOARD_NAME = "Board";
         private const string COL_LIMIT = "Limit";
         private const string COL_ORDINAL = "Ordinal";
 
+        internal string Name { get => _name; 
+            set {
+                if (Persist)
+                {
+                    Update(COL_NAME, value);
+                }
+                _name = value;
+            } }
 
         internal string CreatorEmail
         {
@@ -54,7 +64,20 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _limit = value;
             }
         }
-        internal int Ordinal { get => _ordinal; }
+        internal int Ordinal { get => _ordinal; 
+            set {
+                if (Persist)
+                {
+                    
+                    Update(COL_ORDINAL, value);
+                }
+                foreach (DTask task in _tasks)
+                {
+                    task.Ordinal = value;
+                }
+                _ordinal = value;
+                }
+        } 
 
         internal List<DTask> Tasks
         {
@@ -67,12 +90,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         // constructor
 
-        internal DColumn(string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, "Column")
+        internal DColumn(string name,string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, "Column")
         {
             _creatorEmail = creatorEmail;
             _boardName = boardName;
             _ordinal = ordinal;
             _limit = limit;
+            _name = name;
         }
 
 

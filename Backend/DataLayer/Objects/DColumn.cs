@@ -107,9 +107,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
             SQLiteCommand command = new SQLiteCommand
             {
                 Connection = connection,
-                CommandText = $"INSERT INTO {_tableName}  VALUES (@{COL_ID}, @{COL_CREATOR_EMAIL}, @{COL_BOARD_NAME}, @{COL_ORDINAL}, @{COL_LIMIT})"
+                CommandText = $"INSERT INTO {_tableName}  VALUES (@{COL_ID},@{COL_NAME}, @{COL_CREATOR_EMAIL}, @{COL_BOARD_NAME}, @{COL_ORDINAL}, @{COL_LIMIT})"
             };
             command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
+            command.Parameters.Add(new SQLiteParameter(COL_NAME, _name));
             command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, CreatorEmail));
             command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, BoardName));
             command.Parameters.Add(new SQLiteParameter(COL_ORDINAL, Ordinal));

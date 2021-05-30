@@ -13,11 +13,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     {
         //fields
         private int taskIdCounter = 0; //will be updated by every task added to the board and so keeping each ID unique
+        private int columnCounter = 3; //will be updated by every column added/removed from the board 
         private IList<Column> columns = new List<Column>();
 
         private DBoard dBoard; //parallel DTO
 
         internal int TaskIdCounter { get => taskIdCounter; }
+        internal int ColumnCounter { get => columnCounter; }
         internal IList<string> Columns
         {
             get
@@ -60,10 +62,49 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <summary>
         /// Adds new member to DTO
         /// </summary>
-        /// <param name="member">new member's email</param>
+        /// <param name="memberEmail">new member's email</param>
         internal void AddMember(string memberEmail)
         {
             dBoard.AddMember(memberEmail);
+        }
+
+        /// <summary>
+        /// Adds a new column to given board
+        /// </summary>
+        /// <param name="columnOrdinal">The location of the new column. Location for old columns with index>=columnOrdinal is increased by 1 (moved right). </param>
+        /// <param name="columnName">The name for the new columns</param>        
+        public void AddColumn(int columnOrdinal, string columnName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Renames a specific column
+        /// </summary>
+        /// <param name="columnOrdinal">The column location. </param>
+        /// <param name="newColumnName">The new column name</param>        
+        public void RenameColumn(int columnOrdinal, string newColumnName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Moves a column shiftSize times to the right. If shiftSize is negative, the column moves to the left
+        /// </summary>
+        /// <param name="columnOrdinal">The column location. </param>
+        /// <param name="shiftSize">The number of times to move the column, relativly to its current location. Negative values are allowed</param>  
+        public void MoveColumn(int columnOrdinal, int shiftSize)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Removes a specific column
+        /// </summary>
+        /// <param name="columnOrdinal">The column location. Location for old columns with index>=columnOrdinal is decreases by 1 </param>
+        public void RemoveColumn(int columnOrdinal)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -183,6 +224,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal IList<Task> GetColumnTasks(int columnOrdinal)
         {
             return columns[columnOrdinal].Tasks;
+        }
+
+        /// <summary>
+        /// checks legality of columnOrdinal
+        /// </summary>
+        /// <param name="columnOrdinal">columnOrdinal that needs to be checked</param>
+        /// <exception cref="IndexOutOfRangeException">Thrown if the given ordinal isn't legal</exception>
+        private void checkColumnOrdinal(int columnOrdinal)
+        {
+            if (columnOrdinal < 0 || columnOrdinal >= columnCounter)
+            {
+                throw new ArgumentOutOfRangeException($"{columnCounter-1}");
+            }
         }
     }
 }

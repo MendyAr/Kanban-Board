@@ -208,7 +208,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         /// this function remove the DTO line from the relative table
         /// </summary>
         /// <remarks> this function do not delete related line</remarks>
-        internal virtual void remove()
+        internal virtual void Remove()
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {

@@ -57,13 +57,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
              Members.Add(memberEmail);
         }
 
-        internal void removeColumn(int columnOrdinal)
+        internal void RemoveColumn(int columnOrdinal)
         {
             foreach (DColumn column in _columns)
             {
                 if(column.Ordinal == columnOrdinal)
                 {
-                    column.remove();
+                    column.Remove();
                     break;
                 }
             }

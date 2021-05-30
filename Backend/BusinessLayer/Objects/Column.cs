@@ -46,7 +46,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal Column(string name, string creatorEmail, string boardName, int columnOrdinal)
         {
             this.name = name;
-            dColumn = new DColumn(creatorEmail, boardName, columnOrdinal, -1);
+            dColumn = new DColumn(name, creatorEmail, boardName, columnOrdinal, -1);
             dColumn.Insert();
             dColumn.Persist = true;
         }
@@ -58,18 +58,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal Column(DColumn dColumn)
         {
             limit = dColumn.Limit;
-            switch (dColumn.Ordinal)
-            {
-                case 0:
-                    name = "backlog";
-                    break;
-                case 1: 
-                    name = "in progress";
-                    break;
-                default:
-                    name = "done";
-                    break;
-            }
+            name = dColumn.Name;
             foreach (DTask dTask in dColumn.Tasks)
             {
                 tasks[dTask.TaskId] = new Task(dTask);
@@ -112,6 +101,20 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (tasks.Count == limit)
                 throw new OutOfMemoryException(Name);
             tasks[task.TaskId] = task;
+        }
+
+        /// <summary>
+        /// adds all given tasks in the IList to the column
+        /// </summary>
+        /// <param name="tasks">new tasks</param>
+        internal void AddTasks(IList<Task> tasks)
+        {
+            if (limit != -1 && (tasks.Count + this.tasks.Count) > limit)
+                throw new OutOfMemoryException(Name);
+            foreach (Task task in tasks)
+            {
+                tasks[task.TaskId] = task;
+            }
         }
 
         /// <summary>
@@ -178,6 +181,15 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             validateAssignee(userEmail, taskId);
             tasks[taskId].Description = description;
+        }
+
+        /// <summary>
+        /// updates the ordinal saved in DAL
+        /// </summary>
+        /// <param name="columnOrdinal">new ordinal</param>
+        internal void UpdateOrdinal(int columnOrdinal)
+        {
+            dColumn.Ordinal = columnOrdinal;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace IntroSE.Kanban.Backend.DataLayer
@@ -98,9 +99,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
             _limit = limit;
             _name = name;
         }
-
-
-        // method
 
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)
         {

@@ -30,7 +30,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
             foreach(DBoard dBoard in results)
             {
-                dBoard.Columns = _columnController.Select(dBoard.CreatorEmail, dBoard.BoardName).Cast<DColumn>().ToList();
+                dBoard.Columns = _columnController.Select(dBoard.CreatorEmail, dBoard.BoardName);
                 dBoard.Members = _boardMemberController.Select(dBoard.Id);
             }
 

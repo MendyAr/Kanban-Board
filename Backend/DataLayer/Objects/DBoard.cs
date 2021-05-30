@@ -11,8 +11,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         private readonly string _creatorEmail;
         private string _boardName;
-        private IList<DColumn> columns;
-        private HashSet<string> members;
+        private IList<DColumn> _columns;
+        private HashSet<string> _members;
         private BoardMemberController _boardMemberController;
 
         private const string COL_BOARD_NAME = "Name";
@@ -31,30 +31,42 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _boardName = value;
             } }
 
-        internal IList<DColumn> Columns { get => columns; set => columns = value; }
+        internal IList<DColumn> Columns { get => _columns; set => _columns = value; }
 
-        internal HashSet<string> Members { get => members; set => members = value; }
+        internal HashSet<string> Members { get => _members; set => _members = value; }
 
         //constructor
         internal DBoard (string creatorEmail, string boardName) : base(creatorEmail + boardName,"Board")
         {
             this._creatorEmail = creatorEmail;
             this._boardName = boardName;
-            columns = new DColumn[3];
-            members = new HashSet<string>();
+            _columns = new DColumn[3];
+            _members = new HashSet<string>();
             _boardMemberController = new BoardMemberController();
         }
 
         //methods
         internal int numberOfTasks()
         {
-            return columns[0].Tasks.Count + columns[1].Tasks.Count + columns[2].Tasks.Count;
+            return _columns[0].Tasks.Count + _columns[1].Tasks.Count + _columns[2].Tasks.Count;
         }
 
         internal void AddMember (string memberEmail)
         {
              _boardMemberController.Insert(Id, memberEmail);
              Members.Add(memberEmail);
+        }
+
+        internal void removeColumn(int columnOrdinal)
+        {
+            foreach (DColumn column in _columns)
+            {
+                if(column.Ordinal == columnOrdinal)
+                {
+                    column.remove();
+                    break;
+                }
+            }
         }
 
         protected override SQLiteCommand InsertCommand(SQLiteConnection connection)

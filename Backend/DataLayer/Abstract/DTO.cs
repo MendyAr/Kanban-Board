@@ -204,6 +204,34 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
         }
 
+        /// <summary>
+        /// this function remove the DTO line from the relative table
+        /// </summary>
+        /// <remarks> this function do not delete related line</remarks>
+        internal virtual void remove()
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {_tableName} WHERE {COL_ID} = @{COL_ID}";
+                command.Parameters.Add(new SQLiteParameter(COL_ID, Id));
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    log.Error($"Failed to delete '{Id}', tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+        }
 
         protected abstract SQLiteCommand InsertCommand(SQLiteConnection connection);
 

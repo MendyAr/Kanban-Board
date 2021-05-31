@@ -18,15 +18,28 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         private DColumn dColumn; //parallel DTO
 
-        internal string Name { get => name;}
+        internal string Name { 
+            get => name;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("Column Name cannot be null");
+                if (value.Equals(""))
+                    throw new ArgumentException("New Name cannot be empty");
+                name = value;
+                dColumn.Name = value;
+
+            }
+        }
         internal int Limit
         {
             get => limit;
             set
             {
-                 if (value != -1 && tasks.Count > value) 
-                     throw new ArgumentException(Name);
-                 limit = value;
+                if (value != -1 && tasks.Count > value) 
+                    throw new ArgumentException(Name);
+                limit = value;
+                dColumn.Limit = value;
             }
         }
         internal IList<Task> Tasks

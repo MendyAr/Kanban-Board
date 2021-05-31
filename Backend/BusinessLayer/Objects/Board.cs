@@ -89,7 +89,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         public void RenameColumn(int columnOrdinal, string newColumnName)
         {
             checkColumnOrdinal(columnOrdinal);
-            throw new NotImplementedException();
+            columns[columnOrdinal].Name = newColumnName;
         }
 
         /// <summary>
@@ -101,7 +101,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         public void MoveColumn(int columnOrdinal, int shiftSize)
         {
             checkColumnOrdinal(columnOrdinal);
-            throw new NotImplementedException();
+            if (columns[columnOrdinal].Tasks.Count != 0)
+                throw new ArgumentException("Cannot move non-empty column");
         }
 
         /// <summary>
@@ -112,7 +113,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         public void RemoveColumn(int columnOrdinal)
         {
             checkColumnOrdinal(columnOrdinal);
-            throw new NotImplementedException();
+            if (columnCounter == 2)
+                throw new ArgumentException($"Cannot remove column {columns[columnOrdinal].Name} - Board cannot have less than 2 columns");
         }
 
         /// <summary>

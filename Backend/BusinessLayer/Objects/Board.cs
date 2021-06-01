@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
+using DColumn= IntroSE.Kanban.Backend.DataLayer.DColumn;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -49,9 +50,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         internal Board(DBoard dBoard)
         {
-            columns.Insert(0, new Column(dBoard.Columns[0]));
-            columns.Insert(1, new Column(dBoard.Columns[1])); 
-            columns.Insert(2, new Column(dBoard.Columns[2]));
+            foreach (DColumn dColumn in dBoard.Columns)
+            {
+                columns.Add(new Column(dColumn));
+            }
             taskIdCounter = dBoard.numberOfTasks();
             this.dBoard = dBoard;
             this.dBoard.Persist = true;
@@ -74,10 +76,16 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">The location of the new column. Location for old columns with index>=columnOrdinal is increased by 1 (moved right). </param>
         /// <param name="columnName">The name for the new columns</param>        
         /// <remarks>calls checkColumnOrdinal</remarks>
-        public void AddColumn(int columnOrdinal, string columnName)
+        public void AddColumn(string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
-            checkColumnOrdinal(columnOrdinal);
-            throw new NotImplementedException();
+            if (columnOrdinal < 0 || columnOrdinal > columnCounter)
+                throw new ArgumentOutOfRangeException($"{columnCounter-1}");
+            columns.Insert(columnOrdinal, new Column(columnName, creatorEmail, boardName, columnOrdinal));
+            columnCounter++;
+            for (int i = columnOrdinal+1; i < columnCounter; i++)
+            {
+                columns[i].UpdateOrdinal(i);
+            }
         }
 
         /// <summary>
@@ -101,8 +109,22 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         public void MoveColumn(int columnOrdinal, int shiftSize)
         {
             checkColumnOrdinal(columnOrdinal);
+            if (columnOrdinal + shiftSize >= columnCounter || columnOrdinal + shiftSize < 0)
+                throw new ArgumentException();
             if (columns[columnOrdinal].Tasks.Count != 0)
                 throw new ArgumentException("Cannot move non-empty column");
+            Column tmp = columns[columnOrdinal];
+            while (shiftSize > 0) { //if need to shift right
+                columns[columnOrdinal] = columns[columnOrdinal + 1];
+                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
+                columnOrdinal++; shiftSize--;
+            }
+            while (shiftSize < 0) { //if to shift left
+                columns[columnOrdinal] = columns[columnOrdinal - 1];
+                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
+                columnOrdinal--; shiftSize++;
+            }
+            columns[columnOrdinal] = tmp;
         }
 
         /// <summary>
@@ -115,6 +137,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             checkColumnOrdinal(columnOrdinal);
             if (columnCounter == 2)
                 throw new ArgumentException($"Cannot remove column {columns[columnOrdinal].Name} - Board cannot have less than 2 columns");
+            Column column = columns[columnOrdinal];
+            columns.RemoveAt(columnOrdinal);
+            columnCounter--;
+            if (columnOrdinal == 0)
+            {
+                columns[columnOrdinal].AddTasks(column.Tasks);
+            }
+            else
+            {
+                column.UpdateOrdinal(columnOrdinal - 1);
+                columns[columnOrdinal - 1].AddTasks(column.Tasks);
+            }
+            dBoard.RemoveColumn(columnOrdinal);
+            while (columnOrdinal < columnCounter)
+            {
+                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
+                columnOrdinal++;
+            }
         }
 
         /// <summary>

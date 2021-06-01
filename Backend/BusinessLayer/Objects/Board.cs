@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
+using DColumn= IntroSE.Kanban.Backend.DataLayer.DColumn;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -13,11 +14,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     {
         //fields
         private int taskIdCounter = 0; //will be updated by every task added to the board and so keeping each ID unique
+        private int columnCounter = 3; //will be updated by every column added/removed from the board 
         private IList<Column> columns = new List<Column>();
 
         private DBoard dBoard; //parallel DTO
 
         internal int TaskIdCounter { get => taskIdCounter; }
+        internal int ColumnCounter { get => columnCounter; }
         internal IList<string> Columns
         {
             get
@@ -47,9 +50,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         internal Board(DBoard dBoard)
         {
-            columns.Insert(0, new Column(dBoard.Columns[0]));
-            columns.Insert(1, new Column(dBoard.Columns[1])); 
-            columns.Insert(2, new Column(dBoard.Columns[2]));
+            foreach (DColumn dColumn in dBoard.Columns)
+            {
+                columns.Add(new Column(dColumn));
+            }
             taskIdCounter = dBoard.numberOfTasks();
             this.dBoard = dBoard;
             this.dBoard.Persist = true;
@@ -60,10 +64,97 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <summary>
         /// Adds new member to DTO
         /// </summary>
-        /// <param name="member">new member's email</param>
+        /// <param name="memberEmail">new member's email</param>
         internal void AddMember(string memberEmail)
         {
             dBoard.AddMember(memberEmail);
+        }
+
+        /// <summary>
+        /// Adds a new column to given board
+        /// </summary>
+        /// <param name="columnOrdinal">The location of the new column. Location for old columns with index>=columnOrdinal is increased by 1 (moved right). </param>
+        /// <param name="columnName">The name for the new columns</param>        
+        /// <remarks>calls checkColumnOrdinal</remarks>
+        public void AddColumn(string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        {
+            if (columnOrdinal < 0 || columnOrdinal > columnCounter)
+                throw new ArgumentOutOfRangeException($"{columnCounter-1}");
+            columns.Insert(columnOrdinal, new Column(columnName, creatorEmail, boardName, columnOrdinal));
+            columnCounter++;
+            for (int i = columnOrdinal+1; i < columnCounter; i++)
+            {
+                columns[i].UpdateOrdinal(i);
+            }
+        }
+
+        /// <summary>
+        /// Renames a specific column
+        /// </summary>
+        /// <param name="columnOrdinal">The column location. </param>
+        /// <param name="newColumnName">The new column name</param>        
+        /// <remarks>calls checkColumnOrdinal</remarks>
+        public void RenameColumn(int columnOrdinal, string newColumnName)
+        {
+            checkColumnOrdinal(columnOrdinal);
+            columns[columnOrdinal].Name = newColumnName;
+        }
+
+        /// <summary>
+        /// Moves a column shiftSize times to the right. If shiftSize is negative, the column moves to the left
+        /// </summary>
+        /// <param name="columnOrdinal">The column location. </param>
+        /// <param name="shiftSize">The number of times to move the column, relativly to its current location. Negative values are allowed</param>  
+        /// <remarks>calls checkColumnOrdinal</remarks>
+        public void MoveColumn(int columnOrdinal, int shiftSize)
+        {
+            checkColumnOrdinal(columnOrdinal);
+            if (columnOrdinal + shiftSize >= columnCounter || columnOrdinal + shiftSize < 0)
+                throw new ArgumentException();
+            if (columns[columnOrdinal].Tasks.Count != 0)
+                throw new ArgumentException("Cannot move non-empty column");
+            Column tmp = columns[columnOrdinal];
+            while (shiftSize > 0) { //if need to shift right
+                columns[columnOrdinal] = columns[columnOrdinal + 1];
+                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
+                columnOrdinal++; shiftSize--;
+            }
+            while (shiftSize < 0) { //if to shift left
+                columns[columnOrdinal] = columns[columnOrdinal - 1];
+                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
+                columnOrdinal--; shiftSize++;
+            }
+            columns[columnOrdinal] = tmp;
+        }
+
+        /// <summary>
+        /// Removes a specific column
+        /// </summary>
+        /// <param name="columnOrdinal">The column location. Location for old columns with index>=columnOrdinal is decreases by 1 </param>
+        /// <remarks>calls checkColumnOrdinal</remarks>
+        public void RemoveColumn(int columnOrdinal)
+        {
+            checkColumnOrdinal(columnOrdinal);
+            if (columnCounter == 2)
+                throw new ArgumentException($"Cannot remove column {columns[columnOrdinal].Name} - Board cannot have less than 2 columns");
+            Column column = columns[columnOrdinal];
+            columns.RemoveAt(columnOrdinal);
+            columnCounter--;
+            if (columnOrdinal == 0)
+            {
+                columns[columnOrdinal].AddTasks(column.Tasks);
+            }
+            else
+            {
+                column.UpdateOrdinal(columnOrdinal - 1);
+                columns[columnOrdinal - 1].AddTasks(column.Tasks);
+            }
+            dBoard.RemoveColumn(columnOrdinal);
+            while (columnOrdinal < columnCounter)
+            {
+                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
+                columnOrdinal++;
+            }
         }
 
         /// <summary>
@@ -71,8 +162,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// </summary>
         /// <param name="columnOrdinal">represent the limited column</param>
         /// <param name="limit">new limit</param>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal void LimitColumn(int columnOrdinal, int limit)
         {
+            checkColumnOrdinal(columnOrdinal);
             columns[columnOrdinal].Limit = limit;
         }
         
@@ -102,8 +195,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">which column the task is in</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="assignee">new assignee</param>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal void AssignTask(string userEmail, int columnOrdinal, int taskId, string assignee)
         {
+            checkColumnOrdinal(columnOrdinal);
             columns[columnOrdinal].AssignTask(userEmail, taskId, assignee);
         }
         
@@ -114,8 +209,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">which column the task is in</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="DueDate">new and updated due date</param>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal void UpdateTaskDueDate(string userEmail, int columnOrdinal, int taskId, DateTime DueDate)
         {
+            checkColumnOrdinal(columnOrdinal);
             columns[columnOrdinal].UpdateTaskDueDate(userEmail, taskId, DueDate);
         }
 
@@ -126,8 +223,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">which column the task is in</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="title">new and updated title</param>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal void UpdateTaskTitle(string userEmail, int columnOrdinal, int taskId, string title)
         {
+            checkColumnOrdinal(columnOrdinal);
             columns[columnOrdinal].UpdateTaskTitle(userEmail, taskId, title);
         }
         
@@ -138,8 +237,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">which column the task is in</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="description">new and updated description</param>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal void UpdateTaskDescription(string userEmail, int columnOrdinal, int taskId, string description)
         {
+            checkColumnOrdinal(columnOrdinal);
             columns[columnOrdinal].UpdateTaskDescription(userEmail, taskId, description);
         }
         
@@ -150,8 +251,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">which column the task is in</param>
         /// <param name="taskId">the advanced task's ID</param>
         /// <exception cref="OutOfMemoryException">Thrown if the next column is already at its limit</exception>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal void AdvanceTask(string userEmail, int columnOrdinal, int taskId)
         {
+            checkColumnOrdinal(columnOrdinal);
             Task task = columns[columnOrdinal].RemoveTask(userEmail, taskId); //removes task from current column
             try
             {
@@ -170,8 +273,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// </summary>
         /// <param name="columnOrdinal">represents the requested column</param>
         /// <returns>Requested Column</returns>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal Column GetColumn(int columnOrdinal)
         {
+            checkColumnOrdinal(columnOrdinal);
             return columns[columnOrdinal];
         }
 
@@ -180,9 +285,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// </summary>
         /// <param name="columnOrdinal">represents the requested column</param>
         /// <returns>IList<Task> containing all the tasks</Task></returns>
+        /// <remarks>calls checkColumnOrdinal</remarks>
         internal IList<Task> GetColumnTasks(int columnOrdinal)
         {
+            checkColumnOrdinal(columnOrdinal);
             return columns[columnOrdinal].Tasks;
+        }
+
+        /// <summary>
+        /// checks legality of columnOrdinal
+        /// </summary>
+        /// <param name="columnOrdinal">columnOrdinal that needs to be checked</param>
+        /// <exception cref="IndexOutOfRangeException">Thrown if the given ordinal isn't legal</exception>
+        private void checkColumnOrdinal(int columnOrdinal)
+        {
+            if (columnOrdinal < 0 || columnOrdinal >= columnCounter)
+            {
+                throw new ArgumentOutOfRangeException($"{columnCounter-1}");
+            }
         }
     }
 }

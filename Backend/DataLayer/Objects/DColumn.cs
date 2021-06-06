@@ -20,6 +20,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private const string COL_BOARD_NAME = "Board";
         private const string COL_LIMIT = "Limit";
         private const string COL_ORDINAL = "Ordinal";
+        private const string TASK_TABLE_NAME = "Task";
 
         internal string Name { get => _name; 
             set {
@@ -71,6 +72,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 {
                     
                     Update(COL_ORDINAL, value);
+                    Update(COL_ID, CreatorEmail + BoardName + value);
                 }
                 foreach (DTask task in _tasks)
                 {
@@ -114,6 +116,56 @@ namespace IntroSE.Kanban.Backend.DataLayer
             command.Parameters.Add(new SQLiteParameter(COL_ORDINAL, Ordinal));
             command.Parameters.Add(new SQLiteParameter(COL_LIMIT, Limit));
             return command;
+        }
+
+        internal override void Remove()
+        {
+            base.Remove();
+            bool errorOcurred = false;
+            int res = -1;
+            string thisColumn = "ThisColumn";
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"update {TASK_TABLE_NAME} set [{COL_ORDINAL}]=@{COL_ORDINAL} where ({COL_BOARD_NAME}=@{COL_BOARD_NAME} AND {COL_CREATOR_EMAIL}=@{COL_CREATOR_EMAIL} AND {COL_ORDINAL}=@{thisColumn}) "
+                };
+                try
+                {
+                    command.Parameters.Add(new SQLiteParameter(COL_ORDINAL, Ordinal-1));
+                    command.Parameters.Add(new SQLiteParameter(COL_BOARD_NAME, BoardName));
+                    command.Parameters.Add(new SQLiteParameter(COL_CREATOR_EMAIL, CreatorEmail));
+                    command.Parameters.Add(new SQLiteParameter(thisColumn, Ordinal));
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    errorOcurred = true;
+                    log.Error($"Failed to update data in the DB, tried command: {command.CommandText},\n" +
+                         $"the SQLite exception massage was: {e.Message}");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                    if (errorOcurred)
+                        throw new InvalidOperationException();
+                }
+
+            }
+            if (res <= 0)
+            {
+                log.Error($"SQLite Update query in table '{_tableName}' returned {res}.");
+                throw new Exception("The data didn't update correctly");
+            }
+
+            foreach (DTask dTask in Tasks)
+            {
+                dTask.ReduceOrdinal();
+            }
+
         }
     }
 }

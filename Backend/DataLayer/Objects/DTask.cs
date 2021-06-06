@@ -157,5 +157,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
             return command;
         }
+
+        internal void ReduceOrdinal()
+        {
+            _ordinal = _ordinal - 1;
+        }
     }
 }

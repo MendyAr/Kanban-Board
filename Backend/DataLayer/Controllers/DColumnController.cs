@@ -102,7 +102,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
             int ordinal = reader.GetInt32(3);
             int limit = reader.GetInt32(4);
 
-            DColumn result = new DColumn(creator, boardName, ordinal, limit);
+            DColumn result = new DColumn("name", creator, boardName, ordinal, limit);
             return result;
         }
     }

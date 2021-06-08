@@ -1,0 +1,15 @@
+﻿<Window x:Class="Frontend.View.UserPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend.View"
+        mc:Ignorable="d"
+        Title="UserPage" Height="450" Width="800">
+    <Grid>
+        <Button Content="Add Board" HorizontalAlignment="Left" Height="43" Margin="28,336,0,0" VerticalAlignment="Top" Width="107"/>
+        <Button Content="Remove Board" HorizontalAlignment="Left" Height="43" Margin="397,336,0,0" VerticalAlignment="Top" Width="107"/>
+        <Button Content="Join Board" HorizontalAlignment="Left" Height="43" Margin="215,336,0,0" VerticalAlignment="Top" Width="107"/>
+        <Button Content="Logout" HorizontalAlignment="Left" Height="43" Margin="628,336,0,0" VerticalAlignment="Top" Width="107"/>
+    </Grid>
+</Window>

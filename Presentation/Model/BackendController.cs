@@ -127,5 +127,95 @@ namespace Presentation.Model
                 throw new Exception(res.ErrorMessage);
             }
         }
+
+        internal IList<Task> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            Response<IList<STask>> res = Service.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+            else
+            {
+                IList<Task> tasks = new List<Task>();
+                foreach (STask s_task in res.Value)
+                {
+                    tasks.Add(new Task(s_task));
+                }
+                return tasks;
+            }
+        }
+
+        public void AddBoard(string userEmail, string name)
+        {
+            Response res = Service.AddBoard(userEmail, name);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+        }
+
+        internal void JoinBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            Response res = Service.JoinBoard(userEmail, creatorEmail, boardName);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+        }
+
+        internal void RemoveBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            Response res = Service.RemoveBoard(userEmail, creatorEmail, boardName);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+        }
+
+        internal IList<Task> InProgressTasks(string userEmail)
+        {
+            Response<IList<STask>> res = Service.InProgressTasks(userEmail);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+            else
+            {
+                IList<Task> tasks = new List<Task>();
+                foreach (STask s_task in res.Value)
+                {
+                    tasks.Add(new Task(s_task));
+                }
+                return tasks;
+            }
+        }
+
+        internal void AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            Response res = Service.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+        }
+
+        internal IList<String> GetBoardNames(string userEmail)
+        {
+            Response<IList<String>> res = Service.GetBoardNames(userEmail);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+            else
+            {
+                IList<String> board_names = new List<String>();
+                foreach (String name in res.Value)
+                {
+                    board_names.Add(name);
+                }
+                return board_names;
+            }
+        }
     }
 }

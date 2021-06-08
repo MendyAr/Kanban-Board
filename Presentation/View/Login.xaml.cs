@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Frontend.ViewModel;
+using Presentation.Model;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace Frontend.View
 {
@@ -19,14 +11,17 @@ namespace Frontend.View
     /// </summary>
     public partial class Login : Window
     {
+        private LoginViewModel viewModel;
         public Login()
         {
             InitializeComponent();
+            this.viewModel = new LoginViewModel();
+            this.DataContext = viewModel;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -39,9 +34,15 @@ namespace Frontend.View
 
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
-
+            User user = viewModel.Login();
+            if(user != null)
+            {
+                BoardView boardView = new BoardView(user);
+                boardView.Show();
+                this.Close();
+            }
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

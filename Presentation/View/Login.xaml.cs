@@ -19,20 +19,7 @@ namespace Frontend.View
             this.DataContext = viewModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
+        
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
@@ -45,9 +32,9 @@ namespace Frontend.View
             }
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Register_Click(object sender, RoutedEventArgs e)
         {
-
+             viewModel.Register();
         }
     }
 }

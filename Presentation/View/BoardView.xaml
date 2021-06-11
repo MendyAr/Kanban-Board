@@ -6,7 +6,5 @@
         xmlns:local="clr-namespace:Frontend.View"
         mc:Ignorable="d"
         Title="BoardView" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <ListBox ItemsSource="{Binding Path=Forum.Messages}" SelectedItem="{Binding Path=SelectedColumn, Mode=TwoWay}" Margin="0,61,548,97"/>
 </Window>

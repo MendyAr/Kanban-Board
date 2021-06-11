@@ -43,5 +43,19 @@ namespace Frontend.ViewModel
                 return null;
             }
         }
+
+        public void Register()
+        {
+            Message = "";
+            try
+            {
+                backendController.Register(Username, Password);
+                Message = $"{Username} had succesfully register ";
+            }
+            catch
+            {
+                Message = $"{Username} cammot be register";
+            }
+        }
     }
 }

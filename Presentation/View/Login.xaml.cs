@@ -1,7 +1,6 @@
 ﻿using Frontend.ViewModel;
 using Presentation.Model;
 using System.Windows;
-using System.Windows.Controls;
 
 
 namespace Frontend.View
@@ -26,7 +25,7 @@ namespace Frontend.View
             User user = viewModel.Login();
             if(user != null)
             {
-                BoardView boardView = new BoardView(user);
+                UserView boardView = new UserView(user);
                 boardView.Show();
                 this.Close();
             }

@@ -340,5 +340,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             return BoardS.GetBoardNames(userEmail);
         }
+
+        /// <summary>
+        /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
+        /// </summary>
+        /// <param name="userEmail">The userEmail of the user. Must be logged-in.</param>
+        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
+        public Response<IList<String>> GetBetterBoardNames(string userEmail)
+        {
+            return BoardS.GetBetterBoardNames(userEmail);
+        }
     }
 }

@@ -61,7 +61,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bc.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName);
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                return new Response(e.Message);
+            }
         }
 
         /// <summary>
@@ -75,7 +83,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RenameColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string newColumnName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bc.RenameColumn(userEmail, creatorEmail, boardName, columnOrdinal, newColumnName);
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                return new Response(e.Message);
+            }
         }
 
         /// <summary>
@@ -89,7 +105,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response MoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int shiftSize)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bc.MoveColumn(userEmail, creatorEmail, boardName, columnOrdinal, shiftSize);
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                return new Response(e.Message);
+            }
         }
 
         /// <summary>
@@ -102,7 +126,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RemoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bc.RemoveColumn(userEmail, creatorEmail, boardName, columnOrdinal);
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                return new Response(e.Message);
+            }
         }
 
         /// <summary>
@@ -413,7 +445,23 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 return Response<IList<String>>.FromError(e.Message);
             }
+        }
 
+        /// <summary>
+        /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
+        public Response<IList<String>> GetBetterBoardNames(string userEmail)
+        {
+            try
+            {
+                return Response<IList<String>>.FromValue(bc.GetBetterBoardNames(userEmail));
+            }
+            catch (Exception e)
+            {
+                return Response<IList<String>>.FromError(e.Message);
+            }
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (Exception e)
             {
-                log.Fatal($"Failed to load data - {e.Message}");
+                log.Fatal($"FAILED to load data - {e.Message}");
                 throw new Exception(e.Message);
             }
 
@@ -270,7 +270,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnName">The name for the new columns</param>        
         public void AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
-            throw new NotImplementedException();
+            validateLogin(userEmail, $"AddColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {columnName})");
+            checkMembership(userEmail, creatorEmail, boardName, "AddColumn");
+            try
+            {
+                boards[creatorEmail][boardName].AddColumn(creatorEmail, boardName, columnOrdinal, columnName);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                log.Warn($"FAILED to add column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
+                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+            }
         }
 
         /// <summary>
@@ -283,7 +293,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="newColumnName">The new column name</param>        
         public void RenameColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string newColumnName)
         {
-            throw new NotImplementedException();
+            validateLogin(userEmail, $"RenameColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {newColumnName})");
+            checkMembership(userEmail, creatorEmail, boardName, "RenameColumn");
+            try
+            {
+                boards[creatorEmail][boardName].RenameColumn(columnOrdinal, newColumnName);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                log.Warn($"FAILED to rename column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
+                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+            }
         }
 
         /// <summary>
@@ -296,7 +316,23 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="shiftSize">The number of times to move the column, relativly to its current location. Negative values are allowed</param>  
         public void MoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int shiftSize)
         {
-            throw new NotImplementedException();
+            validateLogin(userEmail, $"MoveColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {shiftSize})");
+            checkMembership(userEmail, creatorEmail, boardName, "MoveColumn");
+            try
+            {
+                boards[creatorEmail][boardName].MoveColumn(columnOrdinal, shiftSize);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                log.Warn($"FAILED to move column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
+                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+            }
+            catch (ArithmeticException)
+            {
+                log.Warn($"FAILED to move column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - shift '{shiftSize}' too large");
+                throw new ArithmeticException($"Shift out of range");
+            }
+
         }
 
         /// <summary>
@@ -308,7 +344,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">The column location. Location for old columns with index>=columnOrdinal is decreases by 1 </param>
         public void RemoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            throw new NotImplementedException();
+            validateLogin(userEmail, $"RemoveColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal})");
+            checkMembership(userEmail, creatorEmail, boardName, "RemoveColumn");
+            try
+            {
+                boards[creatorEmail][boardName].RemoveColumn(columnOrdinal);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                log.Warn($"FAILED to remove column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
+                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+            }
         }
 
         /// <summary>
@@ -337,7 +383,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (ArgumentException e)
@@ -417,7 +463,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
@@ -460,7 +506,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
@@ -508,7 +554,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
@@ -556,7 +602,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
@@ -603,7 +649,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
@@ -642,7 +688,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
         }
@@ -666,7 +712,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             catch (ArgumentOutOfRangeException e)
             {
-                log.Warn($"Failed to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
+                log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
                 throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
         }

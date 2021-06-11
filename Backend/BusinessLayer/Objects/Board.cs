@@ -76,6 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">The location of the new column. Location for old columns with index>=columnOrdinal is increased by 1 (moved right). </param>
         /// <param name="columnName">The name for the new columns</param>        
         /// <remarks>calls checkColumnOrdinal</remarks>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if given columnOrdinal isn't legal</exception>
         public void AddColumn(string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
             if (columnOrdinal < 0 || columnOrdinal > columnCounter)
@@ -110,21 +111,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             checkColumnOrdinal(columnOrdinal);
             if (columnOrdinal + shiftSize >= columnCounter || columnOrdinal + shiftSize < 0)
-                throw new ArgumentException();
+                throw new ArithmeticException();
             if (columns[columnOrdinal].Tasks.Count != 0)
-                throw new ArgumentException("Cannot move non-empty column");
+                throw new Exception("Cannot move non-empty column");
+            int sign = Math.Sign(shiftSize);
             Column tmp = columns[columnOrdinal];
-            while (shiftSize > 0) { //if need to shift right
-                columns[columnOrdinal] = columns[columnOrdinal + 1];
+            while (shiftSize != 0) //updating all other columns' ordinal
+            { 
+                columns[columnOrdinal] = columns[columnOrdinal + sign];
                 columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
-                columnOrdinal++; shiftSize--;
-            }
-            while (shiftSize < 0) { //if to shift left
-                columns[columnOrdinal] = columns[columnOrdinal - 1];
-                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
-                columnOrdinal--; shiftSize++;
+                columnOrdinal += sign; shiftSize -= sign;
             }
             columns[columnOrdinal] = tmp;
+            columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
         }
 
         /// <summary>
@@ -152,8 +151,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             dBoard.RemoveColumn(columnOrdinal);
             while (columnOrdinal < columnCounter)
             {
-                columns[columnOrdinal].UpdateOrdinal(columnOrdinal);
-                columnOrdinal++;
+                columns[columnOrdinal++].UpdateOrdinal(columnOrdinal);
             }
         }
 

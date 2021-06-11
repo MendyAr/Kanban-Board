@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using DUserController = IntroSE.Kanban.Backend.DataLayer.DUserController;
 using DUser = IntroSE.Kanban.Backend.DataLayer.DUser;
+using ConfigReader = IntroSE.Kanban.Backend.DataLayer.Controllers.ConfigReader;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
@@ -24,6 +25,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         //password limiters
         private const int PASS_MIN_LENGTH = 4;
         private const int PASS_MAX_LENGTH = 20;
+        private List<string> forbiddenPasswords = ConfigReader.getInstance().ForbiddenPasswords;
 
         //constructors
         public UserController(LoginInstance loginInstance)
@@ -200,6 +202,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (pass.Length > PASS_MAX_LENGTH)
                 throw new ArgumentException("password too long");
 
+            //check if forbidden password
+            if (forbiddenPasswords.Contains(pass))
+                throw new ArgumentException("password in forbidden passwords list");
 
             char[] numbers = { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             if (pass.IndexOfAny(numbers) == -1)         // check contain a number

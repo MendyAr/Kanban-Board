@@ -1,7 +1,6 @@
 ﻿using Frontend.ViewModel;
 using Presentation.Model;
 using System.Windows;
-using System.Windows.Controls;
 
 
 namespace Frontend.View
@@ -19,35 +18,22 @@ namespace Frontend.View
             this.DataContext = viewModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
+        
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             User user = viewModel.Login();
             if(user != null)
             {
-                BoardView boardView = new BoardView(user);
+                UserView boardView = new UserView(user);
                 boardView.Show();
                 this.Close();
             }
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void Register_Click(object sender, RoutedEventArgs e)
         {
-
+             viewModel.Register();
         }
     }
 }

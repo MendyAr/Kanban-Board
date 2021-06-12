@@ -27,10 +27,5 @@ namespace IntroSE.Kanban.Frontend.View
             taskVM = new TaskViewModel();
             DataContext = taskVM;
         }
-
-        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
     }
 }

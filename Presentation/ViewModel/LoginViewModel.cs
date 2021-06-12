@@ -1,7 +1,7 @@
 ﻿using Presentation.Model;
 using System;
 
-namespace Frontend.ViewModel
+namespace IntroSE.Kanban.Frontend.ViewModel
 {
     class LoginViewModel : ViewModelObject
     {

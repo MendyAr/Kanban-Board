@@ -4,7 +4,7 @@ using System.Windows;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
 using SUser = IntroSE.Kanban.Backend.ServiceLayer.User;
-namespace Presentation.Model
+namespace IntroSE.Kanban.Frontend.Model
 {
     public class BackendController
     {

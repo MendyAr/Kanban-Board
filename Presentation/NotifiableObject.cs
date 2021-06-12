@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-namespace Frontend
+namespace IntroSE.Kanban.Frontend
 {
     class NotifiableObject : INotifyPropertyChanged
     {

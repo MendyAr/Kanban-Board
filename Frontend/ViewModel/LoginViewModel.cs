@@ -1,4 +1,4 @@
-﻿using Presentation.Model;
+﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 
 namespace IntroSE.Kanban.Frontend.ViewModel

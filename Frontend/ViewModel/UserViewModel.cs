@@ -1,5 +1,4 @@
-﻿using Frontend.Model;
-using Presentation.Model;
+﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

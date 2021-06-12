@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Frontend.ViewModel
+namespace IntroSE.Kanban.Frontend.ViewModel
 {
     class ViewModelObject :NotifiableObject
     {

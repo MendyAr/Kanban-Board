@@ -1,4 +1,4 @@
-﻿using Frontend.ViewModel;
+﻿using IntroSE.Kanban.Frontend.ViewModel;
 using Presentation.Model;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Frontend.View
+namespace IntroSE.Kanban.Frontend.View
 {
     /// <summary>
     /// Interaction logic for UserView.xaml

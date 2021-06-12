@@ -1,9 +1,9 @@
-﻿using Frontend.ViewModel;
+﻿using IntroSE.Kanban.Frontend.ViewModel;
 using Presentation.Model;
 using System.Windows;
 
 
-namespace Frontend.View
+namespace IntroSE.Kanban.Frontend.View
 {
     /// <summary>
     /// Interaction logic for Login.xaml

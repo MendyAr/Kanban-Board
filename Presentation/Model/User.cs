@@ -1,4 +1,4 @@
-﻿using Frontend.Model;
+﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Presentation.Model
+namespace IntroSE.Kanban.Frontend.Model
 {
     public class User
     {

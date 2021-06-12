@@ -11,17 +11,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TaskViewModel = IntroSE.Kanban.Frontend.ViewModel.TaskViewModel;
 
-namespace Frontend.View
+namespace IntroSE.Kanban.Frontend.View
 {
     /// <summary>
     /// Interaction logic for task.xaml
     /// </summary>
     public partial class task : Window
     {
+        TaskViewModel taskVM;
         public task()
         {
             InitializeComponent();
+            taskVM = new TaskViewModel();
+            DataContext = taskVM;
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

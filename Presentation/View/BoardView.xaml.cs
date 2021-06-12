@@ -1,4 +1,4 @@
-﻿using Frontend.Model;
+﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Frontend.View
+namespace IntroSE.Kanban.Frontend.View
 {
     /// <summary>
     /// Interaction logic for BoardView.xaml

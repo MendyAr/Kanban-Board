@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace Frontend.Model
+namespace IntroSE.Kanban.Frontend.Model
 { 
     class Board
     {

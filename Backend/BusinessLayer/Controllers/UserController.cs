@@ -25,7 +25,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         //password limiters
         private const int PASS_MIN_LENGTH = 4;
         private const int PASS_MAX_LENGTH = 20;
-        private List<string> forbiddenPasswords = ConfigReader.getInstance().ForbiddenPasswords;
+        private List<string> forbiddenPasswords = new List<string>();
 
         //constructors
         public UserController(LoginInstance loginInstance)
@@ -70,6 +70,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
             if (errorMsg != null)
                 throw new Exception(errorMsg);
+
+            try
+            {
+                this.forbiddenPasswords = ConfigReader.getInstance().ForbiddenPasswords;
+            }
         }
 
         ///<summary>Removes all persistent users data.</summary>

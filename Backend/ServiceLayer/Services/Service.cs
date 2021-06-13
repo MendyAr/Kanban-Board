@@ -148,6 +148,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return BoardS.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit);
         }
 
+        public Response<Column> GetSColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            return BoardS.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
+        }
+
         /// <summary>
         /// Get the limit of a specific column
         /// </summary>
@@ -280,6 +285,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public Response AddBoard(string userEmail, string name)
         {
             return BoardS.AddBoard(userEmail, name);
+        }
+
+        public Response<Board> GetBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            return BoardS.GetBoard(userEmail, creatorEmail, boardName);
         }
 
         /// <summary>

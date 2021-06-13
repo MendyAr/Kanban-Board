@@ -7,23 +7,23 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
         public readonly string CreatorEmail;
         public readonly string Name;
-        public readonly IList<string> Columns;
-        public readonly int TaskCounter;
+        public readonly int ColumnCount;
+        public readonly int TaskCount;
 
-        internal Board(string creatorEmail, string boardName, IList<string> columnNames, int taskCounter)
+        internal Board(string creatorEmail, string boardName, int columnCount, int taskCount)
         {
             CreatorEmail = creatorEmail;
             Name = boardName;
-            Columns = new List<string>(columnNames);
-            TaskCounter = taskCounter;
+            ColumnCount = columnCount;
+            TaskCount = taskCount;
         }
 
         internal Board(string creatorEmail, string boardName, BBoard bBoard)
         {
             CreatorEmail = creatorEmail;
             Name = boardName;
-            Columns = bBoard.Columns;
-            TaskCounter = bBoard.TaskIdCounter;
+            ColumnCount = bBoard.ColumnCounter;
+            TaskCount = bBoard.TaskIdCounter;
         }
     }
 }

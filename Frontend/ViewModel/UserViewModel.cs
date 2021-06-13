@@ -1,9 +1,9 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
@@ -109,7 +109,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             {
                 backendController.JoinBoard(User.Email, JoinBoardCreator, JoinBoardName);
                 Message = "You Joined the board " + JoinBoardName + " Successfully";
-                User.JoinBoard(JoinBoardCreator, JoinBoardName);
+                User.AddBoard(JoinBoardCreator+ ":" + JoinBoardName);
             }
             catch(Exception e)
             {
@@ -117,13 +117,13 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        internal void createBoard()
+        internal void CreateBoard()
         {
             Message = "";
             try
             {
                 backendController.AddBoard(User.Email, NewBoardName);
-                User.addBoard(NewBoardName);
+                User.AddBoard(User.Email + ":" + NewBoardName);
             }
             catch (Exception e)
             {
@@ -133,7 +133,15 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         internal Board OpenBoard()
         {
             
-            return backendController.loadBoard(SelectedBoard);
+            return backendController.LoadBoard(SelectedBoard);
         }
+
+        public  Collection<Task> GetInProggress()
+        {
+            Collection<Task> tasks= new Collection<Task>(backendController.GetInProgressTasks(User.Email));
+
+            return tasks;
+        }
+
     }
 }

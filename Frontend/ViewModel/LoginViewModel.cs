@@ -1,5 +1,4 @@
-﻿using IntroSE.Kanban.Frontend.Model;
-using System;
+﻿using System;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
@@ -54,7 +53,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
             catch
             {
-                Message = $"{Username} cammot be register";
+                Message = $"{Username} can not be register";
             }
         }
     }

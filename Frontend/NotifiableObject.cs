@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 namespace IntroSE.Kanban.Frontend
 {
-    class NotifiableObject : INotifyPropertyChanged
+    public abstract class NotifiableObject : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string property)

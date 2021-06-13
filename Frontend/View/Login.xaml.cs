@@ -1,5 +1,5 @@
 ﻿using IntroSE.Kanban.Frontend.ViewModel;
-using Presentation.Model;
+using IntroSE.Kanban.Frontend.Model;
 using System.Windows;
 
 

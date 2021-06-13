@@ -749,10 +749,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     string[] boardDetails = board.Split(':', 2);
                     if (checkBoardExistance(boardDetails[0], boardDetails[1]))
                     {
-                        foreach (Task task in boards[boardDetails[0]][boardDetails[1]].GetColumnTasks(1))
+                        for (int i = 1; i < boards[boardDetails[0]][boardDetails[1]].ColumnCounter - 1; i++)
                         {
-                            if (task.Assignee.Equals(userEmail))
-                                inProgress.Add(task);
+                            foreach (Task task in boards[boardDetails[0]][boardDetails[1]].GetColumnTasks(i))
+                            {
+                                if (task.Assignee.Equals(userEmail))
+                                    inProgress.Add(task);
+                            }
                         }
                     }
                     else

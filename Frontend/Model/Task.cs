@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Frontend.Model
 {
-    internal class Task
+    internal class Task : NotifiableModelObject
     {
         public readonly int Id;
         public readonly DateTime CreationTime;
@@ -15,6 +15,8 @@ namespace IntroSE.Kanban.Frontend.Model
         public readonly DateTime DueDate;
         public readonly string emailAssignee;
 
-
+        public Task()
+        {
+        }
     }
 }

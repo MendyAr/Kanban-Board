@@ -53,7 +53,12 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Create_Board_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.createBoard();
+            viewModel.CreateBoard();
+        }
+
+        private void In_Progress_Tasks_Click()
+        {
+
         }
     }
 }

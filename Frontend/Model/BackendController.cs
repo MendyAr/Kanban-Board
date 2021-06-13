@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
@@ -27,7 +28,9 @@ namespace IntroSE.Kanban.Frontend.Model
             {
                 throw new Exception(user.ErrorMessage);
             }
-            return new User(user.Value);
+            string email = user.Value.Email;
+            Collection <string> boards = new Collection<string>(GetBetterBoardNames(email));
+            return new User(email,boards);
         }
 
         internal void Register(string username, string password)
@@ -173,9 +176,10 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        internal IList<Task> InProgressTasks(string userEmail)
+        internal IList<Task> GetInProgressTasks(string userEmail)
         {
             Response<IList<STask>> res = Service.InProgressTasks(userEmail);
+            
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
@@ -216,6 +220,11 @@ namespace IntroSE.Kanban.Frontend.Model
                 }
                 return board_names;
             }
+        }
+
+        internal IList<string> GetBetterBoardNames(string email)
+        {
+            return Service.GetBetterBoardNames(email).Value;
         }
     }
 }

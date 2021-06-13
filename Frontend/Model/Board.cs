@@ -7,7 +7,7 @@ using System.Text;
 
 namespace IntroSE.Kanban.Frontend.Model
 { 
-    class Board
+    public class Board
     {
         ObservableCollection<Task> tasks;
         public string CreatorEmail { get; private set; }

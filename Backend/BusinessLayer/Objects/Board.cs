@@ -21,18 +21,6 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         internal int TaskIdCounter { get => taskIdCounter; }
         internal int ColumnCounter { get => columnCounter; }
-        internal IList<string> Columns
-        {
-            get
-            {
-                IList<string> colNames = new List<string>();
-                foreach (Column column in columns)
-                {
-                    colNames.Add(column.Name);
-                }
-                return colNames;
-            }
-        }
 
         //constructor
         /// <summary>

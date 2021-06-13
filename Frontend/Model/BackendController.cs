@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using IntroSE.Kanban.Backend.ServiceLayer;
-using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
 using SUser = IntroSE.Kanban.Backend.ServiceLayer.User;
+using SBoard = IntroSE.Kanban.Backend.ServiceLayer.Board;
+using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;
+using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
 namespace IntroSE.Kanban.Frontend.Model
 {
     public class BackendController
@@ -21,16 +23,14 @@ namespace IntroSE.Kanban.Frontend.Model
             Service.LoadData();
         }
 
-        public User Login(string username, string password)
+        public UserModel Login(string username, string password)
         {
             Response<SUser> user = Service.Login(username, password);
             if (user.ErrorOccured)
             {
                 throw new Exception(user.ErrorMessage);
             }
-            string email = user.Value.Email;
-            Collection <string> boards = new Collection<string>(GetBetterBoardNames(email));
-            return new User(email,boards);
+            return new UserModel(this, user.Value);
         }
 
         internal void Register(string username, string password)
@@ -49,9 +49,9 @@ namespace IntroSE.Kanban.Frontend.Model
         }
 
 
-        internal void AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        internal void AddColumn(BoardModel board, int columnOrdinal, string columnName)
         {
-            Response res = Service.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName);
+            Response res = Service.AddColumn(board.User.Email, board.CreatorEmail, board.Name, columnOrdinal, columnName);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
@@ -225,6 +225,57 @@ namespace IntroSE.Kanban.Frontend.Model
         internal IList<string> GetBetterBoardNames(string email)
         {
             return Service.GetBetterBoardNames(email).Value;
+        }
+
+        //-----------------------------------------------------------------------------------------
+
+        internal ObservableCollection<BoardModel> GetBoards(UserModel user)
+        {
+            Response<IList<string>> boardNamesRes = Service.GetBetterBoardNames(user.Email);
+            if (boardNamesRes.ErrorOccured)
+            {
+                throw new Exception(boardNamesRes.ErrorMessage);
+            }
+            ObservableCollection<BoardModel> boards = new ObservableCollection<BoardModel>();
+            foreach (string boardID in boardNamesRes.Value)
+            {
+                string[] boardDetails = boardID.Split(':', 2);
+                Response<SBoard> boardRes = Service.GetBoard(user.Email, boardDetails[0], boardDetails[1]);
+                if (boardRes.ErrorOccured)
+                {
+                    throw new Exception(boardRes.ErrorMessage);
+                }
+                boards.Add(new BoardModel(user, boardRes.Value));
+            }
+            return boards;
+        }
+
+        internal ObservableCollection<ColumnModel> GetBoardColumns(BoardModel board)
+        {
+            ObservableCollection<ColumnModel> columns = new ObservableCollection<ColumnModel>();
+            for (int i = 0; i < board.ColumnCount; i++)
+            {
+                Response<SColumn> columnRes = Service.GetSColumn(board.User.Email, board.CreatorEmail, board.Name, i);
+                if (columnRes.ErrorOccured)
+                {
+                    throw new Exception(columnRes.ErrorMessage);
+                }
+                columns.Add(new ColumnModel(board, i, columnRes.Value));
+            }
+            return columns;
+        }
+
+        internal ObservableCollection<TaskModel> GetColumnTasks(ColumnModel column)
+        {
+            ObservableCollection<TaskModel> tasks = new ObservableCollection<TaskModel>();
+            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.Name, column.Ordinal);
+            if (tasksRes.ErrorOccured)
+                throw new Exception(tasksRes.ErrorMessage);
+            foreach (STask sTask in tasksRes.Value)
+            {
+                tasks.Add(new TaskModel(column, sTask));
+            }
+            return tasks;
         }
     }
 }

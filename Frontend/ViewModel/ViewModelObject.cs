@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class ViewModelObject :NotifiableObject
+    public abstract class ViewModelObject : NotifiableObject
     {
-        protected BackendController backendController;
+        public BackendController Controller { get; private set; }
 
-        public ViewModelObject()
+        public ViewModelObject(BackendController controller)
         {
-            this.backendController = new BackendController();
+            this.Controller = controller;
         }
     }
 }

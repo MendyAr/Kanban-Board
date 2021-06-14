@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,13 @@ namespace IntroSE.Kanban.Frontend.View
     /// </summary>
     public partial class Board : Window
     {
-        public Board()
+
+        private BoardViewModel ViewModel;
+        public Board(BoardModel boardModel)
         {
             InitializeComponent();
+            this.ViewModel = new BoardViewModel(boardModel);
+            this.DataContext = ViewModel;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

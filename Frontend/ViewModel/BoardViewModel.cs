@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 {
     class BoardViewModel : ViewModelObject
     {
+
+        private BoardModel board;
 
         private string _boardName;
         private string _boardCreator;
@@ -25,6 +28,11 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 this._message = value;
                 RaisePropertyChanged("Message");
             }
+        }
+
+        public BoardViewModel(BoardModel boardModel)
+        {
+            this.Controller = boardModel.Controller;
         }
 
         //RollBack?

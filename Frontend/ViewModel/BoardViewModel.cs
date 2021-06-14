@@ -30,9 +30,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public BoardViewModel(BoardModel boardModel)
+        public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
         {
-            this.Controller = boardModel.Controller;
         }
 
         //RollBack?

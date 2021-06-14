@@ -97,12 +97,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         protected override DColumn ConvertReaderToObject(SQLiteDataReader reader)
         {
-            string creator = reader.GetString(1);
-            string boardName = reader.GetString(2);
-            int ordinal = reader.GetInt32(3);
-            int limit = reader.GetInt32(4);
+            string name = reader.GetString(1);
+            string creator = reader.GetString(2);
+            string boardName = reader.GetString(3);
+            int ordinal = reader.GetInt32(4);
+            int limit = reader.GetInt32(5);
 
-            DColumn result = new DColumn("name", creator, boardName, ordinal, limit);
+            DColumn result = new DColumn(name, creator, boardName, ordinal, limit);
             return result;
         }
     }

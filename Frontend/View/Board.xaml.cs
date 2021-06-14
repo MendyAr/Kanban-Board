@@ -43,5 +43,10 @@ namespace IntroSE.Kanban.Frontend.View
         {
 
         }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

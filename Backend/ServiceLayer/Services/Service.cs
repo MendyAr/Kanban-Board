@@ -13,9 +13,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         //constructors
         public Service()
         {
-            BusinessLayer.LoginInstance loginInstance = new BusinessLayer.LoginInstance();
-            UserS = new UserService(loginInstance);
-            BoardS = new BoardService(loginInstance);
+            UserS = new UserService();
+            BoardS = new BoardService();
         }
 
         //methods

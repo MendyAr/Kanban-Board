@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         //fields
 
         private Dictionary<string, User> users; //key - email, value - user of that email
-        private LoginInstance loginInstance;
+        private LoginInstance loginInstance = LoginInstance.GetInstance();
 
         private DUserController dUserController; //parallel DController
 
@@ -28,10 +28,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private List<string> forbiddenPasswords = new List<string>();
 
         //constructors
-        public UserController(LoginInstance loginInstance)
+        public UserController()
         {
             users = new Dictionary<string, User>();
-            this.loginInstance = loginInstance;
             this.dUserController = new DUserController();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));

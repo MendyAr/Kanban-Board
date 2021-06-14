@@ -18,18 +18,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         //fields
         private Dictionary<string, Dictionary<string, Board>> boards; //first key is userEmail , second key will be the board name
         private Dictionary<string, HashSet<string>> userBoards; //first key is userEmail, second key is a set of all the boards he is a member of
-        private LoginInstance loginInstance;
+        private LoginInstance loginInstance = LoginInstance.GetInstance();
 
         private DBC dBoardController = new DBC(); //parallel DController
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
-        internal BoardController(LoginInstance loginInstance)
+        internal BoardController()
         {
             boards = new Dictionary<string, Dictionary<string, Board>>();
             userBoards = new Dictionary<string, HashSet<string>>();
-            this.loginInstance = loginInstance;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Kanban.app booted");
@@ -171,8 +170,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="userEmail">the calling user's email</param>
         /// <param name="boardName">the new board name</param>
         /// <exception cref="ArgumentException">thrown when the board already exists for that user</exception>
+        /// <returns>the newly created Board</returns>
         /// <remarks>call validateLogin</remarks>
-        internal void AddBoard(string userEmail, string boardName)
+        internal Board AddBoard(string userEmail, string boardName)
         {
             validateLogin(userEmail, $"AddBoard({userEmail}, {boardName})");
             if (!boards.ContainsKey(userEmail)) //create new entry if needed
@@ -195,6 +195,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             JoinBoard(userEmail, userEmail, boardName);
             log.Info($"SUCCESSFULLY created '{userEmail}:{boardName}'");
+            return boards[userEmail][boardName];
         }
 
         /// <summary>
@@ -203,8 +204,9 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="userEmail">the calling user's email</param>
         /// <param name="creatorEmail">board's creator - idetifier</param>
         /// <param name="boardName">board's name - identifier</param>
+        /// <returns>The joined board</returns>
         /// <remarks>calls validateLogin</remarks>
-        internal void JoinBoard(string userEmail, string creatorEmail, string boardName)
+        internal Board JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
             validateLogin(userEmail, $"JoinBoard({userEmail}, {creatorEmail}, {boardName})");
             if (!checkBoardExistance(creatorEmail, boardName)) //check board existance
@@ -223,6 +225,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             userBoards[userEmail].Add($"{creatorEmail}:{boardName}");
             boards[creatorEmail][boardName].AddMember(userEmail);
             log.Info($"SUCCESSFULLY signed '{userEmail}' to '{creatorEmail}:{boardName}'");
+            return boards[creatorEmail][boardName];
         }
 
 
@@ -268,13 +271,14 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="boardName">board's name - identifier</param>
         /// <param name="columnOrdinal">The location of the new column. Location for old columns with index>=columnOrdinal is increased by 1 (moved right). </param>
         /// <param name="columnName">The name for the new columns</param>        
-        public void AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        /// <returns>The newly added Column</returns>
+        public Column AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
             validateLogin(userEmail, $"AddColumn({userEmail}, {creatorEmail}, {boardName}, {columnOrdinal}, {columnName})");
             checkMembership(userEmail, creatorEmail, boardName, "AddColumn");
             try
             {
-                boards[creatorEmail][boardName].AddColumn(creatorEmail, boardName, columnOrdinal, columnName);
+                return boards[creatorEmail][boardName].AddColumn(creatorEmail, boardName, columnOrdinal, columnName);
             }
             catch (ArgumentOutOfRangeException e)
             {

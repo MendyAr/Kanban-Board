@@ -7,6 +7,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     /// </summary>
     internal class LoginInstance
     {
+        private static LoginInstance instance = null;
+
         //fields
         private string connectedEmail;
         internal string ConnectedEmail { get => connectedEmail; }
@@ -14,6 +16,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal LoginInstance()
         {
             connectedEmail = null;
+        }
+
+        public static LoginInstance GetInstance()
+        {
+            if (instance == null)
+                instance = new LoginInstance();
+            return instance;
         }
 
         /// <summary>

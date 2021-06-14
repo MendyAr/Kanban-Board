@@ -149,22 +149,27 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public void AddBoard(string userEmail, string name)
+        public BoardModel AddBoard(UserModel user, string newBoardName)
         {
-            Response res = Service.AddBoard(userEmail, name);
+            Response<SBoard> res =(Response<SBoard>) Service.AddBoard(user.Email, newBoardName);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
+            }
+            else
+            {
+                return new BoardModel(user, res.Value);
             }
         }
 
-        internal void JoinBoard(string userEmail, string creatorEmail, string boardName)
+        internal BoardModel JoinBoard(UserModel user, string creatorEmail, string boardName)
         {
-            Response res = Service.JoinBoard(userEmail, creatorEmail, boardName);
+            Response <SBoard> res= (Response<SBoard>) Service.JoinBoard(user.Email, creatorEmail, boardName);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
             }
+            return new BoardModel(user,res.Value);
         }
 
         internal void RemoveBoard(string userEmail, string creatorEmail, string boardName)
@@ -176,7 +181,7 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        internal IList<Task> GetInProgressTasks(string userEmail)
+        internal IList<TaskModel> GetInProgressTasks(string userEmail,BackendController controller)
         {
             Response<IList<STask>> res = Service.InProgressTasks(userEmail);
             
@@ -186,10 +191,10 @@ namespace IntroSE.Kanban.Frontend.Model
             }
             else
             {
-                IList<Task> tasks = new List<Task>();
+                IList<TaskModel> tasks = new List<TaskModel>();
                 foreach (STask s_task in res.Value)
                 {
-                    tasks.Add(new Task(s_task));
+                    tasks.Add(new TaskModel(s_task,controller));
                 }
                 return tasks;
             }

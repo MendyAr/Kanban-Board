@@ -57,10 +57,10 @@ namespace IntroSE.Kanban.Frontend.Model
         public BoardModel(UserModel user, SBoard sBoard) : base(user.Controller)
         {
             this._user = user;
-            this.CreatorEmail = sBoard.CreatorEmail;
-            this.Name = sBoard.Name;
-            this.ColumnCount = sBoard.ColumnCount;
-            this.TaskCount = sBoard.TaskCount;
+            this._creatorEmail = sBoard.CreatorEmail;
+            this._name = sBoard.Name;
+            this._columnCount = sBoard.ColumnCount;
+            this._taskCount = sBoard.TaskCount;
         }
 
         public ObservableCollection<ColumnModel> GetColumns()

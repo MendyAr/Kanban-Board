@@ -54,5 +54,10 @@ namespace IntroSE.Kanban.Frontend.View
         {
 
         }
+
+        private void OnClick5(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

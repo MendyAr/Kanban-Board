@@ -25,7 +25,7 @@ namespace IntroSE.Kanban.Frontend.View
             BoardModel board = viewModel.OpenBoard();
             if (board != null)
             {
-                BoardWin boardWin = new BoardWin(board,board.Controller);
+                BoardWin boardWin = new BoardWin(board);
                 boardWin.Show();
             }
         }
@@ -46,11 +46,18 @@ namespace IntroSE.Kanban.Frontend.View
             viewModel.CreateBoard();
         }
 
+        /*
         private void In_Progress_Tasks_Click()
+        {
+        }
+        */
+
+        private void In_Progress_Tasks_Click(object sender, RoutedEventArgs e)
         {
             IList<TaskModel> tasks = viewModel.GetInProggress();
             InProgressTasksView inProgress = new InProgressTasksView(tasks,viewModel.Controller);
             inProgress.Show();
+
         }
     }
 }

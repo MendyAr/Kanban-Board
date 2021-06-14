@@ -15,9 +15,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private BC bc;
 
         //constructors
-        internal BoardService(BusinessLayer.LoginInstance loginInstance)
+        internal BoardService()
         {
-            bc = new BC(loginInstance);
+            bc = new BC();
         }
 
         //methods 
@@ -58,17 +58,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="boardName">The name of the board</param>
         /// <param name="columnOrdinal">The location of the new column. Location for old columns with index>=columnOrdinal is increased by 1 (moved right). The first column is identified by 0, the location increases by 1 for each column.</param>
         /// <param name="columnName">The name for the new columns</param>        
-        /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        public Response AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        /// <returns>A response object. The response should contain the newly added column or an error message in case of an error</returns>
+        public Response<Column> AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
             try
             {
-                bc.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName);
-                return new Response();
+                return Response<Column>.FromValue(new Column(bc.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName), columnOrdinal));
             }
             catch(Exception e)
             {
-                return new Response(e.Message);
+                return Response<Column>.FromError(e.Message);
             }
         }
 
@@ -284,7 +283,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                return Response<Column>.FromValue(new Column(bc.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal)));
+                return Response<Column>.FromValue(new Column(bc.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal), columnOrdinal));
             }
             catch (Exception e)
             {
@@ -336,17 +335,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <param name="boardName">name of the new board</param>
-        /// <returns>Reponse containing message detailing the error if occured</returns>
-        internal Response AddBoard(string userEmail, string boardName)
+        /// <returns>Reponse containing the new board, or message detailing the error if occured</returns>
+        internal Response<Board> AddBoard(string userEmail, string boardName)
         {
             try
             {
-                bc.AddBoard(userEmail, boardName);
-                return new Response();
+                
+                return Response<Board>.FromValue(new Board(userEmail, boardName, bc.AddBoard(userEmail, boardName)));
             }
             catch (Exception e)
             {
-                return new Response(e.Message);
+                return Response<Board>.FromError(e.Message);
             }
         }
 
@@ -356,17 +355,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="userEmail">userEmail of the current user.</param>
         /// <param name="creatorEmail">userEmail of the board creator</param>
         /// <param name="boardName">The name of the new board</param>
-        /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        internal Response JoinBoard(string userEmail, string creatorEmail, string boardName)
+        /// <returns>A response object. The response should contain the board if succeeded or an error message in case of an error</returns>
+        internal Response<Board> JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
             try
             {
-                bc.JoinBoard(userEmail, creatorEmail, boardName);
-                return new Response();
+                
+                return Response<Board>.FromValue(new Board(creatorEmail, boardName, bc.JoinBoard(userEmail, creatorEmail, boardName)));
             }
             catch (Exception e)
             {
-                return new Response(e.Message);
+                return Response<Board>.FromError(e.Message);
             }
         }
 

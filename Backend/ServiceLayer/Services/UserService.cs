@@ -9,9 +9,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         private UC uc;
 
         //constructor
-        internal UserService(BusinessLayer.LoginInstance loginInstance)
+        internal UserService()
         {
-            uc = new UC(loginInstance);
+            uc = new UC();
         }
 
         //functions

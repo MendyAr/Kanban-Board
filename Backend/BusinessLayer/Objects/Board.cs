@@ -65,16 +65,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnName">The name for the new columns</param>        
         /// <remarks>calls checkColumnOrdinal</remarks>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if given columnOrdinal isn't legal</exception>
-        public void AddColumn(string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        /// <returns>the newly added Column</returns>
+        public Column AddColumn(string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
             if (columnOrdinal < 0 || columnOrdinal > columnCounter)
                 throw new ArgumentOutOfRangeException($"{columnCounter-1}");
-            columns.Insert(columnOrdinal, new Column(columnName, creatorEmail, boardName, columnOrdinal));
+            Column newCol = new Column(columnName, creatorEmail, boardName, columnOrdinal);
+            columns.Insert(columnOrdinal, newCol);
             columnCounter++;
             for (int i = columnOrdinal+1; i < columnCounter; i++)
             {
                 columns[i].UpdateOrdinal(i);
             }
+            return newCol;
         }
 
         /// <summary>

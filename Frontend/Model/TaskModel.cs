@@ -70,12 +70,12 @@ namespace IntroSE.Kanban.Frontend.Model
             this._user = column.User;
             this._board = column.Board;
             this._column = column;
-            this.ID = sTask.Id;
-            this.CreationTime = sTask.CreationTime;
-            this.Title = sTask.Title;
-            this.Description = sTask.Description;
-            this.DueDate = sTask.DueDate;
-            this.Assignee = sTask.emailAssignee;
+            this._id = sTask.Id;
+            this._creationTime = sTask.CreationTime;
+            this._title = sTask.Title;
+            this._description = sTask.Description;
+            this._dueDate = sTask.DueDate;
+            this._emailAssignee = sTask.emailAssignee;
         }
     }
 }

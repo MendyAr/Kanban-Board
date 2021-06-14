@@ -40,13 +40,13 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public ColumnModel(BoardModel board, int ordinal, SColumn sColumn) : base(board.Controller)
+        public ColumnModel(BoardModel board, SColumn sColumn) : base(board.Controller)
         {
             this._user = board.User;
             this._board = board;
-            this.Ordinal = ordinal;
-            this.Name = sColumn.Name;
-            this.Limit = sColumn.Limit;
+            this._ordinal = sColumn.Ordinal;
+            this._name = sColumn.Name;
+            this._limit = sColumn.Limit;
         }
 
         public ObservableCollection<TaskModel> GetTasks()

@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Frontend.Model
 
         public UserModel(BackendController controller, SUser sUser) : base(controller)
         {
-            this.Email = sUser.Email;
+            this._email = sUser.Email;
         }
 
         public ObservableCollection<BoardModel> GetBoards()

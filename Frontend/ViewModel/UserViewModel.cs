@@ -2,24 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.Collections.Specialized;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
 
     class UserViewModel : ViewModelObject
     {
-        private User _user;
+        private UserModel _user;
         private string _message;
-        private bool _isBoardlSelected= false;
-        private string _selectedBoard;
+        private BoardModel _selectedBoard;
         private string _joinBoardCreator;
         private string _joinBoardName;
         private string _newBoardName;
         private bool _isJoinArgumentProvide = false;
+        private bool _isBoardlSelected = false;
         private bool _isCreatBoardArgumentProvide = false;
-        public User User { get => _user; private set { _user = value; } }
+        private ObservableCollection<BoardModel> _boards;
+        public UserModel User { get => _user; private set { _user = value; } }
         public string Title { get => "Boards for " + User.Email; }
         public bool IsBoardSelected
         {
@@ -33,7 +33,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         
 
-        public string SelectedBoard { 
+        public BoardModel SelectedBoard { 
             get=>_selectedBoard; 
             set 
             {
@@ -68,17 +68,17 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             get => _isJoinArgumentProvide;
             set
             {
-                _isJoinArgumentProvide = JoinBoardName != "" & JoinBoardCreator != "";
+                _isJoinArgumentProvide = (JoinBoardName != "" & JoinBoardCreator != "") & (JoinBoardName != null & JoinBoardCreator != null);
                 RaisePropertyChanged("IsJoinArgumentProvide");
             }
         }
 
-        public bool IsCreatBoardArgumentProvide
+        public bool IsCreateBoardArgumentProvide
         {
             get => _isCreatBoardArgumentProvide;
             set
             {
-                _isCreatBoardArgumentProvide = NewBoardName != "";
+                _isCreatBoardArgumentProvide = NewBoardName != "" & NewBoardName != null;
                 RaisePropertyChanged("IsCreatBoardArgumentProvide");
             }
         }
@@ -88,28 +88,24 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             set
             {
                 _newBoardName = value;
-                IsCreatBoardArgumentProvide = false; // does not matter what value
+                IsCreateBoardArgumentProvide = false; // does not matter what value
             }
         }
+
+
         public string Message { get=>_message; 
             set { _message= value;
                 RaisePropertyChanged("Message"); } }
-        
-
-        public UserViewModel(User user) 
-        {
-            User = user;
-           // does not matter that value
-        } 
+   
 
         internal void Join_Board()
         {
             Message = "";
             try
             {
-                backendController.JoinBoard(User.Email, JoinBoardCreator, JoinBoardName);
+                BoardModel joindBoard = Controller.JoinBoard(User, JoinBoardCreator, JoinBoardName);
                 Message = "You Joined the board " + JoinBoardName + " Successfully";
-                User.AddBoard(JoinBoardCreator+ ":" + JoinBoardName);
+                Boards.Add(joindBoard);
             }
             catch(Exception e)
             {
@@ -122,25 +118,52 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             Message = "";
             try
             {
-                backendController.AddBoard(User.Email, NewBoardName);
-                User.AddBoard(User.Email + ":" + NewBoardName);
+                BoardModel board = Controller.AddBoard(User, NewBoardName);
+                Message = $"You Created the board {NewBoardName} successfully";
+                Boards.Add(board);
             }
             catch (Exception e)
             {
                 Message = "You Failed to create Board " + NewBoardName + " because " + e.Message;
             }
         }
-        internal Board OpenBoard()
+        internal BoardModel OpenBoard()
         {
-            
-            return backendController.LoadBoard(SelectedBoard);
+
+            return SelectedBoard;
         }
 
-        public  Collection<Task> GetInProggress()
+        public  IList<TaskModel> GetInProggress()
         {
-            Collection<Task> tasks= new Collection<Task>(backendController.GetInProgressTasks(User.Email));
+            IList<TaskModel> tasks= Controller.GetInProgressTasks(User.Email,Controller);
 
             return tasks;
+        }
+
+        public ObservableCollection<BoardModel> Boards { get => _boards; private set => _boards=value; }
+
+        public UserViewModel(UserModel user,BackendController backendController):base(backendController)
+        {
+            User = user;
+            Boards = User.GetBoards();
+            Boards.CollectionChanged += HandleBoardsChange;
+        }
+
+        private void HandleBoardsChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+           /* //read more here: https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net/4279274#4279274
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (MessageModel y in e.OldItems)
+                {
+
+                    Controller.RemoveMessage(user.Email, y.Id);
+                }
+
+            }
+           */
+
+            RaisePropertyChanged("Boards");
         }
 
     }

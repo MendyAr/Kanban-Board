@@ -16,6 +16,8 @@ namespace IntroSE.Kanban.Frontend.Model
         private int _columnCount;
         private int _taskCount;
 
+        public string FullName { get => CreatorEmail + " : " + Name; }
+
         public UserModel User { get => _user; }
         public string CreatorEmail
         {

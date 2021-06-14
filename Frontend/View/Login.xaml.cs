@@ -14,7 +14,7 @@ namespace IntroSE.Kanban.Frontend.View
         public Login()
         {
             InitializeComponent();
-            this.viewModel = new LoginViewModel();
+            this.viewModel = new LoginViewModel(new BackendController());
             this.DataContext = viewModel;
         }
 
@@ -22,7 +22,7 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            User user = viewModel.Login();
+            UserModel user = viewModel.Login();
             if(user != null)
             {
                 UserView boardView = new UserView(user);

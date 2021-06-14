@@ -77,5 +77,15 @@ namespace IntroSE.Kanban.Frontend.Model
             this.DueDate = sTask.DueDate;
             this.Assignee = sTask.emailAssignee;
         }
+
+        public TaskModel(STask sTask,BackendController backendController):base(backendController)
+        {
+            this.ID = sTask.Id;
+            this.CreationTime = sTask.CreationTime;
+            this.Title = sTask.Title;
+            this.Description = sTask.Description;
+            this.DueDate = sTask.DueDate;
+            this.Assignee = sTask.emailAssignee;
+        }
     }
 }

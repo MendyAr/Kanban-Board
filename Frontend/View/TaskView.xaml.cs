@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,10 +22,10 @@ namespace IntroSE.Kanban.Frontend.View
     public partial class TaskView : Window
     {
         TaskViewModel taskVM;
-        public TaskView()
+        public TaskView(TaskModel task)
         {
             InitializeComponent();
-            taskVM = new TaskViewModel();
+            taskVM = new TaskViewModel(task);
             DataContext = taskVM;
         }
     }

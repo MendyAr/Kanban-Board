@@ -33,9 +33,9 @@
         <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="552,68,0,0" Orientation="Horizontal" VerticalAlignment="Top"/>
         <StackPanel Grid.Column="1" Margin="226,24,10,516" Orientation="Horizontal">
             <Label Content="Board name:" FontWeight="Bold" FontSize="16" Height="44" Width="117"/>
-            <Label Content="---" FontWeight="Bold" FontSize="16" Height="44" Width="202"/>
+            <Label Content="{Binding Path=Title, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="44" Width="202"/>
             <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="44" Width="73"/>
-            <Label Content="---" FontWeight="Bold" FontSize="16" Height="44" Width="174"/>
+            <Label Content="{Binding Path=Title, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="44" Width="174"/>
         </StackPanel>
         <ListBox HorizontalAlignment="Center" Height="206" Margin="0,91,0,0" VerticalAlignment="Top" Width="896" Grid.Column="1" Background="White"/>
     </Grid>

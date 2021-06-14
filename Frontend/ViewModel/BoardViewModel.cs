@@ -1,6 +1,7 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     class BoardViewModel : ViewModelObject
     {
 
-        private BoardModel board;
+        private BoardModel boardModel;
+        private ObservableCollection<ColumnModel> columns;
 
         private string _boardName;
         private string _boardCreator;
@@ -32,6 +34,11 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
         {
+<<<<<<< HEAD
+=======
+            this.boardModel = boardModel;
+            columns = boardModel.GetColumns();
+>>>>>>> 0bd1648 ( pulling new content)
         }
 
         //RollBack?

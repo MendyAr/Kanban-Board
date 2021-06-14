@@ -28,6 +28,7 @@ namespace IntroSE.Kanban.Frontend.View
             InitializeComponent();
             this.ViewModel = new BoardViewModel(boardModel);
             this.DataContext = ViewModel;
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

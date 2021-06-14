@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <StartupObject>Presentation.App</StartupObject>
+    <StartupObject>IntroSE.Kanban.Frontend.App</StartupObject>
     <AssemblyName>IntroSE.Kanban.Frontend</AssemblyName>
     <RootNamespace>IntroSE.Kanban.Frontend</RootNamespace>
   </PropertyGroup>

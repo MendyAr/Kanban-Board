@@ -70,10 +70,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (errorMsg != null)
                 throw new Exception(errorMsg);
 
-            try
-            {
-                this.forbiddenPasswords = ConfigReader.getInstance().ForbiddenPasswords;
-            }
+            this.forbiddenPasswords = ConfigReader.getInstance().ForbiddenPasswords;
         }
 
         ///<summary>Removes all persistent users data.</summary>

@@ -85,6 +85,7 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
+        /*
         internal Task AddTask(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
             Response<STask> res = Service.AddTask(userEmail, creatorEmail, boardName, title, description, dueDate);
@@ -94,6 +95,7 @@ namespace IntroSE.Kanban.Frontend.Model
             }
             return new Task(res.Value);
         }
+        */
 
         internal void UpdateTaskDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
@@ -131,6 +133,7 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
+        /*
         internal IList<Task> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
             Response<IList<STask>> res = Service.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
@@ -148,6 +151,7 @@ namespace IntroSE.Kanban.Frontend.Model
                 return tasks;
             }
         }
+        */
 
         public BoardModel AddBoard(UserModel user, string newBoardName)
         {

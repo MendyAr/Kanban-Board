@@ -153,7 +153,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                     string[] boardDetails = board.Split(':', 2);
                     if (checkBoardExistance(boardDetails[0], boardDetails[1]))
                     {
-                        boards.Add($"{boardDetails[0]} : {boardDetails[1]}");
+                        boards.Add($"{boardDetails[0]}:{boardDetails[1]}");
                     }
                     else
                     {

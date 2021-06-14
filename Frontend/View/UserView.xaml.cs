@@ -31,6 +31,7 @@ namespace IntroSE.Kanban.Frontend.View
         }
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
+            viewModel.Logout();
             Login loginWin = new Login();
             loginWin.Show();
             this.Close();

@@ -42,6 +42,11 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
+        internal void Logout(UserModel user)
+        {
+            Service.Logout(user.Email);
+        }
+
         ///<summary>Removes all persistent data.</summary>
         public void DeleteData()
         {

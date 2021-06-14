@@ -15,21 +15,9 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         private string _joinBoardCreator;
         private string _joinBoardName;
         private string _newBoardName;
-        private bool _isJoinArgumentProvide = false;
-        private bool _isBoardlSelected = false;
-        private bool _isCreatBoardArgumentProvide = false;
         private ObservableCollection<BoardModel> _boards;
         public UserModel User { get => _user; private set { _user = value; } }
         public string Title { get => "Boards for " + User.Email; }
-        public bool IsBoardSelected
-        {
-            get => _isBoardlSelected;
-            set 
-            {
-                _isBoardlSelected = SelectedBoard != null;
-                RaisePropertyChanged("IsBoardSelected");
-            }
-        }
 
         
 
@@ -38,7 +26,6 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             set 
             {
                 _selectedBoard = value;
-                IsBoardSelected = false; // does not matter what value
             } 
         }
 
@@ -48,11 +35,13 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             set 
             {
                 _joinBoardCreator = value;
-                IsJoinArgumentProvide = false; // does not matter what value
             }
         }
 
-    
+        internal void Logout()
+        {
+            Controller.Logout(User);
+        }
 
         public string JoinBoardName
         {
@@ -60,35 +49,16 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             set
             {
                 _joinBoardName = value;
-                IsJoinArgumentProvide = false; // does not matter what value
-            }
-        }
-        public bool IsJoinArgumentProvide 
-        {
-            get => _isJoinArgumentProvide;
-            set
-            {
-                _isJoinArgumentProvide = (JoinBoardName != "" & JoinBoardCreator != "") & (JoinBoardName != null & JoinBoardCreator != null);
-                RaisePropertyChanged("IsJoinArgumentProvide");
             }
         }
 
-        public bool IsCreateBoardArgumentProvide
-        {
-            get => _isCreatBoardArgumentProvide;
-            set
-            {
-                _isCreatBoardArgumentProvide = NewBoardName != "" & NewBoardName != null;
-                RaisePropertyChanged("IsCreatBoardArgumentProvide");
-            }
-        }
         public string NewBoardName
         {
             get => _newBoardName;
             set
             {
                 _newBoardName = value;
-                IsCreateBoardArgumentProvide = false; // does not matter what value
+
             }
         }
 

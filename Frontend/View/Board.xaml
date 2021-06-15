@@ -5,38 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntroSE.Kanban.Frontend.View"
         mc:Ignorable="d"
-        Title="Board" Height="600" Width="900">
+        Title="Board" Height="450" Width="800">
     <Grid Margin="0,0,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.Background>
             <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
         </Grid.Background>
-        <Button x:Name="btn6" BorderBrush="Black" Content="Click the picture." Margin="0,0,567,0"/>
-        <Button x:Name="btn7" BorderBrush="Black" Content="Click the picture." Margin="0,0,567,0"/>
-        <Button x:Name="btn5" Click="OnClick5" Grid.ColumnSpan="2" Margin="20,6,804,498" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
-            <Image Source="\Images\back_button.png" Height="71" Width="67"/>
+        <Button x:Name="Roll_Back" Click="Roll_Back"  Grid.ColumnSpan="2" Margin="9,12,708,357" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
+            <Image Source="\Images\back_button.png" Height="65" Width="84" RenderTransformOrigin="0.931,0.494"/>
         </Button>
-        <Grid Grid.Column="1" HorizontalAlignment="Left" Height="112" Margin="26,342,0,0" VerticalAlignment="Top" Width="864">
-            <Button Content="Move" Height="39" Width="78" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="107,73,0,0" HorizontalAlignment="Left" Click="Button_Click_1" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Delete" Height="45" Width="106" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="458,56,0,0" HorizontalAlignment="Left" Click="Button_Click_2" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Limit column" Height="38" Width="98" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="264,73,0,0" HorizontalAlignment="Left" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Add column" Height="38" Width="106" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="726,72,0,0" HorizontalAlignment="Left" FontWeight="Bold" FontSize="14"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="140" VerticalAlignment="Top" Margin="243,46,0,0" HorizontalAlignment="Left" FontSize="14"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="120" VerticalAlignment="Top" Margin="86,45,0,0" HorizontalAlignment="Left" FontSize="14"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="162" VerticalAlignment="Top" Margin="698,44,0,0" HorizontalAlignment="Left" TextChanged="TextBox_TextChanged" FontSize="14"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="394" VerticalAlignment="Top" Margin="217,0,0,0" HorizontalAlignment="Left" FontSize="14"/>
-        </Grid>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="303,68,0,0" Orientation="Horizontal" VerticalAlignment="Top"/>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="552,68,0,0" Orientation="Horizontal" VerticalAlignment="Top"/>
-        <StackPanel Grid.Column="1" Margin="226,24,10,516" Orientation="Horizontal">
-            <Label Content="Board name:" FontWeight="Bold" FontSize="16" Height="44" Width="117"/>
-            <Label Content="{Binding Path=Title, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="44" Width="202"/>
-            <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="44" Width="73"/>
-            <Label Content="{Binding Path=Title, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="44" Width="174"/>
+        <StackPanel Margin="206,34,30,363" Orientation="Horizontal">
+            <Label Content="Board name:" FontWeight="Bold" FontSize="16" Height="37" Width="109"/>
+            <Label Content="{Binding Title, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="34" Width="190"/>
+            <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="34" Width="77"/>
+            <Label Content="{Binding BoardCreator, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="35" Width="173"/>
         </StackPanel>
-        <ListBox HorizontalAlignment="Center" Height="206" Margin="0,91,0,0" VerticalAlignment="Top" Width="896" Grid.Column="1" Background="White"/>
+        <ListBox ItemsSource="{Binding Path = columns}" SelectedItem="{Binding Path=SelectedMessage, Mode=TwoWay}" 
+                 HorizontalAlignment="Center" Height="105" Margin="0,103,0,0" VerticalAlignment="Top" Width="800" Background="White" Opacity="0.5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="#FF003CFF" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBox Text="{Binding Path=Name , Mode=TwoWay}" BorderBrush="{x:Null}"/>
+                            <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" BorderBrush="{x:Null}" Background="{Binding Path=DataContext.BackgroundColor, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="177,234,0,0" VerticalAlignment="Top" Width="79" Click="Delete_Column"/>
+        <Button Content="Add Column" HorizontalAlignment="Left" Height="47" Margin="433,234,0,0" VerticalAlignment="Top" Width="80" Click="Add_Column"/>
+        <TextBox HorizontalAlignment="Left" Height="25" Margin="538,258,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding Path =NewColumnName, Mode=OneWayToSource}"/>
+        <Label Content="Insert a name for the new column:" HorizontalAlignment="Left" Height="34" Margin="538,226,0,0" VerticalAlignment="Top" Width="199"/>
+        <Label Content="{Binding Path =Message, Mode=OneWay} " HorizontalAlignment="Left" Height="25" Margin="126,321,0,0" VerticalAlignment="Top" Width="288" Foreground="Red"/>
+        <Button Content="Show" HorizontalAlignment="Left" Height="47" Margin="50,234,0,0" VerticalAlignment="Top" Width="80" Click="Show_Column"/>
+        <Button Content="Add Task" HorizontalAlignment="Left" Height="47" Margin="310,234,0,0" VerticalAlignment="Top" Width="79" Click="Add_Task"/>
+        <TextBox HorizontalAlignment="Left" Height="26" Margin="538,336,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnOrdinal, Mode=OneWayToSource}"/>
+        <Label Content="Insert ordinal:" HorizontalAlignment="Left" Height="34" Margin="538,304,0,0" VerticalAlignment="Top" Width="199"/>
     </Grid>
 </Window>

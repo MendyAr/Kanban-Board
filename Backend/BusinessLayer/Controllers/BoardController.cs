@@ -733,7 +733,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             validateLogin(userEmail, $"GetBoard({userEmail}, {creatorEmail}, {boardName})");
             checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
-            return boards[userEmail][boardName];
+            return boards[creatorEmail][boardName];
         }
 
         /// <summary>

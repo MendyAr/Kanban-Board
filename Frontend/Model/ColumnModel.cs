@@ -40,11 +40,11 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public ColumnModel(BoardModel board, int ordinal, SColumn sColumn) : base(board.Controller)
+        public ColumnModel(BoardModel board, SColumn sColumn) : base(board.Controller)
         {
             this._user = board.User;
             this._board = board;
-            this.Ordinal = ordinal;
+            this.Ordinal = sColumn.Ordinal;
             this.Name = sColumn.Name;
             this.Limit = sColumn.Limit;
         }

@@ -260,7 +260,7 @@ namespace IntroSE.Kanban.Frontend.Model
                 {
                     throw new Exception(columnRes.ErrorMessage);
                 }
-                columns.Add(new ColumnModel(board, i, columnRes.Value));
+                columns.Add(new ColumnModel(board, columnRes.Value));
             }
             return columns;
         }

@@ -732,8 +732,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         internal Board GetBoard(string userEmail, string creatorEmail, string boardName)
         {
             validateLogin(userEmail, $"GetBoard({userEmail}, {creatorEmail}, {boardName})");
-            checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
-            return boards[userEmail][boardName];
+            checkMembership(userEmail, creatorEmail, boardName, "GetBoard");
+            return boards[creatorEmail][boardName];
         }
 
         /// <summary>
@@ -797,8 +797,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <remarks>calls checkBoardExistance</remarks>
         private void checkMembership(string userEmail, string creatorEmail, string boardName, string method)
         {
-            if (!userBoards.ContainsKey(userEmail) || !userBoards[userEmail].Contains($"{creatorEmail}:{boardName}") || !checkBoardExistance(creatorEmail, boardName)) {
-                userBoards[userEmail].Remove($"{creatorEmail}:{boardName}");
+            bool exists = checkBoardExistance(creatorEmail, boardName);
+            if (!userBoards.ContainsKey(userEmail) || !userBoards[userEmail].Contains($"{creatorEmail}:{boardName}") || !exists) {
+                if (!exists)
+                {
+                    userBoards[userEmail].Remove($"{creatorEmail}:{boardName}");
+                }
                 log.Warn($"ACCESS VIOLATION - '{method}' - {userEmail} is not a member of '{creatorEmail}:{boardName}'");
                 throw new AccessViolationException($"{userEmail} is not a member of '{creatorEmail}:{boardName}'");
             }

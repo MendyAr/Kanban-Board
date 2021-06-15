@@ -1,18 +1,8 @@
-﻿using IntroSE.Kanban.Frontend.ViewModel;
-using Presentation.Model;
-using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.ViewModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using BoardWin = IntroSE.Kanban.Frontend.View.Board;
 
 namespace IntroSE.Kanban.Frontend.View
 {
@@ -22,25 +12,27 @@ namespace IntroSE.Kanban.Frontend.View
     public partial class UserView : Window
     {
         private UserViewModel viewModel;
-        public UserView(User user )
+        public UserView(UserModel user )
         {
             InitializeComponent();
-            this.viewModel = new UserViewModel(user);
+            this.viewModel = new UserViewModel(user,user.Controller);
             DataContext = viewModel;
 
         }
 
         private void Select_Board_Click(object sender, RoutedEventArgs e)
         {
-            Board board = viewModel.OpenBoard();
+            BoardModel board = viewModel.OpenBoard();
             if (board != null)
             {
-                BoardView boardWin = new BoardView(board);
+                BoardWin boardWin = new BoardWin(board);
                 boardWin.Show();
+                this.Close();
             }
         }
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
+            viewModel.Logout();
             Login loginWin = new Login();
             loginWin.Show();
             this.Close();
@@ -56,8 +48,17 @@ namespace IntroSE.Kanban.Frontend.View
             viewModel.CreateBoard();
         }
 
+        /*
         private void In_Progress_Tasks_Click()
         {
+        }
+        */
+
+        private void In_Progress_Tasks_Click(object sender, RoutedEventArgs e)
+        {
+            IList<TaskModel> tasks = viewModel.GetInProggress();
+            InProgressTasksView inProgress = new InProgressTasksView(tasks,viewModel.Controller);
+            inProgress.Show();
 
         }
     }

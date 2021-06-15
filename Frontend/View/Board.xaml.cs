@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,29 +21,47 @@ namespace IntroSE.Kanban.Frontend.View
     /// </summary>
     public partial class Board : Window
     {
-        public Board()
+
+        private BoardViewModel ViewModel;
+        public Board(BoardModel board)
         {
             InitializeComponent();
+            this.ViewModel = new BoardViewModel(board);
+            this.DataContext = ViewModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Add_Column(object sender, RoutedEventArgs e)
         {
-
+            ViewModel.AddColumn();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Add_Task(object sender, RoutedEventArgs e)
         {
-
+            AddingNewTask newTask = new AddingNewTask(ViewModel.board);
+            newTask.Show();
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void Delete_Column(object sender, RoutedEventArgs e)
         {
-
+            ViewModel.DeleteColumn();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Show_Column(object sender, RoutedEventArgs e)
         {
+            ColumnModel column = ViewModel.GetColumn();
+            if(column != null)
+            {
+                ColumnView columnView = new ColumnView(column);
+                columnView.Show();
+                this.Close();
+            }
+        }
 
+        private void Roll_Back(object sender, RoutedEventArgs e)
+        {
+            UserView userView = new UserView(ViewModel.board.User);
+            userView.Show();
+            this.Close();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using IntroSE.Kanban.Frontend.Model;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
@@ -29,12 +30,12 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 RaisePropertyChanged("Message");
             }
         }
-        public User Login()
+        public UserModel Login()
         {
             Message = "";
             try
             {
-                return backendController.Login(Username, Password); 
+                return Controller.Login(Username, Password); 
             }
             catch (Exception e)
             {
@@ -48,13 +49,18 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             Message = "";
             try
             {
-                backendController.Register(Username, Password);
-                Message = $"{Username} had succesfully register ";
+                Controller.Register(Username, Password);
+                Message = $"{Username} had successfully register ";
             }
-            catch
+            catch(Exception e)
             {
-                Message = $"{Username} can not be register";
+                Message = e.Message;
             }
+        }
+
+        public LoginViewModel(BackendController controller) : base(controller)
+        {
+            
         }
     }
 }

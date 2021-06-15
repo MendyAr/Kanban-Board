@@ -1,4 +1,5 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,21 +13,25 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using TaskViewModel = IntroSE.Kanban.Frontend.ViewModel.TaskViewModel;
 
 namespace IntroSE.Kanban.Frontend.View
 {
     /// <summary>
-    /// Interaction logic for TaskView.xaml
+    /// Interaction logic for InProgressTasksView.xaml
     /// </summary>
-    public partial class TaskView : Window
+    public partial class InProgressTasksView : Window
     {
-        TaskViewModel taskVM;
-        public TaskView(TaskModel task)
+        InProgressTasksViewModel viewModel;
+        public InProgressTasksView(IList<TaskModel>tasks,BackendController controller)
         {
             InitializeComponent();
-            taskVM = new TaskViewModel(task);
-            DataContext = taskVM;
+            this.viewModel = new InProgressTasksViewModel(tasks,controller);
+            DataContext = viewModel;
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

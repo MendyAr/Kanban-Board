@@ -4,13 +4,31 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <StartupObject>Presentation.App</StartupObject>
+    <StartupObject>IntroSE.Kanban.Frontend.App</StartupObject>
     <AssemblyName>IntroSE.Kanban.Frontend</AssemblyName>
     <RootNamespace>IntroSE.Kanban.Frontend</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\arrow.png" />
+    <None Remove="Images\back_button.png" />
+    <None Remove="Images\Board_Background.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Backend\Backend.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\arrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\back_button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Board_Background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

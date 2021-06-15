@@ -9,33 +9,31 @@
     <Grid>
         <StackPanel Orientation="Vertical" Margin="0,0,0,148">
             <Label Content="{Binding Path=Title, Mode=OneTime}" HorizontalAlignment="Center"/>
-            <ListBox ItemsSource="{Binding Path=User.Boards, Mode=OneWay}" SelectedItem="{Binding Path=SelectedBoard, Mode=OneWay}">
+            <ListBox ItemsSource="{Binding Path=Boards, Mode=OneWay}" SelectedItem="{Binding Path=SelectedBoard, Mode=OneWayToSource}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="#FF003CFF" BorderThickness="1">
                             <StackPanel Orientation="Vertical" >
-                                <TextBox Text="{Binding Path=User.Boards.FullName, Mode=TwoWay}" BorderBrush="{x:Null}"/>
-                                
+                                <Label Content="{Binding Path=FullName, Mode=OneTime}"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <Button Content="Select Board" Click="Select_Board_Click" IsEnabled="{Binding Path=IsBoardSelected,Mode=OneWay}"></Button>
+            <Button Content="Select Board" Click="Select_Board_Click" ></Button>
             <Button Content="Logout" Click="Logout_Click"/>
-            <Button Content="Button"/>
+            <Label Content="{Binding Path=Message, Mode=OneWay}" Foreground="Red"/>
         </StackPanel>
-        <Button Content="Join" HorizontalAlignment="Left" Margin="645,381,0,0" VerticalAlignment="Top" Click="Join_Board_Click" Width="74" IsEnabled="{Binding Path=IsRegisterArgumentProvide,Mode=OneWay}" />
+        <Button Content="Join" HorizontalAlignment="Left" Margin="645,381,0,0" VerticalAlignment="Top" Click="Join_Board_Click" Width="74"  />
         <Label Content="Join to board" HorizontalAlignment="Left" Margin="622,286,0,0" VerticalAlignment="Top" Height="31" Width="120"/>
         <TextBox HorizontalAlignment="Left" Margin="622,334,0,0" Text="{Binding Path=JoinBoardCreator, Mode=OneWayToSource}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" />
         <TextBox HorizontalAlignment="Left" Margin="622,358,0,0" Text="{Binding Path=JoinBoardName, Mode=OneWayToSource}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Board Creator Email" HorizontalAlignment="Left" Margin="494,334,0,0" VerticalAlignment="Top"/>
         <Label Content="Board Name" HorizontalAlignment="Left" Margin="514,354,0,0" VerticalAlignment="Top"/>
-        <Button Content="Create" HorizontalAlignment="Left" Margin="136,381,0,0" VerticalAlignment="Top" Click="Create_Board_Click" Width="74" IsEnabled="{Binding Path =IsCreatBoardArgumentProvide, Mode=OneWay}" />
+        <Button Content="Create" HorizontalAlignment="Left" Margin="136,381,0,0" VerticalAlignment="Top" Click="Create_Board_Click" Width="74"  />
         <TextBox HorizontalAlignment="Left" Margin="113,358,0,0" Text="{Binding Path = NewBoardName, Mode=OneWayToSource}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="New Board Name" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top"/>
-        <Label Content="{Binding Path=ErrorMessage, Mode=OneWay}" Foreground="Red" HorizontalAlignment="Left" Margin="336,391,0,0" VerticalAlignment="Top" Height="18" Width="100"/>
         <Label Content="Create to board" HorizontalAlignment="Left" Margin="113,286,0,0" VerticalAlignment="Top" Height="31" Width="120"/>
         <Button Content="In Progress" HorizontalAlignment="Left" Margin="366,292,0,0" VerticalAlignment="Top" Click ="In_Progress_Tasks_Click"/>
     </Grid>

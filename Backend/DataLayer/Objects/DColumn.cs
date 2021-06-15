@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private int _limit;
         private List<DTask> _tasks;
 
-        private const string COL_NAME = "Creator";
+        private const string COL_NAME = "Name";
         private const string COL_CREATOR_EMAIL = "Creator";
         private const string COL_BOARD_NAME = "Board";
         private const string COL_LIMIT = "Limit";

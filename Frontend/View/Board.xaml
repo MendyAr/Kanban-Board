@@ -5,83 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntroSE.Kanban.Frontend.View"
         mc:Ignorable="d"
-        Title="Board" Height="600" Width="900">
+        Title="Board" Height="450" Width="800">
     <Grid Margin="0,0,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.Background>
             <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
         </Grid.Background>
-        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="698" Margin="122,26,0,0" Grid.Column="1" Height="39">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="170*"/>
-                <ColumnDefinition Width="179*"/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Board name:" HorizontalAlignment="Left" VerticalAlignment="Center" Height="39" Width="105" FontWeight="Bold" FontSize="16"/>
-            <Label Content="Board creator:" HorizontalAlignment="Left" Margin="88,0,0,0" VerticalAlignment="Center" Height="37" Width="117" FontWeight="Bold" FontSize="16" Grid.Column="1"/>
-            <TextBox HorizontalAlignment="Left" Margin="210,0,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Center" Width="146" Height="31" FontSize="16" Grid.Column="1" Background="{x:Null}" BorderBrush="{x:Null}"/>
-            <TextBox HorizontalAlignment="Left" Margin="110,0,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Center" Width="146" Height="31" FontWeight="Normal" FontSize="16" BorderBrush="{x:Null}" Background="{x:Null}"/>
-            <Label Content="Board name:" HorizontalAlignment="Left" VerticalAlignment="Center" Height="39" Width="105" FontWeight="Bold" FontSize="16"/>
-            <Label Content="Board name:" HorizontalAlignment="Left" VerticalAlignment="Center" Height="39" Width="105" FontWeight="Bold" FontSize="16"/>
-        </Grid>
-        <Button x:Name="btn6" BorderBrush="Black" Content="Click the picture." Margin="0,0,567,0"/>
-        <Button x:Name="btn7" BorderBrush="Black" Content="Click the picture." Margin="0,0,567,0"/>
-        <Button x:Name="btn5" Click="OnClick5" Grid.ColumnSpan="2" Margin="10,0,814,504" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
-            <Image Source="\Images\back_button.png" Height="71" Width="67"/>
-        </Button>
-        <Button x:Name="btn8" Click="OnClick5" Grid.ColumnSpan="2" Margin="828,89,29,461" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="btn8_Copy" Click="OnClick5" Grid.ColumnSpan="2" Margin="786,90,69,460" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
-            <Image Source="/Images/arrow.png" Height="31" Width="27" StretchDirection="Both" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Image.RenderTransform>
-            </Image>
-        </Button>
-        <Button x:Name="btn8_Copy1" Click="OnClick5" Grid.ColumnSpan="2" Margin="826,89,29,461" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
-            <Image Source="/Images/arrow.png" Height="31" Width="27" StretchDirection="Both" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="-90"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </Image.RenderTransform>
-            </Image>
-        </Button>
-        <Label Content="Columns scrolling" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="28" Margin="770,62,0,0" VerticalAlignment="Top" Width="112"/>
-        <Grid Grid.Column="1" HorizontalAlignment="Center" Height="120" Margin="0,454,0,0" VerticalAlignment="Top" Width="864">
-            <Button Content="Move" Height="39" Width="78" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="107,73,0,0" HorizontalAlignment="Left" Click="Button_Click_1" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Delete" Height="45" Width="106" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="543,60,0,0" HorizontalAlignment="Left" Click="Button_Click_2" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Limit " Height="38" Width="78" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="274,73,0,0" HorizontalAlignment="Left" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Add column" Height="38" Width="106" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="726,72,0,0" HorizontalAlignment="Left" FontWeight="Bold" FontSize="14"/>
-            <Button Content="Add task" Height="45" Width="94" Background="{x:Null}" BorderBrush="Gray" VerticalAlignment="Top" Margin="432,60,0,0" HorizontalAlignment="Left" FontWeight="Bold" FontSize="14"/>
-            <Label Content="tools:" Height="32" Width="79" VerticalAlignment="Top" HorizontalAlignment="Left" FontWeight="Bold" FontStyle="Italic" FontSize="16" Margin="0,60,0,0"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="140" VerticalAlignment="Top" Margin="243,46,0,0" HorizontalAlignment="Left" FontSize="14"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="120" VerticalAlignment="Top" Margin="86,45,0,0" HorizontalAlignment="Left" FontSize="14"/>
-            <TextBox Height="20" Text="TextBox" TextWrapping="Wrap" Width="162" VerticalAlignment="Top" Margin="698,44,0,0" HorizontalAlignment="Left" TextChanged="TextBox_TextChanged" FontSize="14"/>
-        </Grid>
-        <Border Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="351" Margin="38,125,0,0" VerticalAlignment="Top" Width="216" BorderBrush="#FF1478CB" BorderThickness="3,3,3,3"/>
-        <Border Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="350" Margin="286,126,0,0" VerticalAlignment="Top" Width="216" BorderThickness="3,3,3,3" BorderBrush="#FF1478CB"/>
-        <Border Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="350" Margin="535,126,0,0" VerticalAlignment="Top" Width="216" BorderThickness="3,3,3,3" BorderBrush="#FF1478CB"/>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="42,87,0,0" Orientation="Horizontal" VerticalAlignment="Top">
-            <CheckBox Content="" Height="18" Width="25" Background="{x:Null}"/>
-            <Label Content="Name" Height="32" Width="79" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="290,87,0,0" Orientation="Horizontal" VerticalAlignment="Top">
-            <CheckBox Content="" Height="18" Width="25" Background="{x:Null}"/>
-            <Label Content="Name" Height="32" Width="79" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
-        </StackPanel>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="539,87,0,0" Orientation="Horizontal" VerticalAlignment="Top">
-            <CheckBox Content="" Height="18" Width="25" BorderBrush="#FF707070" Background="{x:Null}"/>
-            <Label Content="Name" Height="32" Width="79" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
+        <StackPanel>
+            <Button x:Name="Back_Button" Click="Roll_Back" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}" Height="65" Width="84" HorizontalAlignment="Left">
+                <Image Source="\Images\back_button.png" Width="61" RenderTransformOrigin="0.931,0.494" HorizontalAlignment="Center" Height="65"/>
+            </Button>
+            <StackPanel Orientation="Horizontal" Height="43" Width="564">
+                <Label Content="Board name:" FontWeight="Bold" FontSize="16" Height="37" Width="109"/>
+                <Label Content="{Binding Path=Name}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="34" Width="190"/>
+                <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="34" Width="77"/>
+                <Label Content="{Binding Path=board.CreatorEmail, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="35" Width="173"/>
+            </StackPanel>
+            <ListBox ItemsSource="{Binding Path=Columns, Mode=TwoWay}" SelectedItem="{Binding SelectedMessage, Mode=OneWayToSource}" 
+                 Height="76" Width="800" Background="White" Opacity="0.5">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#FF003CFF" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBox Text="{Binding Path=Name, Mode=TwoWay}" BorderBrush="{x:Null}"/>
+                                <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" BorderBrush="{x:Null}" Background="{Binding DataContext.BackgroundColor, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"/>
+                                <TextBox Text="{Binding Path=Limit, Mode=TwoWay}" BorderBrush="{x:Null}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Grid Height="159" Width="688">
+                <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="127,8,0,0" VerticalAlignment="Top" Width="79" Click="Delete_Column" IsEnabled="{Binding Path=EnableFarward, Mode=OneWay}"/>
+                <Button Content="Show" HorizontalAlignment="Left" Height="47" Margin="0,8,0,0" VerticalAlignment="Top" Width="80" Click="Show_Column" IsEnabled="{Binding Path=EnableFarward, Mode=OneWay}"/>
+                <Button Content="Add Column" HorizontalAlignment="Left" Height="47" Margin="383,8,0,0" VerticalAlignment="Top" Width="80" Click="Add_Column"/>
+                <TextBox HorizontalAlignment="Left" Height="25" Margin="488,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding Path=NewColumnName, Mode=OneWayToSource}"/>
+                <Label Content="Insert a name for the new column:" HorizontalAlignment="Left" Height="34" Margin="488,0,0,0" VerticalAlignment="Top" Width="199"/>
+                <Button Content="Add Task" HorizontalAlignment="Left" Height="47" Margin="260,8,0,0" VerticalAlignment="Top" Width="79" Click="Add_Task"/>
+                <TextBox HorizontalAlignment="Left" Height="26" Margin="488,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding Path=NewColumnOrdinal, Mode=OneWayToSource}"/>
+                <Label Content="Insert ordinal:" HorizontalAlignment="Left" Height="34" Margin="488,78,0,0" VerticalAlignment="Top" Width="199"/>
+                <Label Content="{Binding Path=Message, Mode=OneWay}" HorizontalAlignment="Left" Height="25" Margin="0,111,0,0" VerticalAlignment="Top" Width="463" Foreground="Red"/>
+            </Grid>
         </StackPanel>
     </Grid>
 </Window>

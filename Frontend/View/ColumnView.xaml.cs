@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,18 +16,20 @@ using System.Windows.Shapes;
 namespace IntroSE.Kanban.Frontend.View
 {
     /// <summary>
-    /// Interaction logic for UserPage.xaml
+    /// Interaction logic for ColumnView.xaml
     /// </summary>
-    public partial class UserPage : Window
+    public partial class ColumnView : Window
     {
-        public UserPage()
+        public ColumnView(ColumnModel columnModel)
         {
             InitializeComponent();
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Roll_Back(object sender, RoutedEventArgs e)
         {
-
+           /* UserView userView = new UserView(ViewModel.boardModel.User);
+            userView.Show();
+            this.Close();*/
         }
     }
 }

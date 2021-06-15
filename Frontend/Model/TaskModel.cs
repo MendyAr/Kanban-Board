@@ -70,6 +70,16 @@ namespace IntroSE.Kanban.Frontend.Model
             this._user = column.User;
             this._board = column.Board;
             this._column = column;
+            this._id = sTask.Id;
+            this._creationTime = sTask.CreationTime;
+            this._title = sTask.Title;
+            this._description = sTask.Description;
+            this._dueDate = sTask.DueDate;
+            this._emailAssignee = sTask.emailAssignee;
+        }
+
+        public TaskModel(STask sTask,BackendController backendController):base(backendController)
+        {
             this.ID = sTask.Id;
             this.CreationTime = sTask.CreationTime;
             this.Title = sTask.Title;

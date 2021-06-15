@@ -1,4 +1,5 @@
-﻿using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,25 @@ namespace IntroSE.Kanban.Frontend.View
     /// </summary>
     public partial class AddingNewTask : Window
     {
-        public AddingNewTask(BoardModel boardModel)
+        private AddingNewTaskViewModel _viewModel;
+        public AddingNewTask(ColumnModel column)
+        
         {
             InitializeComponent();
+            _viewModel = new AddingNewTaskViewModel(column);
+            DataContext = _viewModel;
+
+        }
+
+        private void Add_Task_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.AddTask();
+        }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            new ColumnView(_viewModel.Column).Show();
+            this.Close();
         }
     }
 }

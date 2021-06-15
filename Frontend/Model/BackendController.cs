@@ -245,6 +245,15 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
+        public TaskModel AddTask(ColumnModel column, string title, string description, DateTime dueDate)
+        {
+            Response<STask> response = Service.AddTask(column.User.Email, column.Board.CreatorEmail, column.Board.Name, title, description, dueDate);
+            if (response.ErrorOccured)
+                throw new Exception(response.ErrorMessage);
+
+            return new TaskModel(column, response.Value);
+        }
+
         internal IList<string> GetBetterBoardNames(string email)
         {
             return Service.GetBetterBoardNames(email).Value;

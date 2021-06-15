@@ -688,7 +688,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             checkMembership(userEmail, creatorEmail, boardName, "GetColumn");
             try
             {
-                return boards[userEmail][boardName].GetColumn(columnOrdinal);
+                return boards[creatorEmail][boardName].GetColumn(columnOrdinal);
             }
             catch (ArgumentOutOfRangeException e)
             {

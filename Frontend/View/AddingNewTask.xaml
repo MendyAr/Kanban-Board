@@ -7,12 +7,10 @@
         mc:Ignorable="d"
         Title="Add Task" Height="450" Width="800">
     <Grid>
-        <Grid.Background>
-            <ImageBrush ImageSource="\Images\Task_Background.jpg" Stretch="UniformToFill"/>
-        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -49,7 +47,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="Due Date:" HorizontalAlignment="Center" FontSize="30"/>
+            <Label Grid.Column="0" Content="Due Date:" HorizontalAlignment="Center" FontSize="20"/>
             <Viewbox Grid.Column="1" HorizontalAlignment="Center">
                 <DatePicker Name="taskDueDate" SelectedDate="{Binding Path=DueDate, Mode=OneWayToSource}" />
             </Viewbox>
@@ -59,10 +57,12 @@
             <StackPanel Orientation="Vertical">
                 <Button Content="Add task" Click="Add_Task_Click"/>
                 <Button Content="Back To Board" Click="Back_Click" />
-                <Viewbox>
-                    <Label Content="{Binding Path=Message, Mode=OneTime}"/>
-                </Viewbox>
             </StackPanel>
+        </Grid>
+        <Grid Grid.Row="4" Margin="10">
+            <Viewbox>
+                <Label Content="{Binding Path=Message, Mode=OneWay}"/>
+            </Viewbox>
         </Grid>
     </Grid>
 </Window>

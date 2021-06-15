@@ -28,7 +28,6 @@ namespace IntroSE.Kanban.Frontend.View
             InitializeComponent();
             this.ViewModel = new BoardViewModel(board);
             this.DataContext = ViewModel;
-
         }
 
         private void Add_Column(object sender, RoutedEventArgs e)
@@ -38,7 +37,7 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Add_Task(object sender, RoutedEventArgs e)
         {
-            AddingNewTask newTask = new AddingNewTask(ViewModel.boardModel);
+            AddingNewTask newTask = new AddingNewTask(ViewModel.board);
             newTask.Show();
         }
 
@@ -60,7 +59,7 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Roll_Back(object sender, RoutedEventArgs e)
         {
-            UserView userView = new UserView(ViewModel.boardModel.User);
+            UserView userView = new UserView(ViewModel.board.User);
             userView.Show();
             this.Close();
         }

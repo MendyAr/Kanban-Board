@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     class BoardViewModel : ViewModelObject
     {
 
-        public BoardModel boardModel;
+        public BoardModel board;
         public ObservableCollection<ColumnModel> columns;
 
         private string _boardName;
@@ -47,7 +47,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public string NewColumnName { get => _newColumnName; set => _newColumnName = value; }
+        public string NewColumnName { get => board.Name; set => _newColumnName = value; }
         public string NewColumnOrdinal { get => _newColumnOrdinal; set => _newColumnOrdinal = value; }
         public bool EnableForward 
         {
@@ -62,7 +62,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         // constructor
         public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
         {
-            this.boardModel = boardModel;
+            this.board = boardModel;
             columns = boardModel.GetColumns();
             columns.CollectionChanged += HandleChange;
         }
@@ -83,8 +83,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             {
                 try
                 {
-                    Controller.AddColumn(boardModel, int.Parse(NewColumnOrdinal), NewColumnName);
-                    columns = boardModel.GetColumns();
+                    Controller.AddColumn(board, int.Parse(NewColumnOrdinal), NewColumnName);
+                    columns = board.GetColumns();
                 }
                 catch (Exception e)
                 {
@@ -97,8 +97,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         {
             try
             {
-                Controller.RemoveColumn(boardModel.User.Email, boardModel.CreatorEmail, boardModel.Name, SelectedColumn.Ordinal);
-                columns = boardModel.GetColumns(); //? columns.remove(selectedColumn), but it can affect the whole set
+                Controller.RemoveColumn(board.User.Email, board.CreatorEmail, board.Name, SelectedColumn.Ordinal);
+                columns = board.GetColumns(); //? columns.remove(selectedColumn), but it can affect the whole set
             }
             catch(Exception e)
             {

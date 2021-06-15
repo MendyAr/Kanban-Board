@@ -27,6 +27,7 @@ namespace IntroSE.Kanban.Frontend.View
             {
                 BoardWin boardWin = new BoardWin(board);
                 boardWin.Show();
+                this.Close();
             }
         }
         private void Logout_Click(object sender, RoutedEventArgs e)

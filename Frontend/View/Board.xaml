@@ -20,7 +20,7 @@
                 <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="34" Width="77"/>
                 <Label Content="{Binding Path=board.CreatorEmail, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="35" Width="173"/>
             </StackPanel>
-            <ListBox ItemsSource="{Binding Path=columns, Mode=TwoWay}" SelectedItem="{Binding SelectedMessage, Mode=OneWayToSource}" 
+            <ListBox ItemsSource="{Binding Path=Columns, Mode=TwoWay}" SelectedItem="{Binding SelectedMessage, Mode=OneWayToSource}" 
                  Height="76" Width="800" Background="White" Opacity="0.5">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

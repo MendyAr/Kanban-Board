@@ -6,7 +6,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     public class AddingNewTaskViewModel : ViewModelObject
     {
         private string _message;
-        private ColumnModel _column;
+        private BoardModel _board;
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
@@ -21,11 +21,11 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public ColumnModel Column { get => _column; }
+        public BoardModel Board { get => _board; }
 
-        public AddingNewTaskViewModel(ColumnModel column) : base(column.Controller)
+        public AddingNewTaskViewModel(BoardModel board) : base(board.Controller)
         {
-            this._column = column;
+            this._board = board;
         }
 
         internal void AddTask()
@@ -33,7 +33,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             try
             {
                 Message = "";
-                TaskModel newTask = Controller.AddTask(_column, Title, Description, DueDate);
+                Controller.AddTask(_board, Title, Description, DueDate);
                 Message = $" The Task '{Title}' had been created successfully";
             }
             catch(Exception e)

@@ -9,7 +9,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     {
 
         public BoardModel board;
-        public ObservableCollection<ColumnModel> columns;
+        public ObservableCollection<ColumnModel> _columns;
 
         private string _boardName;
         private string _boardCreator;
@@ -18,6 +18,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         private string _newColumnName;
         private string _newColumnOrdinal;
         private bool _enableForward;
+
+        public ObservableCollection<ColumnModel> Columns { get => _columns; set => _columns = value; }
 
         public string BoardName { get => _boardName; set => _boardName = value; }
 
@@ -63,8 +65,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
         {
             this.board = boardModel;
-            columns = boardModel.GetColumns();
-            columns.CollectionChanged += HandleChange;
+            Columns = boardModel.GetColumns();
+            Columns.CollectionChanged += HandleChange;
         }
 
 
@@ -84,7 +86,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 try
                 {
                     Controller.AddColumn(board, int.Parse(NewColumnOrdinal), NewColumnName);
-                    columns = board.GetColumns();
+                    Columns = board.GetColumns();
                 }
                 catch (Exception e)
                 {
@@ -98,7 +100,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             try
             {
                 Controller.RemoveColumn(board.User.Email, board.CreatorEmail, board.Name, SelectedColumn.Ordinal);
-                columns = board.GetColumns(); //? columns.remove(selectedColumn), but it can affect the whole set
+                Columns = board.GetColumns(); //? columns.remove(selectedColumn), but it can affect the whole set
             }
             catch(Exception e)
             {

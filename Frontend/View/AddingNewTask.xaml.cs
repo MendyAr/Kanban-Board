@@ -22,11 +22,11 @@ namespace IntroSE.Kanban.Frontend.View
     public partial class AddingNewTask : Window
     {
         private AddingNewTaskViewModel _viewModel;
-        public AddingNewTask(ColumnModel column)
+        public AddingNewTask(BoardModel board)
         
         {
             InitializeComponent();
-            _viewModel = new AddingNewTaskViewModel(column);
+            _viewModel = new AddingNewTaskViewModel(board);
             DataContext = _viewModel;
 
         }
@@ -38,7 +38,6 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            new ColumnView(_viewModel.Column).Show();
             this.Close();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntroSE.Kanban.Frontend.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace IntroSE.Kanban.Frontend.View
     /// </summary>
     public partial class AddingNewTask : Window
     {
-        public AddingNewTask()
+        public AddingNewTask(BoardModel boardModel)
         {
             InitializeComponent();
         }

@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:IntroSE.Kanban.Frontend.View"
         mc:Ignorable="d"
         Title="ColumnView" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <StackPanel.Background>
+            <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
+        </StackPanel.Background>
+    </StackPanel>
 </Window>

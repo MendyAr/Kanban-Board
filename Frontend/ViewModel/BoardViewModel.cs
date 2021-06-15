@@ -1,11 +1,7 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
@@ -18,9 +14,10 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         private string _boardName;
         private string _boardCreator;
         private string _message;
-        private string _selectedMessage;
+        private ColumnModel _selectedColumn;
         private string _newColumnName;
         private string _newColumnOrdinal;
+        private bool _enableForward;
 
         public string BoardName { get => _boardName; set => _boardName = value; }
 
@@ -36,10 +33,33 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public string SelectedMessage { get => _selectedMessage; set => _selectedMessage = value; }
+        public ColumnModel SelectedColumn 
+        {
+            get
+            {
+                return _selectedColumn;
+            }
+            set
+            {
+                _selectedColumn = value;
+                EnableForward = value != null;
+                RaisePropertyChanged("SelectedColumn");
+            }
+        }
+
         public string NewColumnName { get => _newColumnName; set => _newColumnName = value; }
         public string NewColumnOrdinal { get => _newColumnOrdinal; set => _newColumnOrdinal = value; }
+        public bool EnableForward 
+        {
+            get => _enableForward;
+            private set
+            {
+                _enableForward = value;
+                RaisePropertyChanged("EnableForward");
+            }
+        }
 
+        // constructor
         public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
         {
             this.boardModel = boardModel;
@@ -47,6 +67,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             columns.CollectionChanged += HandleChange;
         }
 
+
+        // methods
         public void AddColumn()
         {
             if (NewColumnName == null)
@@ -62,7 +84,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 try
                 {
                     Controller.AddColumn(boardModel, int.Parse(NewColumnOrdinal), NewColumnName);
-                    //columns = boardModel.GetColumns();
+                    columns = boardModel.GetColumns();
                 }
                 catch (Exception e)
                 {
@@ -73,45 +95,25 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         public void DeleteColumn()
         {
-
+            try
+            {
+                Controller.RemoveColumn(boardModel.User.Email, boardModel.CreatorEmail, boardModel.Name, SelectedColumn.Ordinal);
+                columns = boardModel.GetColumns(); //? columns.remove(selectedColumn), but it can affect the whole set
+            }
+            catch(Exception e)
+            {
+                Message = e.Message;
+            }
         }
 
         public ColumnModel GetColumn()
         {
-
-        }
-
-        public void RenameColumn() { }
-
-        public void MoveColumn(int columnOrdinal, int shiftVal)
-        {
-
-        }
-
-        public void LimitColumn(int limit)
-        {
-
+            return SelectedColumn;
         }
 
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //read more here: https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net/4279274#4279274
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (ColumnModel c in e.OldItems)
-                {
-
-                    Controller.RemoveColumn(c);
-                }
-
-            }
-            if (e.Action == NotifyCollectionChangedAction.Move)
-            {
-            }
-            if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-
-            }
+            RaisePropertyChanged("columns");
         }
     }
 }

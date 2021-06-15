@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;
 
 namespace IntroSE.Kanban.Frontend.Model
@@ -21,21 +22,45 @@ namespace IntroSE.Kanban.Frontend.Model
         public int Ordinal { get => _ordinal; 
             set
             {
-                _ordinal = value;
+                try
+                {
+                    Controller.MoveColumn(User.Email, Board.CreatorEmail, Board.Name, _ordinal, value - _ordinal);
+                    _ordinal = value;
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("Cannot change ordinal. " + e.Message);
+                }
                 RaisePropertyChanged("ColumnOrdinal");
             }
         }
         public string Name { get => _name;
             set
             {
-                _name = value;
+                try
+                {
+                    Controller.RenameColumn(User.Email, Board.CreatorEmail, Board.Name, Ordinal, value);
+                    _name = value;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Cannot change name. " + e.Message);
+                }
                 RaisePropertyChanged("ColumnName");
             }
         }
         public int Limit { get => _limit; 
             set
             {
-                _limit = value;
+                try
+                {
+                    Controller.LimitColumn(User.Email, Board.CreatorEmail, Board.Name, Ordinal, value);
+                    _limit = value;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Cannot change limit. " + e.Message);
+                }
                 RaisePropertyChanged("ColumnLimit");
             }
         }

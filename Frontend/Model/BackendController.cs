@@ -101,6 +101,15 @@ namespace IntroSE.Kanban.Frontend.Model
             return new Task(res.Value);
         }
         */
+        internal void LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
+        {
+            Response res = Service.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+        }
+
 
         internal void UpdateTaskDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {

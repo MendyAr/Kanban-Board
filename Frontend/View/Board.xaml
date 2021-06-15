@@ -10,16 +10,16 @@
         <Grid.Background>
             <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
         </Grid.Background>
-        <Button x:Name="Roll_Back" Click="Roll_Back"  Grid.ColumnSpan="2" Margin="9,12,708,357" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
+        <Button x:Name="Back_Button" Click="Roll_Back"  Grid.ColumnSpan="2" Margin="9,12,708,357" FontWeight="Normal" Background="{x:Null}" BorderBrush="{x:Null}">
             <Image Source="\Images\back_button.png" Height="65" Width="84" RenderTransformOrigin="0.931,0.494"/>
         </Button>
         <StackPanel Margin="206,34,30,363" Orientation="Horizontal">
             <Label Content="Board name:" FontWeight="Bold" FontSize="16" Height="37" Width="109"/>
-            <Label Content="{Binding Title, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="34" Width="190"/>
+            <Label Content="{Binding BoardName, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="34" Width="190"/>
             <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="34" Width="77"/>
             <Label Content="{Binding BoardCreator, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="35" Width="173"/>
         </StackPanel>
-        <ListBox ItemsSource="{Binding Path = columns}" SelectedItem="{Binding Path=SelectedMessage, Mode=TwoWay}" 
+        <ListBox ItemsSource="{Binding Path = columns, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedMessage, Mode=OneWayToSource}" 
                  HorizontalAlignment="Center" Height="105" Margin="0,103,0,0" VerticalAlignment="Top" Width="800" Background="White" Opacity="0.5">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -27,19 +27,20 @@
                         <StackPanel Orientation="Horizontal" >
                             <TextBox Text="{Binding Path=Name , Mode=TwoWay}" BorderBrush="{x:Null}"/>
                             <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" BorderBrush="{x:Null}" Background="{Binding Path=DataContext.BackgroundColor, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+                            <TextBox Text="{Binding Path=Limit , Mode=TwoWay}" BorderBrush="{x:Null}"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="177,234,0,0" VerticalAlignment="Top" Width="79" Click="Delete_Column"/>
+        <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="177,234,0,0" VerticalAlignment="Top" Width="79" Click="Delete_Column" IsEnabled="{Binding Path=EnableFarward, Mode=OneWay}"/>
+        <Button Content="Show" HorizontalAlignment="Left" Height="47" Margin="50,234,0,0" VerticalAlignment="Top" Width="80" Click="Show_Column" IsEnabled="{Binding Path=EnableFarward, Mode=OneWay}"/>
         <Button Content="Add Column" HorizontalAlignment="Left" Height="47" Margin="433,234,0,0" VerticalAlignment="Top" Width="80" Click="Add_Column"/>
         <TextBox HorizontalAlignment="Left" Height="25" Margin="538,258,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding Path =NewColumnName, Mode=OneWayToSource}"/>
         <Label Content="Insert a name for the new column:" HorizontalAlignment="Left" Height="34" Margin="538,226,0,0" VerticalAlignment="Top" Width="199"/>
-        <Label Content="{Binding Path =Message, Mode=OneWay} " HorizontalAlignment="Left" Height="25" Margin="126,321,0,0" VerticalAlignment="Top" Width="288" Foreground="Red"/>
-        <Button Content="Show" HorizontalAlignment="Left" Height="47" Margin="50,234,0,0" VerticalAlignment="Top" Width="80" Click="Show_Column"/>
         <Button Content="Add Task" HorizontalAlignment="Left" Height="47" Margin="310,234,0,0" VerticalAlignment="Top" Width="79" Click="Add_Task"/>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="538,336,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnOrdinal, Mode=OneWayToSource}"/>
+        <TextBox HorizontalAlignment="Left" Height="26" Margin="538,336,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding Path =NewColumnOrdinal, Mode=OneWayToSource}"/>
         <Label Content="Insert ordinal:" HorizontalAlignment="Left" Height="34" Margin="538,304,0,0" VerticalAlignment="Top" Width="199"/>
+        <Label Content="{Binding Path =Message, Mode=OneWay}" HorizontalAlignment="Left" Height="25" Margin="126,321,0,0" VerticalAlignment="Top" Width="288" Foreground="Red"/>
     </Grid>
 </Window>

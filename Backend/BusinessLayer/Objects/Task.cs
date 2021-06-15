@@ -1,9 +1,15 @@
 ﻿using IntroSE.Kanban.Backend.DataLayer;
 using System;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("IntroSE.Kanban.Tests")]
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
+<<<<<<< HEAD
     internal class Task : ITask
+=======
+    internal class Task 
+>>>>>>> initialize tests
     {
         private const int MIN_TITLE_LENGTH =  1;
         private const int MAX_TITLE_LENGTH = 50;
@@ -18,7 +24,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private DateTime _dueDate;
         private string _assignee;
 
-        private DTask dTask; //parallel DTO
+        internal DTask dTask; //parallel DTO
 
         int ITask.ID { get => _id;}
         DateTime ITask.CreationTime { get => _creationTime;}
@@ -47,7 +53,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 _description = value;
             }
         }
+<<<<<<< HEAD
         string ITask.Assignee { get => _assignee; 
+=======
+        internal string Assignee { get => assignee; 
+>>>>>>> initialize tests
             set 
             {
                 dTask.Assignee = value;

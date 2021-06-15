@@ -1,4 +1,4 @@
-﻿using IntroSE.Kanban.Frontend.Model;
+using IntroSE.Kanban.Frontend.Model;
 using IntroSE.Kanban.Frontend.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -23,6 +23,7 @@ namespace IntroSE.Kanban.Frontend.View
     {
         private AddingNewTaskViewModel _viewModel;
         public AddingNewTask(ColumnModel column)
+        
         {
             InitializeComponent();
             _viewModel = new AddingNewTaskViewModel(column);

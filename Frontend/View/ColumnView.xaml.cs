@@ -24,5 +24,12 @@ namespace IntroSE.Kanban.Frontend.View
         {
             InitializeComponent();
         }
+
+        private void Roll_Back(object sender, RoutedEventArgs e)
+        {
+           /* UserView userView = new UserView(ViewModel.boardModel.User);
+            userView.Show();
+            this.Close();*/
+        }
     }
 }

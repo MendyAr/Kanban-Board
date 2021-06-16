@@ -45,6 +45,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             _taskIdCounter = dBoard.numberOfTasks();
             _dBoard = dBoard;
             _dBoard.Persist = true;
+            _columnCounter = dBoard.Columns.Count;
         }
 
         //methods

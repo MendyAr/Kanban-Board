@@ -24,7 +24,7 @@ namespace IntroSE.Kanban.Frontend.Model
             {
                 try
                 {
-                    Controller.MoveColumn(User.Email, Board.CreatorEmail, Board.Name, _ordinal, value - _ordinal);
+                    Controller.MoveColumn(User.Email, Board.CreatorEmail, Board.BoardName, _ordinal, value - _ordinal);
                     _ordinal = value;
                     MessageBox.Show("Ordinal changed successfully!");
                 }
@@ -40,7 +40,7 @@ namespace IntroSE.Kanban.Frontend.Model
             {
                 try
                 {
-                    Controller.RenameColumn(User.Email, Board.CreatorEmail, Board.Name, Ordinal, value);
+                    Controller.RenameColumn(User.Email, Board.CreatorEmail, Board.BoardName, Ordinal, value);
                     _name = value;
                     MessageBox.Show("Name changed successfully!");
                 }
@@ -56,7 +56,7 @@ namespace IntroSE.Kanban.Frontend.Model
             {
                 try
                 {
-                    Controller.LimitColumn(User.Email, Board.CreatorEmail, Board.Name, Ordinal, value);
+                    Controller.LimitColumn(User.Email, Board.CreatorEmail, Board.BoardName, Ordinal, value);
                     _limit = value;
                     MessageBox.Show("Task limit changed successfully!");
                 }

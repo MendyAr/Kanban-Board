@@ -30,20 +30,10 @@ namespace IntroSE.Kanban.Frontend.View
             this.DataContext = ViewModel;
         }
 
-        private void Add_Column(object sender, RoutedEventArgs e)
-        {
-            ViewModel.AddColumn();
-        }
-
         private void Add_Task(object sender, RoutedEventArgs e)
         {
             AddingNewTask newTask = new AddingNewTask(ViewModel.Board);
             newTask.Show();
-        }
-
-        private void Delete_Column(object sender, RoutedEventArgs e)
-        {
-            ViewModel.DeleteColumn();
         }
 
         private void Show_Column(object sender, RoutedEventArgs e)

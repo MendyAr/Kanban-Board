@@ -54,9 +54,9 @@ namespace IntroSE.Kanban.Frontend.Model
         }
 
 
-        internal void AddColumn(BoardModel board, int columnOrdinal, string columnName)
+        internal void AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
-            Response res = Service.AddColumn(board.User.Email, board.CreatorEmail, board.Name, columnOrdinal, columnName);
+            Response res = Service.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
@@ -249,7 +249,7 @@ namespace IntroSE.Kanban.Frontend.Model
 
         public void AddTask(BoardModel board, string title, string description, DateTime dueDate)
         {
-            Response<STask> response = Service.AddTask(board.User.Email, board.CreatorEmail, board.Name, title, description, dueDate);
+            Response<STask> response = Service.AddTask(board.User.Email, board.CreatorEmail, board.BoardName, title, description, dueDate);
             if (response.ErrorOccured)
                 throw new Exception(response.ErrorMessage);
 
@@ -289,7 +289,7 @@ namespace IntroSE.Kanban.Frontend.Model
             ObservableCollection<ColumnModel> columns = new ObservableCollection<ColumnModel>();
             for (int i = 0; i < board.ColumnCount; i++)
             {
-                Response<SColumn> columnRes = Service.GetSColumn(board.User.Email, board.CreatorEmail, board.Name, i);
+                Response<SColumn> columnRes = Service.GetSColumn(board.User.Email, board.CreatorEmail, board.BoardName, i);
                 if (columnRes.ErrorOccured)
                 {
                     throw new Exception(columnRes.ErrorMessage);
@@ -302,7 +302,7 @@ namespace IntroSE.Kanban.Frontend.Model
         internal ObservableCollection<TaskModel> GetColumnTasks(ColumnModel column)
         {
             ObservableCollection<TaskModel> tasks = new ObservableCollection<TaskModel>();
-            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.Name, column.Ordinal);
+            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.BoardName, column.Ordinal);
             if (tasksRes.ErrorOccured)
                 throw new Exception(tasksRes.ErrorMessage);
             foreach (STask sTask in tasksRes.Value)

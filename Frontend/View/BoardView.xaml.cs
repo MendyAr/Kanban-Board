@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Add_Task(object sender, RoutedEventArgs e)
         {
-            AddingNewTask newTask = new AddingNewTask(ViewModel.board);
+            AddingNewTask newTask = new AddingNewTask(ViewModel.Board);
             newTask.Show();
         }
 
@@ -59,9 +59,10 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Roll_Back(object sender, RoutedEventArgs e)
         {
-            UserView userView = new UserView(ViewModel.board.User);
+            UserView userView = new UserView(ViewModel.Board.User);
             userView.Show();
             this.Close();
         }
+
     }
 }

@@ -26,12 +26,13 @@ namespace IntroSE.Kanban.Frontend.Model
                 {
                     Controller.MoveColumn(User.Email, Board.CreatorEmail, Board.Name, _ordinal, value - _ordinal);
                     _ordinal = value;
+                    MessageBox.Show("Ordinal changed successfully!");
                 }
                 catch(Exception e)
                 {
                     MessageBox.Show("Cannot change ordinal. " + e.Message);
                 }
-                RaisePropertyChanged("ColumnOrdinal");
+                RaisePropertyChanged("Ordinal");
             }
         }
         public string Name { get => _name;
@@ -41,12 +42,13 @@ namespace IntroSE.Kanban.Frontend.Model
                 {
                     Controller.RenameColumn(User.Email, Board.CreatorEmail, Board.Name, Ordinal, value);
                     _name = value;
+                    MessageBox.Show("Name changed successfully!");
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("Cannot change name. " + e.Message);
                 }
-                RaisePropertyChanged("ColumnName");
+                RaisePropertyChanged("Name");
             }
         }
         public int Limit { get => _limit; 
@@ -56,12 +58,13 @@ namespace IntroSE.Kanban.Frontend.Model
                 {
                     Controller.LimitColumn(User.Email, Board.CreatorEmail, Board.Name, Ordinal, value);
                     _limit = value;
+                    MessageBox.Show("Task limit changed successfully!");
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("Cannot change limit. " + e.Message);
                 }
-                RaisePropertyChanged("ColumnLimit");
+                RaisePropertyChanged("Limit");
             }
         }
 
@@ -72,6 +75,15 @@ namespace IntroSE.Kanban.Frontend.Model
             this._ordinal = sColumn.Ordinal;
             this._name = sColumn.Name;
             this._limit = sColumn.Limit;
+        }
+
+        public ColumnModel(BoardModel board, string Name, int Ordinal) : base(board.Controller)
+        {
+            this._user = board.User;
+            this._board = board;
+            this._name = Name;
+            this._ordinal = Ordinal;
+            this._limit = -1;
         }
 
         public ObservableCollection<TaskModel> GetTasks()

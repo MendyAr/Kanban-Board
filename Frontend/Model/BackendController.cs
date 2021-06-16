@@ -87,6 +87,9 @@ namespace IntroSE.Kanban.Frontend.Model
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
+
+
+
             }
         }
 
@@ -109,7 +112,6 @@ namespace IntroSE.Kanban.Frontend.Model
                 throw new Exception(res.ErrorMessage);
             }
         }
-
 
         internal void UpdateTaskDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {

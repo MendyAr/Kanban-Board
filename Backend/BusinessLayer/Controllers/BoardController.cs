@@ -28,6 +28,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             boards = new Dictionary<string, Dictionary<string, IBoard>>();
             userBoards = new Dictionary<string, HashSet<string>>();
+            this.loginInstance = loginInstance;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Kanban.app booted");

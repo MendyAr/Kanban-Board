@@ -83,6 +83,7 @@ namespace IntroSE.Kanban.Frontend.Model
         public void AddColumn(int newColumnOrdinal, string newColumnName)
         {
             Controller.AddColumn(User.Email, CreatorEmail, BoardName, newColumnOrdinal, newColumnName);
+            ColumnCount++;
             Columns = Controller.GetBoardColumns(this);
             RaisePropertyChanged("Column");
         }

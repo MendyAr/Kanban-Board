@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,24 +12,36 @@ namespace IntroSE.Kanban.Frontend.Model
     public class BoardModel : NotifiableModelObject
     {
         private UserModel _user;
+        private ObservableCollection<ColumnModel> columns;
+
         private string _creatorEmail;
         private string _name;
         private int _columnCount;
         private int _taskCount;
 
-        public string FullName { get => CreatorEmail + " : " + Name; }
+        public string FullName { get => CreatorEmail + " : " + BoardName; }
 
         public UserModel User { get => _user; }
+        
+        public ObservableCollection<ColumnModel> Columns
+        {
+            get => columns;
+            set
+            {
+                columns = value;
+                RaisePropertyChanged("Columns");
+            }
+        }
         public string CreatorEmail
         {
             get => _creatorEmail;
             set
             {
                 _creatorEmail = value;
-                RaisePropertyChanged("BoardCreator");
+                RaisePropertyChanged("CreatorEmail");
             }
         }
-        public string Name
+        public string BoardName
         {
             get => _name;
             set
@@ -43,7 +56,7 @@ namespace IntroSE.Kanban.Frontend.Model
             set
             {
                 _columnCount = value;
-                RaisePropertyChanged("BoardColumnCount");
+                RaisePropertyChanged("ColumnCount");
             }
         }
         public int TaskCount
@@ -52,7 +65,7 @@ namespace IntroSE.Kanban.Frontend.Model
             set
             {
                 _taskCount = value;
-                RaisePropertyChanged("BoardTaskCount");
+                RaisePropertyChanged("TaskCount");
             }
         }
 
@@ -63,11 +76,31 @@ namespace IntroSE.Kanban.Frontend.Model
             this._name = sBoard.Name;
             this._columnCount = sBoard.ColumnCount;
             this._taskCount = sBoard.TaskCount;
+            Columns = Controller.GetBoardColumns(this);
+            Columns.CollectionChanged += HandleChange;
         }
 
-        public ObservableCollection<ColumnModel> GetColumns()
+        public void AddColumn(int newColumnOrdinal, string newColumnName)
         {
-            return Controller.GetBoardColumns(this);
+            Controller.AddColumn(User.Email, CreatorEmail, BoardName, newColumnOrdinal, newColumnName);
+            Columns = Controller.GetBoardColumns(this);
+            RaisePropertyChanged("Column");
+        }
+
+        public void DeleteColumn(int columnOrdinal)
+        {
+            Controller.RemoveColumn(User.Email, CreatorEmail, BoardName, columnOrdinal);
+            Columns = Controller.GetBoardColumns(this);
+            RaisePropertyChanged("Column");
+        }
+
+        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                RaisePropertyChanged("Column");
+            }
+
         }
     }
 }

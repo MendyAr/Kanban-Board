@@ -95,7 +95,8 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="boardName">Board name of the board the task is in - delivered to the created DTO</param>
         /// <returns>The new task that was created</returns>
         /// <exception cref="OutOfMemoryException">Thrown when column is already at its limit</exception>
-        internal Task AddTask(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate, string assignee, string boardCreator, string boardName) { 
+        internal Task AddTask(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate, string assignee, string boardCreator, string boardName) 
+        { 
             //no need to check that limit != -1 as then the boolean check will always be false anyway
             if (tasks.Count == limit)
                 throw new OutOfMemoryException(Name);

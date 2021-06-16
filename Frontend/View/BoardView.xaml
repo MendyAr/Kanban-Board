@@ -26,6 +26,7 @@
             <ListBox HorizontalContentAlignment="Stretch" Height="156" ItemsSource="{Binding Path=Board.Columns, Mode=TwoWay}" SelectedItem="{Binding SelectedColumn, Mode=OneWayToSource}">
                 <ListBox.Template>
                     <ControlTemplate>
+                        <ScrollViewer>
                         <DockPanel LastChildFill="True">
                             <Grid DockPanel.Dock="Top" Height="30">
                                 <Grid.ColumnDefinitions>
@@ -39,20 +40,21 @@
                             </Grid>
                             <ItemsPresenter></ItemsPresenter>
                         </DockPanel>
+                        </ScrollViewer>
                     </ControlTemplate>
                 </ListBox.Template>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0,2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"></ColumnDefinition>
-                                <ColumnDefinition Width="75"></ColumnDefinition>
-                                <ColumnDefinition Width="75"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding Path=Name, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="0"></TextBox>
-                            <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="1"></TextBox>
-                            <TextBox Text="{Binding Path=Limit, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="2"></TextBox>
-                        </Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="450"></ColumnDefinition>
+                                    <ColumnDefinition Width="75"></ColumnDefinition>
+                                    <ColumnDefinition Width="75"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding Path=Name, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="0"></TextBox>
+                                <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="1"></TextBox>
+                                <TextBox Text="{Binding Path=Limit, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="2"></TextBox>
+                            </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

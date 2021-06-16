@@ -1,4 +1,5 @@
 ﻿using System;
+using BTask = IntroSE.Kanban.Backend.BusinessLayer.ITask;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -21,14 +22,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             this.emailAssignee = emailAssignee;
         }
 
-        internal Task(BusinessLayer.Task task)
+        internal Task(BTask task)
         {
-            this.Id = task.TaskId;
-            this.CreationTime = task.CreationTime;
-            this.Title = task.Title;
-            this.Description = task.Description;
-            this.DueDate = task.DueDate;
-            this.emailAssignee = task.Assignee;
+            Id = task.ID;
+            CreationTime = task.CreationTime;
+            Title = task.Title;
+            Description = task.Description;
+            DueDate = task.DueDate;
+            emailAssignee = task.Assignee;
         }
     }
 }

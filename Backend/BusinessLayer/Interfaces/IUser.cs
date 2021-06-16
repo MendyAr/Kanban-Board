@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntroSE.Kanban.Backend.BusinessLayer.Interfaces
+﻿namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    interface IUser
+    internal interface IUser
     {
-        internal bool validatePassword(string password);
+        //members 
+        string Email { get; }
+
+        //methods
+        void Persist();
+        bool ValidatePassword(string password);
     }
 }

@@ -12,11 +12,11 @@ using ConfigReader = IntroSE.Kanban.Backend.DataLayer.Controllers.ConfigReader;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    class UserController
+    internal class UserController
     {
         //fields
 
-        private Dictionary<string, User> users; //key - email, value - user of that email
+        private Dictionary<string, IUser> users; //key - email, value - user of that email
         private LoginInstance loginInstance = LoginInstance.GetInstance();
 
         private DUserController dUserController; //parallel DController
@@ -30,7 +30,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         //constructors
         public UserController()
         {
-            users = new Dictionary<string, User>();
+            users = new Dictionary<string, IUser>();
             this.dUserController = new DUserController();
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
@@ -76,7 +76,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ///<summary>Removes all persistent users data.</summary>
         internal void DeleteData()
         {
-            users = new Dictionary<string, User>();
+            users = new Dictionary<string, IUser>();
             if (loginInstance.ConnectedEmail != null)
             {
                 loginInstance.Logout(loginInstance.ConnectedEmail);
@@ -97,26 +97,27 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ///<param name="password">the user password.</param>
         ///<exception cref="Exception">thrown when email is null, not in email structure or when user with this email already exist.</exception>
         ///<returns>The User created by the registration.</returns>
-        ///<remarks>calls validateEmail, validatePasswordRules</remarks>
-        internal void Register(string userEmail, string password)
+        ///<remarks>calls CreateUser</remarks>
+        internal IUser Register(string userEmail, string password)
         {
             if (users.ContainsKey(userEmail))
             {
                 log.Warn($"FAILED register attempt: '{userEmail}' already exists");
                 throw new Exception("A user already exist with this Email address");
             }
-            validateEmail(userEmail);
-            validatePasswordRules(password);
+            IUser user = CreateUser(userEmail, password);
             try
             {
-                users[userEmail] = new User(userEmail, password);
+                user.Persist();
             }
             catch (InvalidOperationException)
             {
-                log.Warn($"FAILED to create user '{userEmail}' - exists in DataBase but not in BusinessLayer");
+                log.Fatal($"FAILED to create user '{userEmail}' - exists in DataBase but not in BusinessLayer");
                 throw new Exception($"Can't create user '{userEmail}' - this user already exists in the DataBase, please LoadData before continuing");
             }
+            users[userEmail] = user;
             log.Info($"SUCCESSFULLY registered attempt: '{userEmail}'");
+            return user;
         }
 
         /// <summary>
@@ -126,13 +127,13 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="password">The password of the user to login</param>
         /// <returns cref="User">The User that logged in.</returns>
         /// <exception cref="Exception">thrown when a user with this email doesn't exist or when the password is incorrect.</exception>
-        internal User Login(string userEmail, string password)
+        internal IUser Login(string userEmail, string password)
         {
             loginInstance.Login(userEmail); //login as check if even possible
             if (users.ContainsKey(userEmail))
             {
-                User user = users[userEmail];
-                if (user.validatePassword(password))
+                IUser user = users[userEmail];
+                if (user.ValidatePassword(password))
                 {
                     log.Info("SUCCESSFULLY logged in: '" + userEmail + "'");
                     return user;
@@ -161,13 +162,20 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
         }
 
+        private IUser CreateUser(string email, string password)
+        {
+            ValidateEmail(email);
+            ValidatePasswordRules(password);
+            return new User(email, password);
+        }
+
         /// <summary>
         /// check if the input string match an email structure.
         /// </summary>
         /// <param name="email">the input email.</param>
         /// <exception cref="ArgumentNullException">Thrown if the given email is null</exception>
         /// <exception cref="ArgumentException">Thown if email is invalid</exception>
-        private void validateEmail(string email)
+        private void ValidateEmail(string email)
         {
             if (email == null)
             {
@@ -190,7 +198,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="pass">password to check.</param>
         /// <exception cref="ArgumentNullException">Thrown if the password is null</exception>
         /// <exception cref="ArgumentException">Throw if the password is invalid</exception>
-        private void validatePasswordRules(string pass)
+        private void ValidatePasswordRules(string pass)
         {
             if (pass == null)
             { //check null input

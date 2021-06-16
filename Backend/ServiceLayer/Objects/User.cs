@@ -1,4 +1,4 @@
-﻿using BUser = IntroSE.Kanban.Backend.BusinessLayer.User;
+﻿using BUser = IntroSE.Kanban.Backend.BusinessLayer.IUser;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {

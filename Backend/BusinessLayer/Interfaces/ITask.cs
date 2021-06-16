@@ -1,7 +1,19 @@
-﻿namespace IntroSE.Kanban.Backend.BusinessLayer.Interfaces
+﻿using System;
+
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    interface ITask
+    internal interface ITask
     {
-        internal void Advance();
+        //members
+        int ID { get; }
+        string Title { get; set; }
+        string Description { get; set; }
+        string Assignee { get; set; }
+        DateTime CreationTime { get; } 
+        DateTime DueDate { get; set; }
+
+        //methods
+        void persist();
+        void Advance();
     }
 }

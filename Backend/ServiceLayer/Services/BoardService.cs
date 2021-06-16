@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System;
 using BC = IntroSE.Kanban.Backend.BusinessLayer.BoardController;
-using BTask = IntroSE.Kanban.Backend.BusinessLayer.Task;
+using BBoard = IntroSE.Kanban.Backend.BusinessLayer.IBoard;
+using BColumn = IntroSE.Kanban.Backend.BusinessLayer.IColumn;
+using BTask = IntroSE.Kanban.Backend.BusinessLayer.ITask;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -51,6 +53,89 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
+        /// creates a new board for the user
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="boardName">name of the new board</param>
+        /// <returns>Reponse containing the new board, or message detailing the error if occured</returns>
+        internal Response<Board> AddBoard(string userEmail, string boardName)
+        {
+            try
+            {
+                BBoard bBoard = bc.AddBoard(userEmail, boardName);
+                Board board = new Board(bBoard);
+                return Response<Board>.FromValue(board);
+            }
+            catch (Exception e)
+            {
+                return Response<Board>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Adds a board created by another user to the logged-in user. 
+        /// </summary>
+        /// <param name="userEmail">userEmail of the current user.</param>
+        /// <param name="creatorEmail">userEmail of the board creator</param>
+        /// <param name="boardName">The name of the new board</param>
+        /// <returns>A response object. The response should contain the board if succeeded or an error message in case of an error</returns>
+        internal Response<Board> JoinBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            try
+            {
+                BBoard bBoard = bc.JoinBoard(userEmail, creatorEmail, boardName);
+                Board board = new Board(bBoard);
+                return Response<Board>.FromValue(board);
+            }
+            catch (Exception e)
+            {
+                return Response<Board>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <returns>Response holding: ServiceLayer.Board if succeeded, message detailing error if occured</returns>
+        internal Response<Board> GetBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            try
+            {
+                BBoard bBoard = bc.GetBoard(userEmail, creatorEmail, boardName);
+                Board board = new Board(bBoard);
+                return Response<Board>.FromValue(board);
+            }
+            catch (Exception e)
+            {
+                return Response<Board>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// removes existing board of the user
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">email of the board creator - identifier</param>
+        /// <param name="boardName">name of the board - identifier</param>
+        /// <returns>Reponse containing message detailing the error if occured</returns>
+        internal Response<Board> RemoveBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            try
+            {
+                BBoard bBoard = bc.RemoveBoard(userEmail, creatorEmail, boardName);
+                Board board = new Board(bBoard);
+                return Response<Board>.FromValue(board);
+            }
+            catch (Exception e)
+            {
+                return Response<Board>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Adds a new column
         /// </summary>
         /// <param name="userEmail">Email of the current user. Must be logged in</param>
@@ -63,11 +148,55 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                return Response<Column>.FromValue(new Column(bc.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName), columnOrdinal));
+                BColumn bColumn = bc.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName);
+                Column column = new Column(bColumn);
+                return Response<Column>.FromValue(column);
             }
             catch(Exception e)
             {
                 return Response<Column>.FromError(e.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Retrieves specific column of a specific board
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">board's creator - identifier</param>
+        /// <param name="boardName">board's name - identifier</param>
+        /// <param name="columnOrdinal">column index</param>
+        /// <returns>Response holding: ServiceLayer.Column if succeeded, message detailing error if occured</returns>
+        internal Response<Column> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            try
+            {
+                return Response<Column>.FromValue(new Column(bc.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal)));
+            }
+            catch (Exception e)
+            {
+                return Response<Column>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// limits specific column in one of the user's boards
+        /// </summary>
+        /// <param name="userEmail">calling user's email</param>
+        /// <param name="creatorEmail">email of the board creator - identifier</param>
+        /// <param name="boardName">name of the board - identifier</param>
+        /// <param name="columnOrdinal">number representing a column</param>
+        /// <param name="limit">new limit</param>
+        /// <returns>Response containing message detailing the error - if occured</returns>
+        internal Response LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
+        {
+            try
+            {
+                bc.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit);
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                return new Response(e.Message);
             }
         }
 
@@ -137,28 +266,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
-        /// limits specific column in one of the user's boards
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">email of the board creator - identifier</param>
-        /// <param name="boardName">name of the board - identifier</param>
-        /// <param name="columnOrdinal">number representing a column</param>
-        /// <param name="limit">new limit</param>
-        /// <returns>Response containing message detailing the error - if occured</returns>
-        internal Response LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
-        {
-            try
-            {
-                bc.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit);
-                return new Response();
-            }
-            catch(Exception e)
-            {
-                return new Response(e.Message);
-            }
-        }
-
-        /// <summary>
         /// Adds new task to a user's board
         /// </summary>
         /// <param name="userEmail">user's email</param>
@@ -172,11 +279,36 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                return Response<Task>.FromValue(new Task(bc.AddTask(userEmail, creatorEmail, boardName, creationTime, title, description, DueDate)));
+                BTask bTask = bc.AddTask(userEmail, creatorEmail, boardName, creationTime, title, description, DueDate);
+                Task task = new Task(bTask);
+                return Response<Task>.FromValue(task);
             }
             catch (Exception e)
             {
                 return Response<Task>.FromError(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Assigns a task to a user
+        /// </summary>
+        /// <param name="userEmail">userEmail of the current user.</param>
+        /// <param name="creatorEmail">userEmail of the board creator</param>
+        /// <param name="boardName">The name of the board</param>
+        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
+        /// <param name="taskId">The task to be updated identified task ID</param>        
+        /// <param name="emailAssignee">userEmail of the user to assign to task to</param>
+        /// <returns>A response object. The response should contain a error message in case of an error</returns>
+        internal Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            try
+            {
+                bc.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                return new Response(e.Message);
             }
         }
 
@@ -272,26 +404,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
         
         /// <summary>
-        /// Retrieves specific column of a specific board
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">board's creator - identifier</param>
-        /// <param name="boardName">board's name - identifier</param>
-        /// <param name="columnOrdinal">column index</param>
-        /// <returns>Response holding: ServiceLayer.Column if succeeded, message detailing error if occured</returns>
-        internal Response<Column> GetColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
-        {
-            try
-            {
-                return Response<Column>.FromValue(new Column(bc.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal), columnOrdinal));
-            }
-            catch (Exception e)
-            {
-                return Response<Column>.FromError(e.Message);
-            }
-        }
-        
-        /// <summary>
         /// Retrieves all tasks within specific column of a specific board
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
@@ -303,89 +415,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                return Response<IList<Task>>.FromValue(translateList(bc.GetColumnTasks(userEmail, creatorEmail, boardName, columnOrdinal)));
+                IList<BTask> bTasks = bc.GetColumnTasks(userEmail, creatorEmail, boardName, columnOrdinal);
+                IList<Task> tasks = translateList(bTasks);
+                return Response<IList<Task>>.FromValue(tasks);
             }
             catch (Exception e)
             {
                 return Response<IList<Task>>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves specific board
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">board's creator - identifier</param>
-        /// <param name="boardName">board's name - identifier</param>
-        /// <returns>Response holding: ServiceLayer.Board if succeeded, message detailing error if occured</returns>
-        internal Response<Board> GetBoard(string userEmail, string creatorEmail, string boardName)
-        {
-            try
-            {
-                return Response<Board>.FromValue(new Board(creatorEmail, boardName, bc.GetBoard(userEmail, creatorEmail, boardName)));
-            }
-            catch (Exception e)
-            {
-                return Response<Board>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// creates a new board for the user
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="boardName">name of the new board</param>
-        /// <returns>Reponse containing the new board, or message detailing the error if occured</returns>
-        internal Response<Board> AddBoard(string userEmail, string boardName)
-        {
-            try
-            {
-                
-                return Response<Board>.FromValue(new Board(userEmail, boardName, bc.AddBoard(userEmail, boardName)));
-            }
-            catch (Exception e)
-            {
-                return Response<Board>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Adds a board created by another user to the logged-in user. 
-        /// </summary>
-        /// <param name="userEmail">userEmail of the current user.</param>
-        /// <param name="creatorEmail">userEmail of the board creator</param>
-        /// <param name="boardName">The name of the new board</param>
-        /// <returns>A response object. The response should contain the board if succeeded or an error message in case of an error</returns>
-        internal Response<Board> JoinBoard(string userEmail, string creatorEmail, string boardName)
-        {
-            try
-            {
-                
-                return Response<Board>.FromValue(new Board(creatorEmail, boardName, bc.JoinBoard(userEmail, creatorEmail, boardName)));
-            }
-            catch (Exception e)
-            {
-                return Response<Board>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// removes existing board of the user
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <param name="creatorEmail">email of the board creator - identifier</param>
-        /// <param name="boardName">name of the board - identifier</param>
-        /// <returns>Reponse containing message detailing the error if occured</returns>
-        internal Response RemoveBoard(string userEmail, string creatorEmail, string boardName)
-        {
-            try
-            {
-                bc.RemoveBoard(userEmail, creatorEmail, boardName);
-                return new Response();
-            }
-            catch (Exception e)
-            {
-                return new Response(e.Message);
             }
         }
 
@@ -398,7 +434,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                return Response<IList<Task>>.FromValue(translateList(bc.InProgressTasks(userEmail)));
+                IList<BTask> bTasks = bc.InProgressTasks(userEmail);
+                IList<Task> tasks = translateList(bTasks);
+                return Response<IList<Task>>.FromValue(tasks);
             }
             catch (Exception e)
             {
@@ -407,25 +445,20 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
 
         /// <summary>
-        /// Assigns a task to a user
+        /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
         /// </summary>
-        /// <param name="userEmail">userEmail of the current user.</param>
-        /// <param name="creatorEmail">userEmail of the board creator</param>
-        /// <param name="boardName">The name of the board</param>
-        /// <param name="columnOrdinal">The column ID. The first column is identified by 0, the ID increases by 1 for each column</param>
-        /// <param name="taskId">The task to be updated identified task ID</param>        
-        /// <param name="emailAssignee">userEmail of the user to assign to task to</param>
-        /// <returns>A response object. The response should contain a error message in case of an error</returns>
-        internal Response AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        /// <param name="userEmail">calling user's email</param>
+        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
+        public Response<IList<string>> GetBoardNames(string userEmail)
         {
             try
             {
-                bc.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
-                return new Response();
+                IList<string> boardNames = bc.GetBoardNames(userEmail);
+                return Response<IList<string>>.FromValue(boardNames);
             }
             catch (Exception e)
             {
-                return new Response(e.Message);
+                return Response<IList<string>>.FromError(e.Message);
             }
         }
 
@@ -434,32 +467,16 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
-        public Response<IList<String>> GetBoardNames(string userEmail)
+        public Response<IList<string>> GetBetterBoardNames(string userEmail)
         {
             try
             {
-                return Response<IList<String>>.FromValue(bc.GetBoardNames(userEmail));
+                IList<string> boardNames = bc.GetBetterBoardNames(userEmail);
+                return Response<IList<string>>.FromValue(boardNames);
             }
             catch (Exception e)
             {
-                return Response<IList<String>>.FromError(e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Returns the list of board of a user. The user must be logged-in. The function returns all the board names the user created or joined.
-        /// </summary>
-        /// <param name="userEmail">calling user's email</param>
-        /// <returns>A response object with a value set to the board, instead the response should contain a error message in case of an error</returns>
-        public Response<IList<String>> GetBetterBoardNames(string userEmail)
-        {
-            try
-            {
-                return Response<IList<String>>.FromValue(bc.GetBetterBoardNames(userEmail));
-            }
-            catch (Exception e)
-            {
-                return Response<IList<String>>.FromError(e.Message);
+                return Response<IList<string>>.FromError(e.Message);
             }
         }
 

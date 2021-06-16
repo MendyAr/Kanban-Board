@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using BColumn = IntroSE.Kanban.Backend.BusinessLayer.Column;
-using BTask = IntroSE.Kanban.Backend.BusinessLayer.Task;
+﻿using BColumn = IntroSE.Kanban.Backend.BusinessLayer.IColumn;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -9,27 +7,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         public readonly string Name;
         public readonly int Limit;
         public readonly int Ordinal;
-        public readonly IList<string> Tasks;
 
-        internal Column(string Name, int Limit, int Ordinal, IList<string> Tasks)
+        internal Column(string Name, int Limit, int Ordinal)
         {
             this.Name = Name;
             this.Limit = Limit;
             this.Ordinal = Ordinal;
-            this.Tasks = Tasks;
         }
 
-        internal Column(BColumn bColumn, int Ordinal)
+        internal Column(BColumn bColumn)
         {
             Name = bColumn.Name;
             Limit = bColumn.Limit;
-            this.Ordinal = Ordinal;
-            IList<string> tasks = new List<string>();
-            foreach (BTask bTask in bColumn.Tasks)
-            {
-                tasks.Add(bTask.TaskId + " - " + bTask.Title);
-            }
-            Tasks = tasks; 
+            this.Ordinal = bColumn.Ordinal;
         }
     }
 }

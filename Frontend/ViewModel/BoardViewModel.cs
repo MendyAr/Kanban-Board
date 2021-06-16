@@ -1,11 +1,12 @@
-﻿using IntroSE.Kanban.Frontend.Model;
+﻿using IntroSE.Kanban.Frontend.Commands;
+using IntroSE.Kanban.Frontend.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class BoardViewModel : ViewModelObject
+    public class BoardViewModel : ViewModelObject
     {
 
         private BoardModel board;
@@ -18,15 +19,6 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         private bool _enableForward;
 
         public BoardModel Board { get => board; set => board = value; }
-        public ObservableCollection<ColumnModel> Columns
-        {
-            get => _columns;
-            set
-            {
-                _columns = value;
-                RaisePropertyChanged("Columns");
-            }
-        }
 
         public string Message
         {
@@ -63,63 +55,21 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
+        public AddColumnCommand AddColumnCommand { get; } = new AddColumnCommand();
+        public DeleteColumnCommand DeleteColumnCommand { get; } = new DeleteColumnCommand();
+
         // constructor
         public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
         {
             this.board = boardModel;
-            Columns = boardModel.GetColumns();
-            Columns.CollectionChanged += HandleChange;
         }
 
 
         // methods
-        public void AddColumn()
-        {
-            if (NewColumnName == "")
-            {
-                Message = "Enter a name please";
-            }
-            else
-            {
-                try
-                {
-                    Controller.AddColumn(Board, int.Parse(NewColumnOrdinal), NewColumnName);
-                    Columns.Add(new ColumnModel(Board, NewColumnName, int.Parse(NewColumnOrdinal)));
-                }
-                catch (Exception e)
-                {
-                    Message = e.Message;
-                }
-            }
-        }
-
-        public void DeleteColumn()
-        {
-            try
-            {
-                Controller.RemoveColumn(Board.User.Email, Board.CreatorEmail, Board.Name, SelectedColumn.Ordinal);
-                Columns = Board.GetColumns();
-                Message = "Column deleted successfully!";
-            }
-            catch(Exception e)
-            {
-                Message = e.Message;
-            }
-        }
 
         public ColumnModel GetColumn()
         {
             return SelectedColumn;
-        }
-
-        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                RaisePropertyChanged("Column");
-            }
-            
-
         }
 
     }

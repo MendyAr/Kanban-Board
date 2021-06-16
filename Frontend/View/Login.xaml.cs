@@ -16,6 +16,8 @@ namespace IntroSE.Kanban.Frontend.View
             InitializeComponent();
             this.viewModel = new LoginViewModel(new BackendController());
             this.DataContext = viewModel;
+            viewModel.Username = "Mendy@gmail.com";
+            viewModel.Password = "Qwe123";
         }
 
         

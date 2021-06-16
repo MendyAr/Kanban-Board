@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private DBoard dBoard; //parallel DTO
 
         internal int TaskIdCounter { get => taskIdCounter; }
-        internal int ColumnCounter { get => columnCounter; }
+        internal int ColumnCounter { get => columnCounter; set => columnCounter = value; }
 
         //constructor
         /// <summary>
@@ -43,6 +43,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 columns.Add(new Column(dColumn));
             }
             taskIdCounter = dBoard.numberOfTasks();
+            ColumnCounter = dBoard.Columns.Count;
             this.dBoard = dBoard;
             this.dBoard.Persist = true;
         }

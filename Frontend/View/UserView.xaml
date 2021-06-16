@@ -7,8 +7,18 @@
         mc:Ignorable="d"
         Title="UserView" Height="450" Width="800">
     <Grid>
-        <StackPanel Orientation="Vertical" Margin="0,0,0,148">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
             <Label Content="{Binding Path=Title, Mode=OneTime}" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
             <ListBox ItemsSource="{Binding Path=Boards, Mode=OneWay}" SelectedItem="{Binding Path=SelectedBoard, Mode=OneWayToSource}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -20,21 +30,76 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+        </Grid>
 
-            <Button Content="Select Board" Click="Select_Board_Click" ></Button>
-            <Button Content="Logout" Click="Logout_Click"/>
-            <Label Content="{Binding Path=Message, Mode=OneWay}" Foreground="Red"/>
-        </StackPanel>
-        <Button Content="Join" HorizontalAlignment="Left" Margin="645,381,0,0" VerticalAlignment="Top" Click="Join_Board_Click" Width="74"  />
-        <Label Content="Join to board" HorizontalAlignment="Left" Margin="622,286,0,0" VerticalAlignment="Top" Height="31" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="622,334,0,0" Text="{Binding Path=JoinBoardCreator, Mode=OneWayToSource}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" />
-        <TextBox HorizontalAlignment="Left" Margin="622,358,0,0" Text="{Binding Path=JoinBoardName, Mode=OneWayToSource}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Board Creator Email" HorizontalAlignment="Left" Margin="494,334,0,0" VerticalAlignment="Top"/>
-        <Label Content="Board Name" HorizontalAlignment="Left" Margin="514,354,0,0" VerticalAlignment="Top"/>
-        <Button Content="Create" HorizontalAlignment="Left" Margin="136,381,0,0" VerticalAlignment="Top" Click="Create_Board_Click" Width="74"  />
-        <TextBox HorizontalAlignment="Left" Margin="113,358,0,0" Text="{Binding Path = NewBoardName, Mode=OneWayToSource}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="New Board Name" HorizontalAlignment="Left" Margin="10,354,0,0" VerticalAlignment="Top"/>
-        <Label Content="Create to board" HorizontalAlignment="Left" Margin="113,286,0,0" VerticalAlignment="Top" Height="31" Width="120"/>
-        <Button Content="In Progress" HorizontalAlignment="Left" Margin="366,292,0,0" VerticalAlignment="Top" Click ="In_Progress_Tasks_Click"/>
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Vertical">
+                <Button Content="Select Board" Click="Select_Board_Click" ></Button>
+                <Button Content="Logout" Click="Logout_Click"/>
+                <Label Content="{Binding Path=Message, Mode=OneWay}" Foreground="Red"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Label Content="Create board:" VerticalAlignment="Top" FontSize="10"/>
+
+                    <Label Content="New Board Name" VerticalAlignment="Center" FontSize="10"/>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <StackPanel>
+                        <Label/>
+                        <Label/>
+                        <TextBox Text="{Binding Path = NewBoardName, Mode=OneWayToSource}" TextWrapping="Wrap"/>
+                        <Button Content="Create"  Click="Create_Board_Click"  />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Label Content="Join board:" VerticalAlignment="Top" FontSize="10"/>
+                    <Viewbox>
+                        <Label Content="Board Creator Email:" VerticalAlignment="Center" FontSize="10"/>
+                    </Viewbox>
+
+                    <Label Content="Board Name:" VerticalAlignment="Bottom" FontSize="10"/>
+
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <StackPanel>
+                        <Label/>
+                        <Label Height="5"/>
+                        <Label/>
+                        <TextBox Text="{Binding Path=JoinBoardCreator, Mode=OneWayToSource}" TextWrapping="Wrap"/>
+                        <TextBox Text="{Binding Path=JoinBoardName, Mode=OneWayToSource}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <Button Content="Join" Click="Join_Board_Click" HorizontalAlignment="Center" VerticalAlignment="Top" Height="31" Margin="0,26,0,0"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
+    
 </Window>

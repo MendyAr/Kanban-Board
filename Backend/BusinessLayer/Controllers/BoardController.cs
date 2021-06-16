@@ -16,19 +16,19 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     internal class BoardController
     {
         //fields
-        private Dictionary<string, Dictionary<string, Board>> boards; //first key is userEmail , second key will be the board name
+        private Dictionary<string, Dictionary<string, IBoard>> boards; //first key is userEmail , second key will be the board name
         private Dictionary<string, HashSet<string>> userBoards; //first key is userEmail, second key is a set of all the boards he is a member of
-        private LoginInstance loginInstance = LoginInstance.GetInstance();
-
+        private LoginInstance loginInstance;
         private DBC dBoardController = new DBC(); //parallel DController
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         //constructors
-        internal BoardController()
+        internal BoardController(LoginInstance loginInstance)
         {
-            boards = new Dictionary<string, Dictionary<string, Board>>();
+            boards = new Dictionary<string, Dictionary<string, IBoard>>();
             userBoards = new Dictionary<string, HashSet<string>>();
+            this.loginInstance = loginInstance;
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             log.Info("Kanban.app booted");
@@ -63,7 +63,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 //load the board
                 if (!boards.ContainsKey(creatorEmail))
                 {
-                    boards[creatorEmail] = new Dictionary<string, Board>();
+                    boards[creatorEmail] = new Dictionary<string, IBoard>();
                 }
                 if (boards[creatorEmail].ContainsKey(boardName))
                 {
@@ -95,7 +95,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// </summary>
         internal void DeleteData()
         {
-            boards = new Dictionary<string, Dictionary<string, Board>>();
+            boards = new Dictionary<string, Dictionary<string, IBoard>>();
             userBoards = new Dictionary<string, HashSet<string>>();
             try
             {
@@ -172,30 +172,50 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <exception cref="ArgumentException">thrown when the board already exists for that user</exception>
         /// <returns>the newly created Board</returns>
         /// <remarks>call validateLogin</remarks>
-        internal Board AddBoard(string userEmail, string boardName)
+        internal IBoard AddBoard(string userEmail, string boardName)
         {
             validateLogin(userEmail, $"AddBoard({userEmail}, {boardName})");
-            if (!boards.ContainsKey(userEmail)) //create new entry if needed
+            IBoard board = CreateBoard(userEmail, boardName);
+            AddBoard(userEmail, board);
+            JoinBoard(userEmail, userEmail, boardName);
+            log.Info($"SUCCESSFULLY created '{userEmail}:{boardName}'");
+            return boards[userEmail][boardName];
+        }
+
+        internal IBoard CreateBoard(string userEmail, string boardName)
+        {
+            if (checkBoardExistance(userEmail, boardName))
             {
-                boards[userEmail] = new Dictionary<string, Board>();
-            }
-            if (boards[userEmail].ContainsKey(boardName))
-            {
-                log.Warn($"FAILED to create board '{userEmail}:{boardName}' - already exists");
-                throw new ArgumentException($"Board '{userEmail}:{boardName}' already exist");
+                log.Info($"FAILED to create board '{userEmail}:{boardName}' - already exists");
+                throw new Exception($"Can't create board '{userEmail}:{boardName}' - this board already exists");
             }
             try
             {
-                boards[userEmail][boardName] = new Board(userEmail, boardName);
+                return new Board(userEmail, boardName);
             }
             catch (InvalidOperationException)
             {
                 log.Warn($"FAILED to create board '{userEmail}:{boardName}' - exists in DataBase but not in BusinessLayer");
                 throw new Exception($"Can't create board '{userEmail}:{boardName}' - this board already exists in the DataBase, please LoadData before continueing");
             }
-            JoinBoard(userEmail, userEmail, boardName);
-            log.Info($"SUCCESSFULLY created '{userEmail}:{boardName}'");
-            return boards[userEmail][boardName];
+        }
+
+        internal void AddBoard(string userEmail, IBoard board)
+        {
+            if (!boards.ContainsKey(userEmail)) //create new entry if needed
+            {
+                boards[userEmail] = new Dictionary<string, IBoard>();
+                boards[userEmail][board.Name] = board;
+            }
+            else
+            {
+                if (boards[userEmail].ContainsKey(board.Name))
+                {
+                    log.Warn($"FAILED to create board '{userEmail}:{board.Name}' - already exists");
+                    throw new ArgumentException($"Board '{userEmail}:{board.Name}' already exist");
+                }
+                boards[userEmail][board.Name] = board;
+            }
         }
 
         /// <summary>

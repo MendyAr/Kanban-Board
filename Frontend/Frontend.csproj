@@ -13,6 +13,7 @@
     <None Remove="Images\arrow.png" />
     <None Remove="Images\back_button.png" />
     <None Remove="Images\Board_Background.png" />
+    <None Remove="Images\Task_Background.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,12 +30,9 @@
     <Resource Include="Images\Board_Background.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Images\Task_Background.jpg">
+    <Resource Include="Images\Task_Background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Resource>
   </ItemGroup>
 
 </Project>

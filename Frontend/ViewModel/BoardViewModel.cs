@@ -8,22 +8,25 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     class BoardViewModel : ViewModelObject
     {
 
-        public BoardModel board;
-        public ObservableCollection<ColumnModel> _columns;
+        private BoardModel board;
+        private ObservableCollection<ColumnModel> _columns;
 
-        private string _boardName;
-        private string _boardCreator;
         private string _message;
         private ColumnModel _selectedColumn;
         private string _newColumnName;
         private string _newColumnOrdinal;
         private bool _enableForward;
 
-        public ObservableCollection<ColumnModel> Columns { get => _columns; set => _columns = value; }
-
-        public string BoardName { get => _boardName; set => _boardName = value; }
-
-        public string BoardCreator { get => _boardCreator; set => _boardCreator = value; }
+        public BoardModel Board { get => board; set => board = value; }
+        public ObservableCollection<ColumnModel> Columns
+        {
+            get => _columns;
+            set
+            {
+                _columns = value;
+                RaisePropertyChanged("Columns");
+            }
+        }
 
         public string Message
         {
@@ -45,11 +48,10 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             {
                 _selectedColumn = value;
                 EnableForward = value != null;
-                RaisePropertyChanged("SelectedColumn");
             }
         }
 
-        public string NewColumnName { get => board.Name; set => _newColumnName = value; }
+        public string NewColumnName { get => _newColumnName; set => _newColumnName = value; }
         public string NewColumnOrdinal { get => _newColumnOrdinal; set => _newColumnOrdinal = value; }
         public bool EnableForward 
         {
@@ -73,20 +75,16 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         // methods
         public void AddColumn()
         {
-            if (NewColumnName == null)
+            if (NewColumnName == "")
             {
                 Message = "Enter a name please";
-            }
-            else if (NewColumnOrdinal == null)
-            {
-                Message = "Enter an ordinal please";
             }
             else
             {
                 try
                 {
-                    Controller.AddColumn(board, int.Parse(NewColumnOrdinal), NewColumnName);
-                    Columns = board.GetColumns();
+                    Controller.AddColumn(Board, int.Parse(NewColumnOrdinal), NewColumnName);
+                    Columns.Add(new ColumnModel(Board, NewColumnName, int.Parse(NewColumnOrdinal)));
                 }
                 catch (Exception e)
                 {
@@ -99,8 +97,9 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         {
             try
             {
-                Controller.RemoveColumn(board.User.Email, board.CreatorEmail, board.Name, SelectedColumn.Ordinal);
-                Columns = board.GetColumns(); //? columns.remove(selectedColumn), but it can affect the whole set
+                Controller.RemoveColumn(Board.User.Email, Board.CreatorEmail, Board.Name, SelectedColumn.Ordinal);
+                Columns = Board.GetColumns();
+                Message = "Column deleted successfully!";
             }
             catch(Exception e)
             {
@@ -115,8 +114,14 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
         {
-            RaisePropertyChanged("columns");
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                RaisePropertyChanged("Column");
+            }
+            
+
         }
+
     }
 }
 

@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.DataLayer.Controllers
 
         public List<string> ForbiddenPasswords { get => _forbiddenPasswords; }
 
-        public ConfigReader()
+        private ConfigReader()
         {
             _forbiddenPasswords = File.ReadAllLines("ForbiddenPasswords.txt").ToList();
         }

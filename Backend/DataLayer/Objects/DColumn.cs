@@ -16,8 +16,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
         private List<DTask> _tasks;
 
         private const string COL_NAME = "Name";
-        private const string COL_CREATOR_EMAIL = "Creator";
-        private const string COL_BOARD_NAME = "Board";
+        private const string COL_CREATOR_EMAIL = "BoardCreator";
+        private const string COL_BOARD_NAME = "BoardName";
         private const string COL_LIMIT = "Limit";
         private const string COL_ORDINAL = "Ordinal";
         private const string TASK_TABLE_NAME = "Task";
@@ -79,9 +79,10 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 {
 
                     Update(COL_ORDINAL, value);
-                    Update(COL_ID, CreatorEmail + BoardName + value);
+                    Update(COL_ID, CreatorEmail + BoardName + value + Name);
+                    ChangeTaskOrdinal(value);
                 }
-                ChangeTaskOrdinal(value);
+                
                 _ordinal = value;
             }
         }
@@ -97,7 +98,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         // constructor
 
-        internal DColumn(string name, string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal, "Column")
+        internal DColumn(string name, string creatorEmail, string boardName, int ordinal, int limit) : base(creatorEmail + boardName + ordinal +name, "Column")
         {
             _creatorEmail = creatorEmail;
             _boardName = boardName;
@@ -207,11 +208,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                         throw new InvalidOperationException();
                 }
 
-            }
-            if (res <= 0)
-            {
-                log.Error($"SQLite Update query in table '{_tableName}' returned {res}.");
-                throw new Exception("The data didn't update correctly");
             }
         }
     }

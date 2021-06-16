@@ -160,35 +160,5 @@ namespace IntroSE.Kanban.Backend.DataLayer
             }
 
         }
-
-        internal void Delete()
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"DELETE FROM {_tableName}";
-                SQLiteDataReader dataReader = null;
-                try
-                {
-                    connection.Open();
-                    dataReader = command.ExecuteReader();
-                }
-                catch (Exception e)
-                {
-                    log.Error($"Failed to delete from DB, tried command: {command.CommandText},\n" +
-                        $"the SQLite exception massage was: {e.Message}");
-                }
-                finally
-                {
-                    if (dataReader != null)
-                    {
-                        dataReader.Close();
-                    }
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-        }
     }
 }

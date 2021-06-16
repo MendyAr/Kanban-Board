@@ -12,7 +12,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     {
 
         private ColumnModel _column;
-        private ObservableCollection<TaskViewModel> _tasks;
+        private ObservableCollection<TaskModel> _tasks;
         
         private TaskModel _selectedTask;
 
@@ -20,8 +20,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         private string _message;
         private string _filter;
 
-        internal ColumnModel Column { get => _column; set => _column = value; }
-        internal ObservableCollection<TaskViewModel> Tasks { get => _tasks; set => _tasks = value; }
+        public ColumnModel Column { get => _column; set => _column = value; }
+        public ObservableCollection<TaskModel> Tasks { get => _tasks; set => _tasks = value; }
 
         public TaskModel SelectedTask
         {
@@ -69,7 +69,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     public ColumnViewModel(ColumnModel column) : base(column.Controller)
         {
             this.Column = column;
-            //Tasks = Column.GetTasks();
+            Tasks = Column.GetTasks();
         }
 
         public void AdvanceTask()

@@ -2,7 +2,6 @@
 using System;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("IntroSE.Kanban.Tests")]
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
 <<<<<<< HEAD
@@ -24,7 +23,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private DateTime _dueDate;
         private string _assignee;
 
-        internal DTask dTask; //parallel DTO
+        private DTask dTask; //parallel DTO
 
         int ITask.ID { get => _id;}
         DateTime ITask.CreationTime { get => _creationTime;}

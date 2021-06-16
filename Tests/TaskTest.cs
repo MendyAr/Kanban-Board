@@ -12,12 +12,7 @@ namespace IntroSE.Kanban.Tests
         public void Setup()
         {
             task = new Task(0, DateTime.Today, "title1", "", DateTime.Today.AddDays(1), "", "", "");
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            task.dTask.Remove();
+            task.dTask.Persist = false;
         }
 
         [TestCase("z")]

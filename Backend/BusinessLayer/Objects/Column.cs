@@ -9,59 +9,50 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
     /// Class Column stores tasks and allows column operations and manipulation.
     /// </summary>
     /// <remarks>All exceptions thrown will message the column's name for parsing uses of the calling method</remarks>
-    internal class Column
+    internal class Column : IColumn
     {
         //fields
-        private string name;
-        private Dictionary<int, Task> tasks = new Dictionary<int, Task>(); //key - task's ID
-        private int limit = -1; //ranges from -1 (unlimited) to any positive number (actual limit)
+        private string _name;
+        private Dictionary<int, ITask> _tasks = new Dictionary<int, ITask>(); //key - task's ID
+        private int _limit = -1; //ranges from -1 (unlimited) to any positive number (actual limit)
 
-        private DColumn dColumn; //parallel DTO
+        private DColumn _dColumn; //parallel DTO
 
-        internal string Name { 
-            get => name;
+        string IColumn.Name { 
+            get => _name;
             set
             {
                 if (value == null)
                     throw new ArgumentNullException("Column Name cannot be null");
                 if (value.Equals(""))
                     throw new ArgumentException("New Name cannot be empty");
-                name = value;
-                dColumn.Name = value;
+                _name = value;
+                _dColumn.Name = value;
 
             }
         }
-        internal int Limit
+        int IColumn.Ordinal
         {
-            get => limit;
+            get => _dColumn.Ordinal;
+            set => _dColumn.Ordinal = value;
+        }
+        int IColumn.Limit
+        {
+            get => _limit;
             set
             {
-                if (value != -1 && tasks.Count > value) 
-                    throw new ArgumentException(Name);
-                limit = value;
-                dColumn.Limit = value;
-            }
-        }
-        internal IList<Task> Tasks
-        {
-            get
-            {
-                IList<Task> tasks = new List<Task>();
-                foreach (Task task in this.tasks.Values)
-                {
-                    tasks.Add(task);
-                }
-                return tasks;
+                if (value != -1 && _tasks.Count > value) 
+                    throw new ArgumentException(_name);
+                _limit = value;
+                _dColumn.Limit = value;
             }
         }
 
         //constructors
         internal Column(string name, string creatorEmail, string boardName, int columnOrdinal)
         {
-            this.name = name;
-            dColumn = new DColumn(name, creatorEmail, boardName, columnOrdinal, -1);
-            dColumn.Insert();
-            dColumn.Persist = true;
+            this._name = name;
+            _dColumn = new DColumn(name, creatorEmail, boardName, columnOrdinal, -1);
         }
 
         /// <summary>
@@ -70,38 +61,21 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="dColumn">DTO representing the column</param>
         internal Column(DColumn dColumn)
         {
-            limit = dColumn.Limit;
-            name = dColumn.Name;
+            _limit = dColumn.Limit;
+            _name = dColumn.Name;
             foreach (DTask dTask in dColumn.Tasks)
             {
-                tasks[dTask.TaskId] = new Task(dTask);
+                _tasks[dTask.TaskId] = new Task(dTask);
             }
-            this.dColumn = dColumn;
-            this.dColumn.Persist = true;
+            this._dColumn = dColumn;
+            this._dColumn.Persist = true;
         }
 
         //methods
-
-        /// <summary>
-        /// Adds a new task that represents given parameters to the column
-        /// </summary>
-        /// <param name="taskId">ID of Task</param>
-        /// <param name="creationTime">Creation Time of task</param>
-        /// <param name="title">Title of task - has to stand conditions</param>
-        /// <param name="description">Description of task - has to stand conditions</param>
-        /// <param name="dueDate">Due date of task - has to stand conditions</param>
-        /// <param name="assignee">Assignee of task</param>
-        /// <param name="boardCreator">Creator of the board the task is in - delivered to the created DTO</param>
-        /// <param name="boardName">Board name of the board the task is in - delivered to the created DTO</param>
-        /// <returns>The new task that was created</returns>
-        /// <exception cref="OutOfMemoryException">Thrown when column is already at its limit</exception>
-        internal Task AddTask(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate, string assignee, string boardCreator, string boardName) 
-        { 
-            //no need to check that limit != -1 as then the boolean check will always be false anyway
-            if (tasks.Count == limit)
-                throw new OutOfMemoryException(Name);
-            tasks[taskId] = new Task(taskId, creationTime, title, description, dueDate, assignee, boardCreator, boardName);
-            return tasks[taskId];
+        void IColumn.Persist()
+        {
+            _dColumn.Insert();
+            _dColumn.Persist = true;
         }
 
         /// <summary>
@@ -109,40 +83,48 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// </summary>
         /// <param name="task">the added task</param>
         /// <exception cref="OutOfMemoryException">Thrown when column is already at its limit</exception>
-        internal void AddTask(Task task)
+        void IColumn.AddTask(ITask task)
         {
             //no need to check that limit != -1 as then the boolean check will always be false anyway
-            if (tasks.Count == limit)
-                throw new OutOfMemoryException(Name);
-            tasks[task.TaskId] = task;
+            if (_tasks.Count == _limit)
+                throw new OutOfMemoryException(_name);
+            _tasks[task.ID] = task;
         }
 
         /// <summary>
         /// adds all given tasks in the IList to the column
         /// </summary>
         /// <param name="tasks">new tasks</param>
-        internal void AddTasks(IList<Task> tasks)
+        void IColumn.AddTasks(IList<ITask> tasks)
         {
-            if (limit != -1 && (tasks.Count + this.tasks.Count) > limit)
-                throw new OutOfMemoryException(Name);
-            foreach (Task task in tasks)
+            if (_limit != -1 && (tasks.Count + this._tasks.Count) > _limit)
+                throw new OutOfMemoryException(_name);
+            foreach (ITask task in tasks)
             {
-                tasks[task.TaskId] = task;
+                tasks[task.ID] = task;
             }
         }
 
         /// <summary>
-        /// Removes task from the column
+        /// Gets requested task
         /// </summary>
-        /// <param name="taskId">ID of the removed task</param>
-        /// <returns>the removed task</returns>
-        /// <exception cref="IndexOutOfRangeException">Thrown when the column doesn't hold a task with matching given ID</exception>
-        internal Task RemoveTask(string userEmail, int taskId)
+        /// <param name="taskId">task ID</param>
+        /// <returns>requested task</returns>
+        ITask IColumn.GetTask(int taskId)
         {
-            validateAssignee(userEmail, taskId);
-            Task removedTask = tasks[taskId];
-            tasks.Remove(taskId);
-            return removedTask;
+            if (!_tasks.ContainsKey(taskId))
+                throw new ArgumentOutOfRangeException(_name);
+            return _tasks[taskId];
+        }
+
+        /// <summary>
+        /// Gets all the tasks in the column
+        /// </summary>
+        /// <returns>Lists of tasks</returns>
+        IList<ITask> IColumn.GetTasks()
+        {
+            IList<ITask> tasks = new List<ITask>(_tasks.Values);
+            return tasks;
         }
 
         /// <summary>
@@ -152,10 +134,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="taskId">ID of updated task</param>
         /// <param name="assignee">new assignee</param>
         /// <remarks>calls validateAssignee</remarks>
-        internal void AssignTask(string userEmail, int taskId, string assignee)
+        void IColumn.AssignTask(string userEmail, int taskId, string assignee)
         {
             validateAssignee(userEmail, taskId);
-            tasks[taskId].Assignee = assignee;
+            _tasks[taskId].Assignee = assignee;
         }
 
         /// <summary>
@@ -165,10 +147,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="taskId">ID of updated task</param>
         /// <param name="DueDate">new and updated due date</param>
         /// <remarks>calls validateAssignee</remarks>
-        internal void UpdateTaskDueDate(string userEmail, int taskId, DateTime DueDate)
+        void IColumn.UpdateTaskDueDate(string userEmail, int taskId, DateTime DueDate)
         {
             validateAssignee(userEmail, taskId);
-            tasks[taskId].DueDate = DueDate;
+            _tasks[taskId].DueDate = DueDate;
         }
 
         /// <summary>
@@ -178,10 +160,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="taskId">ID of updated task</param>
         /// <param name="title">new and updated title</param>
         /// <remarks>calls validateAssignee</remarks>
-        internal void UpdateTaskTitle(string userEmail, int taskId, string title)
+        void IColumn.UpdateTaskTitle(string userEmail, int taskId, string title)
         {
             validateAssignee(userEmail, taskId);
-            tasks[taskId].Title = title;
+            _tasks[taskId].Title = title;
         }
 
         /// <summary>
@@ -191,19 +173,24 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="taskId">ID of updated task</param>
         /// <param name="description">new and updated description</param>
         /// <remarks>calls validateAssignee</remarks>
-        internal void UpdateTaskDescription(string userEmail, int taskId,  string description)
+        void IColumn.UpdateTaskDescription(string userEmail, int taskId,  string description)
         {
             validateAssignee(userEmail, taskId);
-            tasks[taskId].Description = description;
+            _tasks[taskId].Description = description;
         }
 
         /// <summary>
-        /// updates the ordinal saved in DAL
+        /// Removes task from the column
         /// </summary>
-        /// <param name="columnOrdinal">new ordinal</param>
-        internal void UpdateOrdinal(int columnOrdinal)
+        /// <param name="taskId">ID of the removed task</param>
+        /// <returns>the removed task</returns>
+        /// <remarks>calls validateAssignee</remarks>
+        ITask IColumn.RemoveTask(string userEmail, int taskId)
         {
-            dColumn.Ordinal = columnOrdinal;
+            validateAssignee(userEmail, taskId);
+            ITask removedTask = _tasks[taskId];
+            _tasks.Remove(taskId);
+            return removedTask;
         }
 
         /// <summary>
@@ -211,16 +198,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// </summary>
         /// <param name="userEmail">calling user's email</param>
         /// <param name="taskId">task's ID</param>
+        /// <exception cref="IndexOutOfRangeException">Thrown when the column doesn't hold a task with matching given ID</exception>
         private void validateAssignee(string userEmail, int taskId)
         {
             try
             {
-                if (!tasks[taskId].Assignee.Equals(userEmail))
+                if (!_tasks[taskId].Assignee.Equals(userEmail))
                     throw new InvalidOperationException();
             }
             catch (KeyNotFoundException)
             {
-                throw new IndexOutOfRangeException(Name);
+                throw new IndexOutOfRangeException(_name);
             }
         }
     }

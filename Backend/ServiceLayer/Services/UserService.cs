@@ -1,5 +1,6 @@
 ﻿using System;
 using UC = IntroSE.Kanban.Backend.BusinessLayer.UserController;
+using BUser = IntroSE.Kanban.Backend.BusinessLayer.IUser;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -47,17 +48,18 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<summary>Registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
-        ///<returns cref="Response">The response of the action</returns>
-        internal Response Register(string userEmail, string password)
+        ///<returns>Response containing the newly created user or an error message in case of error</returns>
+        internal Response<User> Register(string userEmail, string password)
         {
             try
             {
-                uc.Register(userEmail, password);
-                return new Response();
+                BUser bUser = uc.Register(userEmail, password);
+                User user = new User(bUser);
+                return Response<User>.FromValue(user);
             }
             catch (Exception e)
             {
-                return new Response(e.Message);
+                return Response<User>.FromError(e.Message);
             }
         }
         

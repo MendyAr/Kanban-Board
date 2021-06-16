@@ -3,7 +3,7 @@ using System;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    class Task 
+    internal class Task : ITask
     {
         private const int MIN_TITLE_LENGTH =  1;
         private const int MAX_TITLE_LENGTH = 50;
@@ -11,56 +11,55 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         private const int MAX_DESCRIPTION_LENGTH = 300;
         
         //fields
-        private readonly int taskId;
-        private string title;
-        private string description;
-        private readonly DateTime creationTime;
-        private DateTime dueDate;
-        private string assignee;
+        private readonly int _id;
+        private string _title;
+        private string _description;
+        private readonly DateTime _creationTime;
+        private DateTime _dueDate;
+        private string _assignee;
 
         private DTask dTask; //parallel DTO
 
-        internal int TaskId { get => taskId;}
-        internal DateTime CreationTime { get => creationTime;}
-        internal DateTime DueDate { get => dueDate;  
+        int ITask.ID { get => _id;}
+        DateTime ITask.CreationTime { get => _creationTime;}
+        DateTime ITask.DueDate { get => _dueDate;  
             set 
             {
                 validateDueDate(value);
                 dTask.DueDate = value;
-                dueDate = value; 
+                _dueDate = value; 
             } 
         }
-        internal string Title { get => title; 
+        string ITask.Title { get => _title; 
             set
             {
                 validateTitle(value);
                 dTask.Title = value;
-                title = value;
+                _title = value;
 
             }
         }
-        internal string Description { get => description; 
+        string ITask.Description { get => _description; 
             set
             {
                 validateDescription(value);
                 dTask.Description = value;
-                description = value;
+                _description = value;
             }
         }
-        public string Assignee { get => assignee; 
+        string ITask.Assignee { get => _assignee; 
             set 
             {
                 dTask.Assignee = value;
-                assignee = value;
+                _assignee = value;
             } 
         }
-
 
         //constructors
         /// <summary>
         /// Creates a new Task
         /// </summary>
-        /// <param name="taskId">ID of Task</param>
+        /// <param name="id">ID of Task</param>
         /// <param name="creationTime">Creation Time of task</param>
         /// <param name="title">Title of task - has to stand conditions</param>
         /// <param name="description">Description of task - has to stand conditions</param>
@@ -69,20 +68,18 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="boardCreator">Creator of the board the task is in - delivered to the created DTO</param>
         /// <param name="boardName">Board name of the board the task is in - delivered to the created DTO</param>
         /// <remarks>calls ValidateDueDate, ValidateTitle, ValidateDescription</remarks>
-        internal Task(int taskId, DateTime creationTime,  string title, string description, DateTime dueDate, string assignee, string boardCreator, string boardName)
+        internal Task(int id, DateTime creationTime,  string title, string description, DateTime dueDate, string assignee, string boardCreator, string boardName)
         {
-            this.taskId = taskId;
-            this.creationTime = creationTime;
+            _id = id;
+            _creationTime = creationTime;
             validateDueDate(dueDate);
-            this.dueDate = dueDate;
+            _dueDate = dueDate;
             validateTitle(title);
-            this.title= title;
+            _title= title;
             validateDescription(description);
-            this.description = description;
-            this.assignee = assignee;
-            dTask = new DTask(taskId, creationTime, title, description, dueDate, assignee, 0, boardCreator, boardName);
-            dTask.Insert();
-            dTask.Persist = true;
+            _description = description;
+            _assignee = assignee;
+            dTask = new DTask(id, creationTime, title, description, dueDate, assignee, 0, boardCreator, boardName);
         }
 
         /// <summary>
@@ -91,30 +88,36 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="dTask">DTO representing the task</param>
         internal Task(DTask dTask)
         {
-            taskId = dTask.TaskId;
-            creationTime = dTask.CreationTime;
-            dueDate = dTask.DueDate;
-            title = dTask.Title;
-            description = dTask.Description;
-            assignee = dTask.Assignee;
+            _id = dTask.TaskId;
+            _creationTime = dTask.CreationTime;
+            _dueDate = dTask.DueDate;
+            _title = dTask.Title;
+            _description = dTask.Description;
+            _assignee = dTask.Assignee;
             this.dTask = dTask;
             this.dTask.Persist = true;
         }
 
         //methods
 
+        void ITask.persist()
+        {
+            dTask.Insert();
+            dTask.Persist = true;
+        }
+
         /// <summary>
         /// Sends a message to dTask to advance column-wise
         /// </summary>
-        internal void Advance()
+        void ITask.Advance()
         {
             dTask.Ordinal = dTask.Ordinal + 1;
         }
 
-        ///<summary>Validates the property of a given description.</summary>
-        ///<param name="description">The description given to the Task</param>
-        ///<exception cref="ArgumentNullException">Thrown if given description is null</exception>
-        ///<exception cref="FormatException">Thrown if the description doesn't fit limits</exception>
+        ///<summary>Validates the property of a given _description.</summary>
+        ///<param name="description">The _description given to the Task</param>
+        ///<exception cref="ArgumentNullException">Thrown if given _description is null</exception>
+        ///<exception cref="FormatException">Thrown if the _description doesn't fit limits</exception>
         private void validateDescription(string description)
         {
             if (description == null)
@@ -132,10 +135,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
         }
 
-        ///<summary>Validates the property of a given title.</summary>
-        ///<param name="title">The title given to the Task</param>
-        ///<exception cref="ArgumentNullException">Thrown if given title is null</exception>
-        ///<exception cref="FormatException">Thrown if the title doesn't fit limits</exception>
+        ///<summary>Validates the property of a given _title.</summary>
+        ///<param name="title">The _title given to the Task</param>
+        ///<exception cref="ArgumentNullException">Thrown if given _title is null</exception>
+        ///<exception cref="FormatException">Thrown if the _title doesn't fit limits</exception>
         private void validateTitle(string title)
         {
             if(title == null)
@@ -152,10 +155,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
         }
 
-        ///<summary>Validate the propriety of a given dueDate.</summary>
-        /// <param name="dueDate">The dueDate given to the Task</param>
-        /// <exception cref="ArgumentNullException">Thrown when dueDate is null object </exception> 
-        /// <exception cref="FormatException"> Thrown when the dueDate is earlier then now. </exception>
+        ///<summary>Validate the propriety of a given _dueDate.</summary>
+        /// <param name="dueDate">The _dueDate given to the Task</param>
+        /// <exception cref="ArgumentNullException">Thrown when _dueDate is null object </exception> 
+        /// <exception cref="FormatException"> Thrown when the _dueDate is earlier then now. </exception>
         private void validateDueDate(DateTime dueDate)
         {
             if (dueDate == null)
@@ -164,7 +167,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             }
             if (dueDate < DateTime.Now)
             {
-                throw new ArgumentException("This due date time already past");
+                throw new ArgumentException("This _due date time already past");
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BBoard = IntroSE.Kanban.Backend.BusinessLayer.Board;
+﻿using BBoard = IntroSE.Kanban.Backend.BusinessLayer.IBoard;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
@@ -18,12 +17,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             TaskCount = taskCount;
         }
 
-        internal Board(string creatorEmail, string boardName, BBoard bBoard)
+        internal Board(BBoard bBoard)
         {
-            CreatorEmail = creatorEmail;
-            Name = boardName;
-            ColumnCount = bBoard.ColumnCounter;
-            TaskCount = bBoard.TaskIdCounter;
+            CreatorEmail = bBoard.Creator;
+            Name = bBoard.Name;
+            ColumnCount = bBoard.ColumnCount;
+            TaskCount = bBoard.TaskCount;
         }
     }
 }

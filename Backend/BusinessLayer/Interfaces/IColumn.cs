@@ -4,20 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntroSE.Kanban.Backend.BusinessLayer.Interfaces
+namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-    interface IColumn
+    internal interface IColumn
     {
-        internal Task AddTask(int taskId, DateTime creationTime, string title, string description, DateTime dueDate, string assignee, string boardCreator, string boardName);
-        internal void AddTask(Task task);
-        internal void AddTasks(IList<Task> tasks);
-        internal Task RemoveTask(string userEmail, int taskId);
-        internal void AssignTask(string userEmail, int taskId, string assignee);
-        internal void UpdateTaskDueDate(string userEmail, int taskId, DateTime DueDate);
-        internal void UpdateTaskTitle(string userEmail, int taskId, string title);
-        internal void UpdateTaskDescription(string userEmail, int taskId, string description);
-        internal void UpdateOrdinal(int columnOrdinal);
-        internal void validateAssignee(string userEmail, int taskId);
-        internal Column AddColumn(Column column);
+        //members 
+        string Name { get; set; }
+        int Ordinal { get; set; }
+        int Limit { get; set; }
+
+        //methods
+        void Persist();
+        void AddTask(ITask task);
+        void AddTasks(IList<ITask> tasks);
+        ITask GetTask(int taskId);
+        IList<ITask> GetTasks();
+        void AssignTask(string userEmail, int taskId, string assignee);
+        void UpdateTaskDueDate(string userEmail, int taskId, DateTime DueDate);
+        void UpdateTaskTitle(string userEmail, int taskId, string title);
+        void UpdateTaskDescription(string userEmail, int taskId, string description);
+        ITask RemoveTask(string userEmail, int taskId);
     }
 }

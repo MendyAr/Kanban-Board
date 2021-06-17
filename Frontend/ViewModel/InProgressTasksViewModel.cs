@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         TaskModel _selectedTask;
 
         public string Title { get => "In progress Tasks"; }
-        private string ID 
+        public string ID 
         { 
             get 
             {
@@ -25,7 +25,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        private string CreationTime
+        public string CreationTime
         {
             get
             {
@@ -40,7 +40,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        private string Description
+        public string Description
         {
             get
             {
@@ -55,7 +55,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        private string DueDate
+        public string DueDate
         {
             get
             {
@@ -70,7 +70,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        private string EmailAssignee
+        public string EmailAssignee
         {
             get
             {

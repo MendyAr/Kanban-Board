@@ -1,5 +1,6 @@
 ﻿using IntroSE.Kanban.Backend.DataLayer;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {

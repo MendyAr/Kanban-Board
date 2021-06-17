@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
-        
+
         public string Message
         {
             get => _message;
@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         public BoardModel Board { get => _board; }
 
-        public AddingNewTaskViewModel(BoardModel board) : base(board.Controller)
+        public AddingNewTaskViewModel(BoardModel board) : base(board.User.Controller)
         {
             this._board = board;
         }
@@ -36,7 +36,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 Controller.AddTask(_board, Title, Description, DueDate);
                 Message = $" The Task '{Title}' had been created successfully";
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Message = $"Fail to create task because {e.Message}";
             }

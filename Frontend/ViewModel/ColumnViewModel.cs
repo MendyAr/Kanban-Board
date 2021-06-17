@@ -1,27 +1,16 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class ColumnViewModel : ViewModelObject
+    class ColumnViewModel : NotifiableObject
     {
 
         private ColumnModel _column;
-        private ObservableCollection<TaskModel> _tasks;
-        
         private TaskModel _selectedTask;
 
         private bool _enableForward;
-        private string _message;
         private string _filter;
 
         public ColumnModel Column { get => _column; set => _column = value; }
-        public ObservableCollection<TaskModel> Tasks { get => _tasks; set => _tasks = value; }
 
         public TaskModel SelectedTask
         {
@@ -33,16 +22,6 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             {
                 _selectedTask = value;
                 EnableForward = value != null;
-            }
-        }
-
-        public string Message
-        {
-            get => _message;
-            set
-            {
-                this._message = value;
-                RaisePropertyChanged("Message");
             }
         }
 
@@ -65,12 +44,14 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 FilterContent();
             }
         }
+        // constructor
 
-    public ColumnViewModel(ColumnModel column) : base(column.Controller)
+        public ColumnViewModel(ColumnModel column)
         {
-            this.Column = column;
-            Tasks = Column.GetTasks();
+            this._column = column;
         }
+
+        //  methods
 
         public void AdvanceTask()
         {
@@ -82,9 +63,9 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             return SelectedTask;
         }
 
-        private void FilterContent() 
-        { 
-        
+        private void FilterContent()
+        {
+
         }
     }
 

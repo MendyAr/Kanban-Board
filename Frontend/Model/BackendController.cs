@@ -171,7 +171,7 @@ namespace IntroSE.Kanban.Frontend.Model
 
         public BoardModel AddBoard(UserModel user, string newBoardName)
         {
-            Response<SBoard> res =(Response<SBoard>) Service.AddBoard(user.Email, newBoardName);
+            Response<SBoard> res = (Response<SBoard>)Service.AddBoard(user.Email, newBoardName);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
@@ -184,12 +184,12 @@ namespace IntroSE.Kanban.Frontend.Model
 
         internal BoardModel JoinBoard(UserModel user, string creatorEmail, string boardName)
         {
-            Response <SBoard> res= (Response<SBoard>) Service.JoinBoard(user.Email, creatorEmail, boardName);
+            Response<SBoard> res = (Response<SBoard>)Service.JoinBoard(user.Email, creatorEmail, boardName);
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
             }
-            return new BoardModel(user,res.Value);
+            return new BoardModel(user, res.Value);
         }
 
         internal void RemoveBoard(string userEmail, string creatorEmail, string boardName)
@@ -201,10 +201,10 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        internal IList<TaskModel> GetInProgressTasks(string userEmail,BackendController controller)
+        internal IList<TaskModel> GetInProgressTasks(string userEmail, BackendController controller)
         {
             Response<IList<STask>> res = Service.InProgressTasks(userEmail);
-            
+
             if (res.ErrorOccured)
             {
                 throw new Exception(res.ErrorMessage);
@@ -214,7 +214,7 @@ namespace IntroSE.Kanban.Frontend.Model
                 IList<TaskModel> tasks = new List<TaskModel>();
                 foreach (STask s_task in res.Value)
                 {
-                    tasks.Add(new TaskModel(s_task,controller));
+                    tasks.Add(new TaskModel(s_task));
                 }
                 return tasks;
             }
@@ -253,7 +253,7 @@ namespace IntroSE.Kanban.Frontend.Model
             if (response.ErrorOccured)
                 throw new Exception(response.ErrorMessage);
 
-          
+
         }
 
         internal IList<string> GetBetterBoardNames(string email)
@@ -299,12 +299,14 @@ namespace IntroSE.Kanban.Frontend.Model
             return columns;
         }
 
-        internal ObservableCollection<TaskModel> GetColumnTasks(ColumnModel column)
+        internal List<TaskModel> GetColumnTasks(ColumnModel column)
         {
-            ObservableCollection<TaskModel> tasks = new ObservableCollection<TaskModel>();
+            List<TaskModel> tasks = new List<TaskModel>();
             Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.BoardName, column.Ordinal);
             if (tasksRes.ErrorOccured)
+            {
                 throw new Exception(tasksRes.ErrorMessage);
+            }
             foreach (STask sTask in tasksRes.Value)
             {
                 tasks.Add(new TaskModel(column, sTask));

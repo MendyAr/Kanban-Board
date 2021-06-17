@@ -52,6 +52,29 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
 
         void IBoard.Persist()
         {
+            foreach (IColumn column in _columns)
+            {
+                try
+                {
+                    column.Persist();
+                }
+                catch (InvalidOperationException)
+                {
+                    for (int i = column.Ordinal - 1; i >= 0; i++)
+                    {
+                        _dBoard.RemoveColumn(i);
+                    }
+                    throw new InvalidOperationException();
+                }
+                catch (Exception)
+                {
+                    for (int i = column.Ordinal - 1; i >= 0; i++)
+                    {
+                        _dBoard.RemoveColumn(i);
+                    }
+                    throw new Exception();
+                }
+            }
             _dBoard.Insert();
             _dBoard.Persist = true;
         }

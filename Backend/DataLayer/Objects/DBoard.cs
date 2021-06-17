@@ -11,12 +11,13 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         private readonly string _creatorEmail;
         private string _boardName;
-        private IList<DColumn> _columns;
+        private List<DColumn> _columns;
         private HashSet<string> _members;
         private BoardMemberController _boardMemberController;
 
         private const string COL_BOARD_NAME = "Name";
         private const string COL_CREATOR_EMAIL = "Creator";
+        private const string COLUMN_TABLE_NAME = "Column";
 
 
         internal string CreatorEmail { get => _creatorEmail;}
@@ -31,7 +32,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 _boardName = value;
             } }
 
-        internal IList<DColumn> Columns { get => _columns; set => _columns = value; }
+        internal List<DColumn> Columns { get => _columns; set => _columns = value; }
 
         internal HashSet<string> Members { get => _members; set => _members = value; }
 
@@ -40,7 +41,7 @@ namespace IntroSE.Kanban.Backend.DataLayer
         {
             this._creatorEmail = creatorEmail;
             this._boardName = boardName;
-            _columns = new DColumn[3];
+            _columns = new List<DColumn>();
             _members = new HashSet<string>();
             _boardMemberController = new BoardMemberController();
         }
@@ -48,7 +49,12 @@ namespace IntroSE.Kanban.Backend.DataLayer
         //methods
         internal int numberOfTasks()
         {
-            return _columns[0].Tasks.Count + _columns[1].Tasks.Count + _columns[2].Tasks.Count;
+            int output = 0;
+            foreach (DColumn column in _columns)
+            {
+                output = output + column.Tasks.Count;
+            }
+            return output;
         }
 
         internal void AddMember (string memberEmail)
@@ -59,12 +65,31 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         internal void RemoveColumn(int columnOrdinal)
         {
-            foreach (DColumn column in _columns)
+            string var1 = "boardCreator";
+            string var2 = "boardName";
+            string var3 = "Ordinal";
+
+            using (var connection = new SQLiteConnection(_connectionString))
             {
-                if(column.Ordinal == columnOrdinal)
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"DELETE FROM {COLUMN_TABLE_NAME} WHERE ({var1}= @{var1} AND {var2}=@{var2} AND {var3}=@{var3})";
+                command.Parameters.Add(new SQLiteParameter(var1, CreatorEmail));
+                command.Parameters.Add(new SQLiteParameter(var2, BoardName));
+                command.Parameters.Add(new SQLiteParameter(var3, columnOrdinal));
+                try
                 {
-                    column.Remove();
-                    break;
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    log.Error($"Failed to delete '{Id}', tried command: {command.CommandText},\n" +
+                        $"the SQLite exception massage was: {e.Message}");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
                 }
             }
         }

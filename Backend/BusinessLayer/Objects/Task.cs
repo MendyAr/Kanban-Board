@@ -4,11 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
-<<<<<<< HEAD
     internal class Task : ITask
-=======
-    internal class Task 
->>>>>>> initialize tests
     {
         private const int MIN_TITLE_LENGTH =  1;
         private const int MAX_TITLE_LENGTH = 50;
@@ -52,11 +48,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 _description = value;
             }
         }
-<<<<<<< HEAD
         string ITask.Assignee { get => _assignee; 
-=======
-        internal string Assignee { get => assignee; 
->>>>>>> initialize tests
             set 
             {
                 dTask.Assignee = value;

@@ -11,6 +11,8 @@ namespace IntroSE.Kanban.Tests
         private IBoard board;
         private Mock<IColumn> ColumnA;
         private Mock<IColumn> ColumnB;
+        private Mock<ITask> TaskA;
+        private Mock<ITask> TaskB;
 
         [SetUp]
         public void Setup()
@@ -18,6 +20,8 @@ namespace IntroSE.Kanban.Tests
             board = new Board("creator", "name");
             ColumnA = new Mock<IColumn>();
             ColumnB = new Mock<IColumn>();
+            TaskA = new Mock<ITask>();
+            TaskB = new Mock<ITask>();
         }
 
         [TestCase(0)]
@@ -205,6 +209,56 @@ namespace IntroSE.Kanban.Tests
                 Assert.Pass();
             }
             Assert.Fail($"Moving Column with tasks should throw exception");
+        }
+
+        [Test]
+        public void GetTask_InRange_Success()
+        {
+            //arrange
+            ColumnA.SetupGet(m => m.Ordinal).Returns(1);
+            TaskA.SetupGet(m => m.ID).Returns(0);
+            TaskA.SetupGet(m => m.Assignee).Returns("assignee1");
+            ColumnA.Setup(m => m.GetTask(0)).Returns(TaskA.Object);
+            board.AddColumn(ColumnA.Object);
+            board.AddTask(TaskA.Object);
+            board.AdvanceTask("assignee1", 0, 0);
+            ITask returnedTask = null;
+            //act
+            try
+            {
+                returnedTask = board.GetTask(0);
+            }
+            //assert
+            catch (Exception)
+            {
+                Assert.Fail("Request should have returned task but exception thrown");
+            }
+            Assert.AreEqual(TaskA.Object, returnedTask, "Returned different Task");
+        }
+
+        [TestCase(-100)]
+        [TestCase(-1)]
+        [TestCase(2)]
+        [TestCase(300)]
+        public void GetTask_OutOfRange_Fail(int taskID)
+        {
+            //arrange
+            TaskA.SetupGet(m => m.ID).Returns(0);
+            TaskB.SetupGet(m => m.ID).Returns(1);
+            board.AddTask(TaskA.Object);
+            board.AddTask(TaskB.Object);
+            ITask returnedTask = null;
+            //act
+            try
+            {
+                returnedTask = board.GetTask(taskID);
+            }
+            //assert
+            catch (Exception)
+            {
+                Assert.Pass();
+            }
+            Assert.Fail($"When requesting task with ID {taskID} but board has tasks with IDs 0-{board.TaskCount - 1} should throw exception");
         }
     }
 }

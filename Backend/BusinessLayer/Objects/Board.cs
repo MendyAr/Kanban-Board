@@ -238,7 +238,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <exception cref="IndexOutOfRangeException">thrown if the task does not exists in the board</exception>
         ITask IBoard.GetTask(int taskID)
         {
-            if (taskID >= _taskIdCounter)
+            if (taskID >= _taskIdCounter || taskID < 0)
             {
                 throw new IndexOutOfRangeException($"No task with ID {taskID} in board");
             }

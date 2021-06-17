@@ -48,11 +48,6 @@ namespace IntroSE.Kanban.Frontend.View
             viewModel.CreateBoard();
         }
 
-        /*
-        private void In_Progress_Tasks_Click()
-        {
-        }
-        */
 
         private void In_Progress_Tasks_Click(object sender, RoutedEventArgs e)
         {

@@ -36,6 +36,7 @@
             <StackPanel Orientation="Vertical">
                 <Button Content="Select Board" Click="Select_Board_Click" ></Button>
                 <Button Content="Logout" Click="Logout_Click"/>
+                <Button Content="In Proggress" Click="In_Progress_Tasks_Click"/>
                 <Label Content="{Binding Path=Message, Mode=OneWay}" Foreground="Red"/>
             </StackPanel>
         </Grid>

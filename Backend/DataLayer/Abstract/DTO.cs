@@ -117,11 +117,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                 }
 
             }
-            if (res <= 0)
-            {
-                log.Error($"SQLite Update query in table '{_tableName}' returned {res}.");
-                throw new Exception("The data didn't update correctly");
-            }
         }
 
         protected void Update(string attributeName, long attributeValue)
@@ -156,11 +151,6 @@ namespace IntroSE.Kanban.Backend.DataLayer
                     if (errorOcurred)
                         throw new InvalidOperationException();
                 }
-            }
-            if (res <= 0)
-            {
-                log.Error($"SQLite Update query in table '{_tableName}' returned {res}.");
-                throw new Exception("The data didn't update correctly");
             }
         }
 

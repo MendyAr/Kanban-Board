@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DBoard = IntroSE.Kanban.Backend.DataLayer.DBoard;
 using DColumn= IntroSE.Kanban.Backend.DataLayer.DColumn;
 
+[assembly: InternalsVisibleTo("IntroSE.Kanban.Tests")]
 namespace IntroSE.Kanban.Backend.BusinessLayer
 {
     /// <summary>

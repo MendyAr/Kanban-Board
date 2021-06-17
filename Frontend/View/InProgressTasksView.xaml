@@ -21,7 +21,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Label Content="{Binding Path=Id, Mode=OneWay}"/>
+            <Label Content="{Binding Path=ID, Mode=OneWay}"/>
             <Label Content="{Binding Path=CreationTime, Mode=OneWay}"/>
             <Label Content="{Binding Path=Description, Mode=OneWay}"/>
             <Label Content="{Binding Path=DueDate, Mode=OneWay}"/>

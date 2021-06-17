@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class TaskViewModel : ViewModelObject
+    class TaskViewModel :   NotifiableObject
     {
-        public TaskViewModel(TaskModel task) : base(task.Controller)
+        public TaskViewModel(TaskModel task) 
         {
         }
     }

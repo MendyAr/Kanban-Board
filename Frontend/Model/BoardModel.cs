@@ -9,7 +9,7 @@ using SBoard = IntroSE.Kanban.Backend.ServiceLayer.Board;
 
 namespace IntroSE.Kanban.Frontend.Model
 {
-    public class BoardModel : NotifiableModelObject
+    public class BoardModel : NotifiableObject
     {
         private UserModel _user;
         private ObservableCollection<ColumnModel> columns;
@@ -19,10 +19,12 @@ namespace IntroSE.Kanban.Frontend.Model
         private int _columnCount;
         private int _taskCount;
 
+        private string _message;
+
         public string FullName { get => CreatorEmail + " : " + BoardName; }
 
         public UserModel User { get => _user; }
-        
+
         public ObservableCollection<ColumnModel> Columns
         {
             get => columns;
@@ -69,40 +71,42 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public BoardModel(UserModel user, SBoard sBoard) : base(user.Controller)
+        public string Message
+        {
+            get => _message;
+            set
+            {
+                _message = value;
+                RaisePropertyChanged("Message");
+            }
+        }
+
+        // constructor
+        public BoardModel(UserModel user, SBoard sBoard)
         {
             this._user = user;
             this._creatorEmail = sBoard.CreatorEmail;
             this._name = sBoard.Name;
             this._columnCount = sBoard.ColumnCount;
             this._taskCount = sBoard.TaskCount;
-            Columns = Controller.GetBoardColumns(this);
-            Columns.CollectionChanged += HandleChange;
+            Columns = User.Controller.GetBoardColumns(this);
         }
 
+        // methods
         public void AddColumn(int newColumnOrdinal, string newColumnName)
         {
-            Controller.AddColumn(User.Email, CreatorEmail, BoardName, newColumnOrdinal, newColumnName);
+            User.Controller.AddColumn(User.Email, CreatorEmail, BoardName, newColumnOrdinal, newColumnName);
             ColumnCount++;
-            Columns = Controller.GetBoardColumns(this);
+            Columns = User.Controller.GetBoardColumns(this);
             RaisePropertyChanged("Column");
         }
 
         public void DeleteColumn(int columnOrdinal)
         {
-            Controller.RemoveColumn(User.Email, CreatorEmail, BoardName, columnOrdinal);
-            ColumnCount = ColumnCount - 1;
-            Columns = Controller.GetBoardColumns(this);
+            User.Controller.RemoveColumn(User.Email, CreatorEmail, BoardName, columnOrdinal);
+            ColumnCount--;
+            Columns = User.Controller.GetBoardColumns(this);
             RaisePropertyChanged("Column");
-        }
-
-        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                RaisePropertyChanged("Column");
-            }
-
         }
     }
 }

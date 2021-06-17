@@ -27,7 +27,7 @@
             <TextBox Text="{Binding Path=Title, Mode=OneWayToSource}"  Height="auto" Width="auto" Grid.Column="1"/>
         </Grid>
 
-       
+
 
         <!-- Description -->
         <Grid Grid.Row="1" Margin="10">

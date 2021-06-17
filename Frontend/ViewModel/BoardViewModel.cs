@@ -1,36 +1,22 @@
 ﻿using IntroSE.Kanban.Frontend.Commands;
 using IntroSE.Kanban.Frontend.Model;
-using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    public class BoardViewModel : ViewModelObject
+    public class BoardViewModel : NotifiableObject
     {
 
         private BoardModel board;
-        private ObservableCollection<ColumnModel> _columns;
+        private ColumnModel _selectedColumn;
 
         private string _message;
-        private ColumnModel _selectedColumn;
         private string _newColumnName;
         private string _newColumnOrdinal;
         private bool _enableForward;
 
         public BoardModel Board { get => board; set => board = value; }
 
-        public string Message
-        {
-            get => _message;
-            set
-            {
-                this._message = value;
-                RaisePropertyChanged("Message");
-            }
-        }
-
-        public ColumnModel SelectedColumn 
+        public ColumnModel SelectedColumn
         {
             get
             {
@@ -43,9 +29,19 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
+        public string Message
+        {
+            get => _message;
+            set
+            {
+                this._message = value;
+                RaisePropertyChanged("Message");
+            }
+        }
+
         public string NewColumnName { get => _newColumnName; set => _newColumnName = value; }
         public string NewColumnOrdinal { get => _newColumnOrdinal; set => _newColumnOrdinal = value; }
-        public bool EnableForward 
+        public bool EnableForward
         {
             get => _enableForward;
             private set
@@ -59,7 +55,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         public DeleteColumnCommand DeleteColumnCommand { get; } = new DeleteColumnCommand();
 
         // constructor
-        public BoardViewModel(BoardModel boardModel) : base(boardModel.Controller)
+        public BoardViewModel(BoardModel boardModel)
         {
             this.board = boardModel;
         }

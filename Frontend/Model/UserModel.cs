@@ -8,8 +8,10 @@ using SUser = IntroSE.Kanban.Backend.ServiceLayer.User;
 
 namespace IntroSE.Kanban.Frontend.Model
 {
-    public class UserModel : NotifiableModelObject
+    public class UserModel : NotifiableObject
     {
+        public BackendController Controller { get; }
+
         private string _email;
         public string Email
         {
@@ -21,8 +23,9 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public UserModel(BackendController controller, SUser sUser) : base(controller)
+        public UserModel(BackendController controller, SUser sUser)
         {
+            this.Controller = controller;
             this._email = sUser.Email;
         }
 

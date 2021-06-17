@@ -7,11 +7,12 @@ using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
 
 namespace IntroSE.Kanban.Frontend.Model
 {
-    public class TaskModel : NotifiableModelObject
+    public class TaskModel : NotifiableObject
     {
         private UserModel _user;
         private BoardModel _board;
         private ColumnModel _column;
+
         private int _id;
         private DateTime _creationTime;
         private string _title;
@@ -22,50 +23,62 @@ namespace IntroSE.Kanban.Frontend.Model
         public UserModel User { get => _user; }
         public BoardModel Board { get => _board; }
         public ColumnModel Column { get => _column; }
-        public int ID { get => _id;
+        public int ID
+        {
+            get => _id;
             set
             {
                 _id = value;
-                RaisePropertyChanged("TaskID");
+                RaisePropertyChanged("ID");
             }
         }
-        public DateTime CreationTime { get => _creationTime;
+        public DateTime CreationTime
+        {
+            get => _creationTime;
             set
             {
                 _creationTime = value;
-                RaisePropertyChanged("TaskCreationTime");
+                RaisePropertyChanged("CreationTime");
             }
         }
-        public string Title { get => _title;
+        public string Title
+        {
+            get => _title;
             set
             {
                 _title = value;
-                RaisePropertyChanged("TaskTitle");
+                RaisePropertyChanged("Title");
             }
         }
-        public string Description { get => _description;
+        public string Description
+        {
+            get => _description;
             set
             {
                 _description = value;
-                RaisePropertyChanged("TaskDescription");
+                RaisePropertyChanged("Description");
             }
         }
-        public DateTime DueDate { get => _dueDate;
+        public DateTime DueDate
+        {
+            get => _dueDate;
             set
             {
                 _dueDate = value;
-                RaisePropertyChanged("TaskDueDate");
+                RaisePropertyChanged("DueDate");
             }
         }
-        public string Assignee { get => _emailAssignee;
+        public string Assignee
+        {
+            get => _emailAssignee;
             set
             {
                 _emailAssignee = value;
-                RaisePropertyChanged("TaskAssignee");
+                RaisePropertyChanged("Assignee");
             }
         }
 
-        public TaskModel(ColumnModel column, STask sTask) : base(column.Controller)
+        public TaskModel(ColumnModel column, STask sTask)
         {
             this._user = column.User;
             this._board = column.Board;
@@ -78,7 +91,7 @@ namespace IntroSE.Kanban.Frontend.Model
             this._emailAssignee = sTask.emailAssignee;
         }
 
-        public TaskModel(STask sTask,BackendController backendController):base(backendController)
+        public TaskModel(STask sTask)
         {
             this.ID = sTask.Id;
             this.CreationTime = sTask.CreationTime;

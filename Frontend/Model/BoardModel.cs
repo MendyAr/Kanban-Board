@@ -91,6 +91,7 @@ namespace IntroSE.Kanban.Frontend.Model
         public void DeleteColumn(int columnOrdinal)
         {
             Controller.RemoveColumn(User.Email, CreatorEmail, BoardName, columnOrdinal);
+            ColumnCount = ColumnCount - 1;
             Columns = Controller.GetBoardColumns(this);
             RaisePropertyChanged("Column");
         }

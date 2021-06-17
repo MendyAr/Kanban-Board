@@ -65,8 +65,8 @@ namespace IntroSE.Kanban.Backend.DataLayer
 
         internal void RemoveColumn(int columnOrdinal)
         {
-            string var1 = "boardCreator";
-            string var2 = "boardName";
+            string var1 = "Creator";
+            string var2 = "Board";
             string var3 = "Ordinal";
 
             using (var connection = new SQLiteConnection(_connectionString))

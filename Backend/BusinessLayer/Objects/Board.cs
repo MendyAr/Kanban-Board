@@ -179,6 +179,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             IColumn column = _columns[columnOrdinal];
             _columns.RemoveAt(columnOrdinal);
             _columnCounter--;
+            _dBoard.RemoveColumn(columnOrdinal);
             if (columnOrdinal == 0)
             {
                 _columns[columnOrdinal].AddTasks(column.GetTasks());
@@ -188,10 +189,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 column.Ordinal = columnOrdinal - 1;
                 _columns[columnOrdinal - 1].AddTasks(column.GetTasks());
             }
-            _dBoard.RemoveColumn(columnOrdinal);
             while (columnOrdinal < _columnCounter)
             {
-                _columns[columnOrdinal++].Ordinal = columnOrdinal;
+                _columns[columnOrdinal].Ordinal = columnOrdinal;
+                columnOrdinal = columnOrdinal + 1;
             }
             return column;
         }

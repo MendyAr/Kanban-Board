@@ -390,7 +390,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             CheckMembership(userEmail, creatorEmail, boardName, "RemoveColumn");
             try
             {
-                boards[creatorEmail][boardName].RemoveColumn(columnOrdinal);
+                    boards[creatorEmail][boardName].RemoveColumn(columnOrdinal);
             }
             catch (ArgumentOutOfRangeException e)
             {

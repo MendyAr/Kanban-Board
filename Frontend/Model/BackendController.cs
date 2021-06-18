@@ -247,11 +247,13 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public void AddTask(BoardModel board, string title, string description, DateTime dueDate)
+        public TaskModel AddTask(BoardModel board, string title, string description, DateTime dueDate)
         {
             Response<STask> response = Service.AddTask(board.User.Email, board.CreatorEmail, board.BoardName, title, description, dueDate);
             if (response.ErrorOccured)
                 throw new Exception(response.ErrorMessage);
+
+            return new TaskModel(board.Columns[0],response.Value);
 
 
         }

@@ -1,18 +1,6 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
 using IntroSE.Kanban.Frontend.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace IntroSE.Kanban.Frontend.View
 {
@@ -22,36 +10,51 @@ namespace IntroSE.Kanban.Frontend.View
     public partial class Board : Window
     {
 
-        private BoardViewModel ViewModel;
+        private BoardViewModel viewModel;
         public Board(BoardModel board)
         {
             InitializeComponent();
-            this.ViewModel = new BoardViewModel(board);
-            this.DataContext = ViewModel;
+            this.viewModel = new BoardViewModel(board);
+            this.DataContext = viewModel;
         }
 
         private void Add_Task(object sender, RoutedEventArgs e)
         {
-            AddingNewTask newTask = new AddingNewTask(ViewModel.Board);
+            AddingTaskView newTask = new AddingTaskView(viewModel.Board);
             newTask.Show();
         }
 
         private void Show_Column(object sender, RoutedEventArgs e)
         {
-            ColumnModel column = ViewModel.GetColumn();
-            if(column != null)
+            ColumnModel columnModel = viewModel.GetSelectedColumn();
+            if (columnModel != null)
             {
-                ColumnView columnView = new ColumnView(column);
+                ColumnView columnView = new ColumnView(new ColumnViewModel(columnModel));
                 columnView.Show();
                 this.Close();
             }
         }
 
+        private void Add_Column(object sender, RoutedEventArgs e)
+        {
+            viewModel.AddColumn();
+        }
+
+        private void Delete_Column(object sender, RoutedEventArgs e)
+        {
+            viewModel.DeleteColumn();
+        }
+
         private void Roll_Back(object sender, RoutedEventArgs e)
         {
-            UserView userView = new UserView(ViewModel.Board.User);
+            UserView userView = new UserView(viewModel.Board.User);
             userView.Show();
             this.Close();
+        }
+
+        private void Refresh(object sender, RoutedEventArgs e)
+        {
+            viewModel.RefreshColumns();
         }
 
     }

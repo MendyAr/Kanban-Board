@@ -15,23 +15,25 @@
         <Button x:Name="Back" Click="Roll_Back"  Background="{x:Null}" BorderBrush="{x:Null}" Width="109" HorizontalAlignment="Left">
             <Image Source="\Images\back_button.png" Height="65" Width="84" RenderTransformOrigin="0.931,0.494" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Button>
-        <TextBox Text="{Binding Path=Column.Name, Mode=TwoWay}" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <ListBox HorizontalContentAlignment="Stretch" Height="204" ItemsSource="{Binding Path=Column.Tasks, Mode=TwoWay}" SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}">
+        <TextBox Text="{Binding Column.Name, Mode=TwoWay}" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <ListBox HorizontalContentAlignment="Stretch" Height="204" ItemsSource="{Binding Tasks, Mode=OneWay}" SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}">
             <ListBox.Template>
                 <ControlTemplate>
-                    <DockPanel LastChildFill="True">
-                        <Grid DockPanel.Dock="Top" Height="30">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="325"></ColumnDefinition>
-                                <ColumnDefinition Width="200"></ColumnDefinition>
-                                <ColumnDefinition Width="75"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" FontWeight="Bold" FontSize="14" Background="Gainsboro">Title</Label>
-                            <Label Grid.Column="1" FontWeight="Bold" FontSize="14" Background="Gainsboro">Assignee</Label>
-                            <Label Grid.Column="2" Margin="0,0,-125,0" FontWeight="Bold" FontSize="14" Background="Gainsboro">Due Date</Label>
-                        </Grid>
-                        <ItemsPresenter></ItemsPresenter>
-                    </DockPanel>
+                    <ScrollViewer>
+                        <DockPanel LastChildFill="True">
+                            <Grid DockPanel.Dock="Top" Height="30">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="325"></ColumnDefinition>
+                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                    <ColumnDefinition Width="75"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" FontWeight="Bold" FontSize="14" Background="Gainsboro">Title</Label>
+                                <Label Grid.Column="1" FontWeight="Bold" FontSize="14" Background="Gainsboro">Assignee</Label>
+                                <Label Grid.Column="2" Margin="0,0,-125,0" FontWeight="Bold" FontSize="14" Background="Gainsboro">Due Date</Label>
+                            </Grid>
+                            <ItemsPresenter></ItemsPresenter>
+                        </DockPanel>
+                    </ScrollViewer>
                 </ControlTemplate>
             </ListBox.Template>
             <ListBox.ItemTemplate>
@@ -43,7 +45,7 @@
                             <ColumnDefinition Width="150"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBox Text="{Binding Path=Title, Mode=TwoWay}" Grid.Column="0"></TextBox>
-                        <TextBox Text="{Binding Path=Assignee, Mode=TwoWay}" Grid.Column="1"></TextBox>
+                        <TextBox Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Grid.Column="1"></TextBox>
                         <TextBox Text="{Binding Path=DueDate, Mode=TwoWay}" Grid.Column="2"></TextBox>
                     </Grid>
                 </DataTemplate>
@@ -53,8 +55,10 @@
             <Label Content="Filter:" Width="103" FontSize="16"/>
             <TextBox Text="{Binding Path=Filter, Mode=OneWayToSource}" TextWrapping="Wrap" Width="230" FontSize="14" Background="{x:Null}"/>
         </StackPanel>
-        <Button Content="Advance Task" Height="28" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="Button_Click_Advance_Task" IsEnabled="{Binding Path=EnableForward, Mode=OneWay}"/>
+        <Button Content="Advance Task" Height="28" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="{Binding Path=EnableForward, Mode=OneWay}"
+                Command="{Binding AdvanceTaskCommand}"
+                CommandParameter="{Binding}"/>
         <Button Content="Show Task" Click="Button_Click_Show_Task" Height="28" IsEnabled="{Binding Path=EnableForward, Mode=OneWay}"/>
-        <TextBox Text="{Binding Column.Board.Message}" TextWrapping="Wrap" Width="800" Height="40" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <TextBox Text="{Binding Message, Mode=OneWay}" TextWrapping="Wrap" Width="800" Height="40" Background="{x:Null}" BorderBrush="{x:Null}"/>
     </StackPanel>
 </Window>

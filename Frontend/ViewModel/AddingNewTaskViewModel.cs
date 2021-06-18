@@ -1,15 +1,24 @@
-﻿using IntroSE.Kanban.Frontend.Model;
+﻿using IntroSE.Kanban.Frontend.Commands;
+using IntroSE.Kanban.Frontend.Model;
 using System;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    public class AddingNewTaskViewModel : ViewModelObject
+    public class AddingTaskViewModel : NotifiableObject
     {
-        private string _message;
         private BoardModel _board;
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime DueDate { get; set; }
+
+        private string _title;
+        private string _description;
+        private DateTime _dueDate;
+
+        private string _message;
+
+        public BoardModel Board { get => _board; }
+
+        public string Title { get => _title; set => _title = value; }
+        public string Description { get => _description; set => _description = value; }
+        public DateTime DueDate { get => _dueDate; set => _dueDate = value; }
 
         public string Message
         {
@@ -21,26 +30,12 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public BoardModel Board { get => _board; }
+        public AddTaskCommand AddTaskCommand { get; } = new AddTaskCommand();
 
-        public AddingNewTaskViewModel(BoardModel board) : base(board.User.Controller)
+        public AddingTaskViewModel(BoardModel boardModel)
         {
-            this._board = board;
+            this._board = boardModel;
         }
 
-        internal void AddTask()
-        {
-            try
-            {
-                Message = "";
-                TaskModel task= Controller.AddTask(_board, Title, Description, DueDate);
-                Board.Columns[0].Tasks.Add(task);
-                Message = $" The Task '{Title}' had been created successfully";
-            }
-            catch (Exception e)
-            {
-                Message = $"Fail to create task because {e.Message}";
-            }
-        }
     }
 }

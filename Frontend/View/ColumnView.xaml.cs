@@ -1,18 +1,5 @@
-﻿using IntroSE.Kanban.Frontend.Model;
-using IntroSE.Kanban.Frontend.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IntroSE.Kanban.Frontend.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace IntroSE.Kanban.Frontend.View
 {
@@ -23,10 +10,10 @@ namespace IntroSE.Kanban.Frontend.View
     {
 
         private ColumnViewModel viewModel;
-        public ColumnView(ColumnModel columnModel)
+        public ColumnView(ColumnViewModel columnViewModel)
         {
             InitializeComponent();
-            this.viewModel = new ColumnViewModel(columnModel);
+            this.viewModel = columnViewModel;
             this.DataContext = viewModel;
         }
 
@@ -37,14 +24,9 @@ namespace IntroSE.Kanban.Frontend.View
             this.Close();
         }
 
-        private void Button_Click_Advance_Task(object sender, RoutedEventArgs e)
-        {
-            viewModel.AdvanceTask();
-        }
-
         private void Button_Click_Show_Task(object sender, RoutedEventArgs e)
         {
-            TaskView taskView = new TaskView(viewModel.getSelectedTask());
+            TaskView taskView = new TaskView(new TaskViewModel(viewModel.GetSelectedTask()));
             if (taskView != null)
             {
                 taskView.Show();

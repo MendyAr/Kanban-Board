@@ -7,6 +7,8 @@ using SUser = IntroSE.Kanban.Backend.ServiceLayer.User;
 using SBoard = IntroSE.Kanban.Backend.ServiceLayer.Board;
 using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;
 using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
+using System.Data.Entity.Migrations.Model;
+
 namespace IntroSE.Kanban.Frontend.Model
 {
     public class BackendController
@@ -286,9 +288,9 @@ namespace IntroSE.Kanban.Frontend.Model
             return boards;
         }
 
-        internal ObservableCollection<ColumnModel> GetBoardColumns(BoardModel board)
+        internal List<ColumnModel> GetBoardColumns(BoardModel board)
         {
-            ObservableCollection<ColumnModel> columns = new ObservableCollection<ColumnModel>();
+            List<ColumnModel> columns = new List<ColumnModel>();
             for (int i = 0; i < board.ColumnCount; i++)
             {
                 Response<SColumn> columnRes = Service.GetSColumn(board.User.Email, board.CreatorEmail, board.BoardName, i);

@@ -1,9 +1,5 @@
 ﻿using IntroSE.Kanban.Frontend.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace IntroSE.Kanban.Frontend.Commands
@@ -22,7 +18,8 @@ namespace IntroSE.Kanban.Frontend.Commands
             var boardViewModel = parameter as BoardViewModel;
             try
             {
-                boardViewModel.Board.DeleteColumn(boardViewModel.SelectedColumn.Ordinal);
+                boardViewModel.Board.DeleteColumn(boardViewModel.SelectedColumn.ordinal);
+                boardViewModel.RefreshColumns();
                 boardViewModel.Message = "Column deleted successfully!";
             }
             catch (Exception e)

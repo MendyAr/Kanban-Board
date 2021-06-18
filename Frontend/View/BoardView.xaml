@@ -18,12 +18,12 @@
             </Button>
             <StackPanel Orientation="Horizontal" Height="43" Width="564">
                 <Label Content="Board name:" FontWeight="Bold" FontSize="16" Height="37" Width="109"/>
-                <Label Content="{Binding Path=Board.BoardName, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="34" Width="190"/>
+                <Label Content="{Binding BoardName, Mode=OneTime}" x:Name="label"  FontWeight="Bold" FontSize="16" Height="34" Width="190"/>
                 <Label Content="Creator:" FontWeight="Bold" FontSize="16" Height="34" Width="77"/>
-                <Label Content="{Binding Path=Board.CreatorEmail, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="35" Width="173"/>
+                <Label Content="{Binding CreatorEmail, Mode=OneTime}" FontWeight="Bold" FontSize="16" Height="35" Width="173"/>
             </StackPanel>
 
-            <ListBox HorizontalContentAlignment="Stretch" Height="156" ItemsSource="{Binding Path=Board.Columns, Mode=TwoWay}" SelectedItem="{Binding SelectedColumn, Mode=OneWayToSource}">
+            <ListBox HorizontalContentAlignment="Stretch" Height="188" ItemsSource="{Binding Columns, Mode=OneWay}" SelectedItem="{Binding SelectedColumn, Mode=OneWayToSource}">
                 <ListBox.Template>
                     <ControlTemplate>
                         <ScrollViewer>
@@ -58,22 +58,21 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Grid Height="159" Width="740">
-                <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="127,8,0,0" VerticalAlignment="Top" Width="79" 
-                        Command="{Binding DeleteColumnCommand}"
-                        CommandParameter="{Binding}"
-                        IsEnabled="{Binding EnableForward, Mode=OneWay}"/>
+            <Grid Height="120" Width="764">
+                <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="127,8,0,0" VerticalAlignment="Top" Width="79" IsEnabled="{Binding EnableForward, Mode=OneWay}"
+                    Command="{Binding DeleteColumnCommand}"
+                    CommandParameter="{Binding}"/>
                 <Button Content="Show" HorizontalAlignment="Left" Height="47" Margin="0,8,0,0" VerticalAlignment="Top" Width="80" Click="Show_Column" IsEnabled="{Binding EnableForward, Mode=OneWay}"/>
                 <Button Content="Add Column" HorizontalAlignment="Left" Height="47" Margin="383,8,0,0" VerticalAlignment="Top" Width="80"
                         Command="{Binding AddColumnCommand}"
-                        CommandParameter="{Binding}"
-                        />
+                        CommandParameter="{Binding}"/>
                 <TextBox HorizontalAlignment="Left" Height="25" Margin="488,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnName, Mode=OneWayToSource}"/>
                 <Label Content="Insert a name for the new column:" HorizontalAlignment="Left" Height="34" Margin="488,0,0,0" VerticalAlignment="Top" Width="199"/>
                 <Button Content="Add Task" HorizontalAlignment="Left" Height="47" Margin="260,8,0,0" VerticalAlignment="Top" Width="79" Click="Add_Task"/>
-                <TextBox HorizontalAlignment="Left" Height="26" Margin="488,110,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnOrdinal, Mode=OneWayToSource}"/>
-                <Label Content="Insert ordinal:" HorizontalAlignment="Left" Height="34" Margin="488,78,0,0" VerticalAlignment="Top" Width="199"/>
-                <TextBlock Text="{Binding Board.Message, Mode=OneWay}" TextWrapping="Wrap" Foreground="Red" Margin="0,67,277,18"/>
+                <TextBox HorizontalAlignment="Left" Height="26" Margin="488,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnOrdinal, Mode=OneWayToSource}"/>
+                <Label Content="Insert ordinal:" HorizontalAlignment="Left" Height="34" Margin="488,58,0,0" VerticalAlignment="Top" Width="199"/>
+                <TextBlock Text="{Binding Message, Mode=OneWay}" TextWrapping="Wrap" Foreground="Red" Margin="22,62,301,10"/>
+                <Button Content="Refresh" HorizontalAlignment="Left" Height="34" Margin="710,0,0,0" VerticalAlignment="Top" Width="44" Click="Refresh"/>
             </Grid>
         </StackPanel>
     </Grid>

@@ -1,16 +1,30 @@
-﻿using IntroSE.Kanban.Frontend.Model;
+﻿using IntroSE.Kanban.Frontend.Commands;
+using IntroSE.Kanban.Frontend.Model;
+using System.Collections.ObjectModel;
+
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class ColumnViewModel : NotifiableObject
+    public class ColumnViewModel : NotifiableObject
     {
 
         private ColumnModel _column;
+        private ObservableCollection<TaskModel> _tasks;
         private TaskModel _selectedTask;
 
+        private string _message;
         private bool _enableForward;
-        private string _filter;
 
         public ColumnModel Column { get => _column; set => _column = value; }
+
+        public ObservableCollection<TaskModel> Tasks
+        {
+            get => _tasks;
+            set
+            {
+                _tasks = value;
+                RaisePropertyChanged("Tasks");
+            }
+        }
 
         public TaskModel SelectedTask
         {
@@ -25,6 +39,16 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
+        public string Message
+        {
+            get => _message;
+            set
+            {
+                _message = value;
+                RaisePropertyChanged("Message");
+            }
+        }
+
         public bool EnableForward
         {
             get => _enableForward;
@@ -35,37 +59,28 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public string Filter
-        {
-            get => _filter;
-            set
-            {
-                _filter = value;
-                FilterContent();
-            }
-        }
+        public AdvanceTaskCommand AdvanceTaskCommand { get; } = new AdvanceTaskCommand();
+
         // constructor
 
         public ColumnViewModel(ColumnModel column)
         {
             this._column = column;
+            RefreshTasks();
         }
 
         //  methods
 
-        public void AdvanceTask()
-        {
-
-        }
-
-        public TaskModel getSelectedTask()
+        public TaskModel GetSelectedTask()
         {
             return SelectedTask;
         }
 
-        private void FilterContent()
+        public void RefreshTasks()
         {
-
+            Tasks = new ObservableCollection<TaskModel>();
+            foreach (var task in Column.GetTasks())
+                Tasks.Add(task);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using IntroSE.Kanban.Frontend.Commands;
 using IntroSE.Kanban.Frontend.Model;
+using System.Collections.Generic;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
@@ -7,15 +8,27 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     {
 
         private BoardModel board;
+        private List<ColumnModel> _column;
         private ColumnModel _selectedColumn;
 
-        private string _message;
         private string _newColumnName;
         private string _newColumnOrdinal;
+        private string _message;
         private bool _enableForward;
 
-        public BoardModel Board { get => board; set => board = value; }
+        public BoardModel Board { get => board; }
+        public string BoardName { get => Board.BoardName; }
+        public string CreatorEmail { get => Board.CreatorEmail; }
 
+        public List<ColumnModel> Columns
+        {
+            get => _column;
+            set
+            {
+                _column = value;
+                RaisePropertyChanged("Columns");
+            }
+        }
         public ColumnModel SelectedColumn
         {
             get
@@ -29,6 +42,9 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
+        public string NewColumnName { get => _newColumnName; set => _newColumnName = value; }
+        public string NewColumnOrdinal { get => _newColumnOrdinal; set => _newColumnOrdinal = value; }
+
         public string Message
         {
             get => _message;
@@ -39,8 +55,6 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public string NewColumnName { get => _newColumnName; set => _newColumnName = value; }
-        public string NewColumnOrdinal { get => _newColumnOrdinal; set => _newColumnOrdinal = value; }
         public bool EnableForward
         {
             get => _enableForward;
@@ -52,18 +66,28 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         }
 
         public AddColumnCommand AddColumnCommand { get; } = new AddColumnCommand();
+
         public DeleteColumnCommand DeleteColumnCommand { get; } = new DeleteColumnCommand();
 
         // constructor
         public BoardViewModel(BoardModel boardModel)
         {
             this.board = boardModel;
+            RefreshColumns();
         }
 
 
         // methods
 
-        public ColumnModel GetColumn()
+        public void RefreshColumns()
+        {
+            List<ColumnModel> newColumns = new List<ColumnModel>();
+            foreach (var column in Board.GetColumn())
+                newColumns.Add(column);
+            Columns = newColumns;
+        }
+
+        public ColumnModel GetSelectedColumn()
         {
             return SelectedColumn;
         }

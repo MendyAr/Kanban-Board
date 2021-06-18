@@ -80,7 +80,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
                 }
                 else
                 {
-                    return SelectedTask.Assignee.ToString();
+                    return SelectedTask.EmailAssignee.ToString();
                 }
             }
         }

@@ -24,17 +24,21 @@ namespace IntroSE.Kanban.Frontend.Commands
         public void Execute(object parameter)
         {
             var boardViewModel = parameter as BoardViewModel;
-
             if (boardViewModel.NewColumnName == "")
             {
                 boardViewModel.Message = "Enter a name please";
+            }
+            else if (!int.TryParse(boardViewModel.NewColumnOrdinal, out int result))
+            {
+                boardViewModel.Message = "Enter a number please";
             }
             else
             {
                 try
                 {
-                    var newColumnOrdinal = int.Parse(boardViewModel.NewColumnOrdinal);
-                    boardViewModel.Board.AddColumn(newColumnOrdinal, boardViewModel.NewColumnName);
+                    boardViewModel.Board.AddColumn(result, boardViewModel.NewColumnName);
+                    boardViewModel.RefreshColumns();
+                    boardViewModel.Message = "Column added successfully!";
                 }
                 catch (Exception e)
                 {

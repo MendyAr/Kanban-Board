@@ -7,6 +7,8 @@ using SUser = IntroSE.Kanban.Backend.ServiceLayer.User;
 using SBoard = IntroSE.Kanban.Backend.ServiceLayer.Board;
 using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;
 using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
+using System.Data.Entity.Migrations.Model;
+
 namespace IntroSE.Kanban.Frontend.Model
 {
     public class BackendController
@@ -247,15 +249,14 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public TaskModel AddTask(BoardModel board, string title, string description, DateTime dueDate)
+        internal TaskModel AddTask(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
-            Response<STask> response = Service.AddTask(board.User.Email, board.CreatorEmail, board.BoardName, title, description, dueDate);
-            if (response.ErrorOccured)
-                throw new Exception(response.ErrorMessage);
-
-            return new TaskModel(board.Columns[0],response.Value);
-
-
+            Response<STask> res = Service.AddTask(userEmail, creatorEmail, boardName, title, description, dueDate);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+            return new TaskModel(res.Value);
         }
 
         internal IList<string> GetBetterBoardNames(string email)
@@ -286,9 +287,9 @@ namespace IntroSE.Kanban.Frontend.Model
             return boards;
         }
 
-        internal ObservableCollection<ColumnModel> GetBoardColumns(BoardModel board)
+        internal List<ColumnModel> GetBoardColumns(BoardModel board)
         {
-            ObservableCollection<ColumnModel> columns = new ObservableCollection<ColumnModel>();
+            List<ColumnModel> columns = new List<ColumnModel>();
             for (int i = 0; i < board.ColumnCount; i++)
             {
                 Response<SColumn> columnRes = Service.GetSColumn(board.User.Email, board.CreatorEmail, board.BoardName, i);
@@ -304,7 +305,7 @@ namespace IntroSE.Kanban.Frontend.Model
         internal List<TaskModel> GetColumnTasks(ColumnModel column)
         {
             List<TaskModel> tasks = new List<TaskModel>();
-            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.BoardName, column.Ordinal);
+            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.BoardName, column.ordinal);
             if (tasksRes.ErrorOccured)
             {
                 throw new Exception(tasksRes.ErrorMessage);

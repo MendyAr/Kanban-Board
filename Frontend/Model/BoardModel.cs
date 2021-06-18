@@ -52,9 +52,9 @@ namespace IntroSE.Kanban.Frontend.Model
             ColumnCount--;
         }
 
-        public void AddTask(string Title, string Description, DateTime DueDate)
+        public void AddTask(string title, string description, DateTime dueDate)
         {
-            User.Controller.AddTask(this, Title, Description, DueDate);
+            User.Controller.AddTask(User.Email, CreatorEmail, BoardName, title, description, dueDate);
         }
     }
 }

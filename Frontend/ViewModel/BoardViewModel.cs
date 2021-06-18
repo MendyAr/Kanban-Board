@@ -1,5 +1,5 @@
-﻿using IntroSE.Kanban.Frontend.Model;
-using System;
+﻿using IntroSE.Kanban.Frontend.Commands;
+using IntroSE.Kanban.Frontend.Model;
 using System.Collections.Generic;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
@@ -65,6 +65,10 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
+        public AddColumnCommand AddColumnCommand { get; } = new AddColumnCommand();
+
+        public DeleteColumnCommand DeleteColumnCommand { get; } = new DeleteColumnCommand();
+
         // constructor
         public BoardViewModel(BoardModel boardModel)
         {
@@ -86,45 +90,6 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         public ColumnModel GetSelectedColumn()
         {
             return SelectedColumn;
-        }
-
-        public void AddColumn()
-        {
-            if (NewColumnName == "")
-            {
-                Message = "Enter a name please";
-            }
-            else if (!int.TryParse(NewColumnOrdinal, out int result))
-            {
-                Message = "Enter a number please";
-            }
-            else
-            {
-                try
-                {
-                    Board.AddColumn(result, NewColumnName);
-                    RefreshColumns();
-                    Message = "Column added successfully!";
-                }
-                catch (Exception e)
-                {
-                    Message = e.Message;
-                }
-            }
-        }
-
-        public void DeleteColumn()
-        {
-            try
-            {
-                Board.DeleteColumn(SelectedColumn.ordinal);
-                RefreshColumns();
-                Message = "Column deleted successfully!";
-            }
-            catch (Exception e)
-            {
-                Message = "Failed to delete column. " + e.Message;
-            }
         }
 
     }

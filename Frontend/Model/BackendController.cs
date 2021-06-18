@@ -249,15 +249,14 @@ namespace IntroSE.Kanban.Frontend.Model
             }
         }
 
-        public TaskModel AddTask(BoardModel board, string title, string description, DateTime dueDate)
+        internal TaskModel AddTask(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
-            Response<STask> response = Service.AddTask(board.User.Email, board.CreatorEmail, board.BoardName, title, description, dueDate);
-            if (response.ErrorOccured)
-                throw new Exception(response.ErrorMessage);
-
-            return new TaskModel(board.Columns[0],response.Value);
-
-
+            Response<STask> res = Service.AddTask(userEmail, creatorEmail, boardName, title, description, dueDate);
+            if (res.ErrorOccured)
+            {
+                throw new Exception(res.ErrorMessage);
+            }
+            return new TaskModel(res.Value);
         }
 
         internal IList<string> GetBetterBoardNames(string email)
@@ -306,7 +305,7 @@ namespace IntroSE.Kanban.Frontend.Model
         internal List<TaskModel> GetColumnTasks(ColumnModel column)
         {
             List<TaskModel> tasks = new List<TaskModel>();
-            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.BoardName, column.Ordinal);
+            Response<IList<STask>> tasksRes = Service.GetColumn(column.User.Email, column.Board.CreatorEmail, column.Board.BoardName, column.ordinal);
             if (tasksRes.ErrorOccured)
             {
                 throw new Exception(tasksRes.ErrorMessage);

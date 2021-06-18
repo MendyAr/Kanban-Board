@@ -1,5 +1,4 @@
-﻿using IntroSE.Kanban.Frontend.Commands;
-using IntroSE.Kanban.Frontend.Model;
+﻿using IntroSE.Kanban.Frontend.Model;
 using System;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
@@ -30,12 +29,22 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public AddTaskCommand AddTaskCommand { get; } = new AddTaskCommand();
-
         public AddingTaskViewModel(BoardModel boardModel)
         {
             this._board = boardModel;
         }
 
+        public void AddTask()
+        {
+            try
+            {
+                Board.AddTask(Title, Description, DueDate);
+                Message = $"Task '{Title}' has added successfully!";
+            }
+            catch (Exception e)
+            {
+                Message = e.Message;
+            }
+        }
     }
 }

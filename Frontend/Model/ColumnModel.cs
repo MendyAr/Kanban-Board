@@ -1,46 +1,124 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
 using System;
+using System.Collections.Generic;
+using System.Windows;
+using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;
 
-namespace IntroSE.Kanban.Frontend.ViewModel
+namespace IntroSE.Kanban.Frontend.Model
 {
-    public class AddingNewTaskViewModel : ViewModelObject
+    public class ColumnModel : NotifiableObject
     {
-        private string _message;
+        private UserModel _user;
         private BoardModel _board;
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime DueDate { get; set; }
 
-        public string Message
-        {
-            get => _message;
-            set
-            {
-                _message = value;
-                RaisePropertyChanged("Message");
-            }
-        }
+        private string _name;
+        public int ordinal { get; private set; }
+        private int _limit;
 
+        public UserModel User { get => _user; }
         public BoardModel Board { get => _board; }
 
-        public AddingNewTaskViewModel(BoardModel board) : base(board.User.Controller)
+
+        public string Name
         {
-            this._board = board;
+            get => _name;
+            set
+            {
+                try
+                {
+                    User.Controller.RenameColumn(User.Email, Board.CreatorEmail, Board.BoardName, ordinal, value);
+                    _name = value;
+                    MessageBox.Show("Name changed successfully!");
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Cannot change name. " + e.Message);
+                }
+                RaisePropertyChanged("Name");
+            }
         }
 
-        internal void AddTask()
+        public string Ordinal
         {
-            try
+            get => ordinal.ToString();
+            set
             {
-                Message = "";
-                TaskModel task = Controller.AddTask(_board, Title, Description, DueDate);
-                Board.Columns[0].Tasks.Add(task);
-                Message = $" The Task '{Title}' had been created successfully";
-            }
-            catch (Exception e)
-            {
-                Message = $"Fail to create task because {e.Message}";
+                if (!int.TryParse(value, out int result))
+                {
+                    MessageBox.Show("Enter a number please");
+                }
+                else
+                {
+                    try
+                    {
+                        User.Controller.MoveColumn(User.Email, Board.CreatorEmail, Board.BoardName, ordinal, result - ordinal);
+                        ordinal = result;
+                        MessageBox.Show("Ordinal changed successfully!");
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Cannot change ordinal. " + e.Message);
+                    }
+                    RaisePropertyChanged("Ordinal");
+                }
+
             }
         }
+
+        public string Limit
+        {
+            get
+            {
+                if (_limit == -1)
+                    return "unlimited";
+                else
+                    return _limit.ToString();
+            }
+            set
+            {
+                if (value == "unlimited")
+                    value = "-1";
+                if (!int.TryParse(value, out int result))
+                {
+                    MessageBox.Show("Enter a number please");
+                }
+                else
+                {
+                    try
+                    {
+                        User.Controller.LimitColumn(User.Email, Board.CreatorEmail, Board.BoardName, ordinal, result);
+                        _limit = result;
+                        MessageBox.Show("Tasks limit changed successfully!");
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Cannot change limit. " + e.Message);
+                    }
+                }
+                RaisePropertyChanged("Limit");
+            }
+        }
+
+        public ColumnModel(BoardModel board, SColumn sColumn)
+        {
+            this._user = board.User;
+            this._board = board;
+            this._name = sColumn.Name;
+            this.ordinal = sColumn.Ordinal;
+            this._limit = sColumn.Limit;
+        }
+
+        // methods
+
+        public List<TaskModel> GetTasks()
+        {
+            return User.Controller.GetColumnTasks(this);
+        }
+
+        public void AdvanceTask(int taskID)
+        {
+            User.Controller.AdvanceTask(User.Email, Board.CreatorEmail, Board.BoardName, ordinal, taskID);
+        }
+
     }
 }

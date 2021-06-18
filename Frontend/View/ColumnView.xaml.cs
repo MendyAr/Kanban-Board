@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Frontend.View
 
         private void Button_Click_Show_Task(object sender, RoutedEventArgs e)
         {
-            TaskView taskView = new TaskView(new TaskViewModel(viewModel.GetSelectedTask()));
+            TaskView taskView = new TaskView(viewModel.GetSelectedTask());
             if (taskView != null)
             {
                 taskView.Show();

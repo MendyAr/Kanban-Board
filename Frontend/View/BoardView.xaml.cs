@@ -35,16 +35,6 @@ namespace IntroSE.Kanban.Frontend.View
             }
         }
 
-        private void Add_Column(object sender, RoutedEventArgs e)
-        {
-            viewModel.AddColumn();
-        }
-
-        private void Delete_Column(object sender, RoutedEventArgs e)
-        {
-            viewModel.DeleteColumn();
-        }
-
         private void Roll_Back(object sender, RoutedEventArgs e)
         {
             UserView userView = new UserView(viewModel.Board.User);

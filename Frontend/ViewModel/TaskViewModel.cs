@@ -1,16 +1,18 @@
 ﻿using IntroSE.Kanban.Frontend.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class TaskViewModel :   NotifiableObject
+    class TaskViewModel :  NotifiableObject
     {
-        public TaskViewModel(TaskModel task) 
+
+        private TaskModel _task;
+
+        public TaskModel Task { get => _task; set => _task = value; }
+
+        public TaskViewModel(TaskModel task)
         {
+            this._task = task;
         }
+
     }
 }

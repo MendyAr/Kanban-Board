@@ -59,9 +59,13 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Grid Height="120" Width="764">
-                <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="127,8,0,0" VerticalAlignment="Top" Width="79" Click="Delete_Column" IsEnabled="{Binding EnableForward, Mode=OneWay}"/>
+                <Button Content="Delete" HorizontalAlignment="Left" Height="47" Margin="127,8,0,0" VerticalAlignment="Top" Width="79" IsEnabled="{Binding EnableForward, Mode=OneWay}"
+                    Command="{Binding DeleteColumnCommand}"
+                    CommandParameter="{Binding}"/>
                 <Button Content="Show" HorizontalAlignment="Left" Height="47" Margin="0,8,0,0" VerticalAlignment="Top" Width="80" Click="Show_Column" IsEnabled="{Binding EnableForward, Mode=OneWay}"/>
-                <Button Content="Add Column" HorizontalAlignment="Left" Height="47" Margin="383,8,0,0" VerticalAlignment="Top" Width="80" Click="Add_Column"/>
+                <Button Content="Add Column" HorizontalAlignment="Left" Height="47" Margin="383,8,0,0" VerticalAlignment="Top" Width="80"
+                        Command="{Binding AddColumnCommand}"
+                        CommandParameter="{Binding}"/>
                 <TextBox HorizontalAlignment="Left" Height="25" Margin="488,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnName, Mode=OneWayToSource}"/>
                 <Label Content="Insert a name for the new column:" HorizontalAlignment="Left" Height="34" Margin="488,0,0,0" VerticalAlignment="Top" Width="199"/>
                 <Button Content="Add Task" HorizontalAlignment="Left" Height="47" Margin="260,8,0,0" VerticalAlignment="Top" Width="79" Click="Add_Task"/>

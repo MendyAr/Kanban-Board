@@ -22,10 +22,10 @@ namespace IntroSE.Kanban.Frontend.View
     public partial class InProgressTasksView : Window
     {
         InProgressTasksViewModel viewModel;
-        public InProgressTasksView(IList<TaskModel>tasks,BackendController controller)
+        public InProgressTasksView(IList<TaskModel>tasks)
         {
             InitializeComponent();
-            this.viewModel = new InProgressTasksViewModel(tasks,controller);
+            this.viewModel = new InProgressTasksViewModel(tasks);
             DataContext = viewModel;
         }
 

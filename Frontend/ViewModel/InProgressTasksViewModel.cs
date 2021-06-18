@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class InProgressTasksViewModel :ViewModelObject
+    class InProgressTasksViewModel : NotifiableObject
     {
         IList<TaskModel> _tasks;
         TaskModel _selectedTask;
@@ -100,7 +100,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         }
 
         public IList<TaskModel> Tasks { get => _tasks; }
-        public InProgressTasksViewModel(IList<TaskModel> tasks, BackendController controller) : base(controller)
+        public InProgressTasksViewModel(IList<TaskModel> tasks)
         {
             this._tasks = tasks;
         }

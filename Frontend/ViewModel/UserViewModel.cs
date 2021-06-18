@@ -7,7 +7,7 @@ using System.Collections.Specialized;
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
 
-    class UserViewModel : ViewModelObject
+    class UserViewModel : NotifiableObject
     {
         private UserModel _user;
         private string _message;
@@ -40,7 +40,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         internal void Logout()
         {
-            Controller.Logout(User);
+            User.Controller.Logout(User);
         }
 
         public string JoinBoardName
@@ -73,7 +73,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             Message = "";
             try
             {
-                BoardModel joindBoard = Controller.JoinBoard(User, JoinBoardCreator, JoinBoardName);
+                BoardModel joindBoard = User.Controller.JoinBoard(User, JoinBoardCreator, JoinBoardName);
                 Message = "You Joined the board " + JoinBoardName + " Successfully";
                 Boards.Add(joindBoard);
             }
@@ -88,7 +88,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             Message = "";
             try
             {
-                BoardModel board = Controller.AddBoard(User, NewBoardName);
+                BoardModel board = User.Controller.AddBoard(User, NewBoardName);
                 Message = $"You Created the board {NewBoardName} successfully";
                 Boards.Add(board);
             }
@@ -105,14 +105,14 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         public  IList<TaskModel> GetInProggress()
         {
-            IList<TaskModel> tasks= Controller.GetInProgressTasks(User.Email,Controller);
+            IList<TaskModel> tasks= User.Controller.GetInProgressTasks(User.Email, User.Controller);
 
             return tasks;
         }
 
         public ObservableCollection<BoardModel> Boards { get => _boards; private set => _boards=value; }
 
-        public UserViewModel(UserModel user,BackendController backendController):base(backendController)
+        public UserViewModel(UserModel user)
         {
             User = user;
             Boards = User.GetBoards();
@@ -120,19 +120,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
         }
 
         private void HandleBoardsChange(object sender, NotifyCollectionChangedEventArgs e)
-        {
-           /* //read more here: https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net/4279274#4279274
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (MessageModel y in e.OldItems)
-                {
-
-                    Controller.RemoveMessage(user.Email, y.Id);
-                }
-
-            }
-           */
-
+        { 
             RaisePropertyChanged("Boards");
         }
 

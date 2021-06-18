@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Frontend.View
         public UserView(UserModel user )
         {
             InitializeComponent();
-            this.viewModel = new UserViewModel(user,user.Controller);
+            this.viewModel = new UserViewModel(user);
             DataContext = viewModel;
 
         }
@@ -52,7 +52,7 @@ namespace IntroSE.Kanban.Frontend.View
         private void In_Progress_Tasks_Click(object sender, RoutedEventArgs e)
         {
             IList<TaskModel> tasks = viewModel.GetInProggress();
-            InProgressTasksView inProgress = new InProgressTasksView(tasks,viewModel.Controller);
+            InProgressTasksView inProgress = new InProgressTasksView(tasks);
             inProgress.Show();
 
         }

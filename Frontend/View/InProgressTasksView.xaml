@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         Title="InProgressTasksView" Height="450" Width="800">
     <Grid>
-
+        <Grid.Background>
+            <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>

@@ -13,23 +13,25 @@
             <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
         </StackPanel.Background>
         <Button x:Name="Back" Click="Roll_Back"  Background="{x:Null}" BorderBrush="{x:Null}" Width="109" HorizontalAlignment="Left">
-            <Image Source="\Images\back_button.png" Height="65" Width="84" RenderTransformOrigin="0.931,0.494" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Image Source="\Images\back_button.png" Height="75" Width="84" RenderTransformOrigin="0.931,0.494" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Button>
-        <TextBox Text="{Binding Column.Name, Mode=TwoWay}" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <ListBox HorizontalContentAlignment="Stretch" Height="204" ItemsSource="{Binding Tasks, Mode=OneWay}" SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}">
+        <TextBox Text="{Binding Column.Name, Mode=TwoWay}" Height="30" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <ListBox Name="TasksListBox" HorizontalContentAlignment="Stretch" Height="180" ItemsSource="{Binding Tasks, Mode=OneWay}" SelectedItem="{Binding SelectedTask, Mode=OneWayToSource}">
             <ListBox.Template>
                 <ControlTemplate>
                     <ScrollViewer>
                         <DockPanel LastChildFill="True">
                             <Grid DockPanel.Dock="Top" Height="30">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="325"></ColumnDefinition>
+                                    <ColumnDefinition Width="300"></ColumnDefinition>
                                     <ColumnDefinition Width="200"></ColumnDefinition>
-                                    <ColumnDefinition Width="75"></ColumnDefinition>
+                                    <ColumnDefinition Width="175"></ColumnDefinition>
+                                    <ColumnDefinition Width="95"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" FontWeight="Bold" FontSize="14" Background="Gainsboro">Title</Label>
-                                <Label Grid.Column="1" FontWeight="Bold" FontSize="14" Background="Gainsboro">Assignee</Label>
-                                <Label Grid.Column="2" Margin="0,0,-125,0" FontWeight="Bold" FontSize="14" Background="Gainsboro">Due Date</Label>
+                                <Label Grid.Column="0" FontWeight="Bold" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro">Title</Label>
+                                <Label Grid.Column="1" FontWeight="Bold" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro">Assignee</Label>
+                                <Label Grid.Column="2" FontWeight="Bold" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro">Due Date</Label>
+                                <Label Grid.Column="3" FontSize="12" HorizontalContentAlignment="Left" Background="Gainsboro">Selection Zone</Label>
                             </Grid>
                             <ItemsPresenter></ItemsPresenter>
                         </DockPanel>
@@ -40,25 +42,32 @@
                 <DataTemplate>
                     <Grid Margin="0,2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="325"></ColumnDefinition>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
                             <ColumnDefinition Width="200"></ColumnDefinition>
-                            <ColumnDefinition Width="150"></ColumnDefinition>
+                            <ColumnDefinition Width="175"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBox Text="{Binding Path=Title, Mode=TwoWay}" Grid.Column="0"></TextBox>
-                        <TextBox Text="{Binding Path=EmailAssignee, Mode=TwoWay}" Grid.Column="1"></TextBox>
-                        <TextBox Text="{Binding Path=DueDate, Mode=TwoWay}" Grid.Column="2"></TextBox>
+                        <TextBox Text="{Binding Path=EmailAssignee, Mode=TwoWay}" HorizontalContentAlignment="Center" Grid.Column="1"></TextBox>
+                        <TextBox Text="{Binding Path=DueDate, Mode=TwoWay}" HorizontalContentAlignment="Center" Background="{Binding DueDateBackgroundColor, Mode=OneWay}" Grid.Column="2"></TextBox>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="BorderThickness" Value="0.75"/>
+                    <Setter Property="BorderBrush" Value="{Binding AssigneeBorderColor, Mode=OneWay}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
         <StackPanel Height="29" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Label Content="Filter:" Width="103" FontSize="16"/>
+            <Label Content="Filter:" Width="54" FontSize="16" Background="{x:Null}"/>
             <TextBox Text="{Binding Path=Filter, Mode=OneWayToSource}" TextWrapping="Wrap" Width="230" FontSize="14" Background="{x:Null}"/>
+            <Button Content="Sort by Due Date" Click="Button_Click_Sort_by_Due_Date"  Height="28" Width="145"/>
         </StackPanel>
         <Button Content="Advance Task" Height="28" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="{Binding Path=EnableForward, Mode=OneWay}"
                 Command="{Binding AdvanceTaskCommand}"
                 CommandParameter="{Binding}"/>
         <Button Content="Show Task" Click="Button_Click_Show_Task" Height="28" IsEnabled="{Binding Path=EnableForward, Mode=OneWay}"/>
-        <TextBox Text="{Binding Message, Mode=OneWay}" TextWrapping="Wrap" Width="800" Height="40" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <TextBox Text="{Binding Message, Mode=OneWay}" Foreground="Red" HorizontalContentAlignment="Center" TextWrapping="Wrap" Width="800" Height="40" Background="{x:Null}" BorderBrush="{x:Null}"/>
     </StackPanel>
 </Window>

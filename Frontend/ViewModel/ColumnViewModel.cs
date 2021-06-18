@@ -1,6 +1,6 @@
 ﻿using IntroSE.Kanban.Frontend.Commands;
 using IntroSE.Kanban.Frontend.Model;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
@@ -8,17 +8,25 @@ namespace IntroSE.Kanban.Frontend.ViewModel
     {
 
         private ColumnModel _column;
-        private ObservableCollection<TaskModel> _tasks;
+        private List<TaskModel> _tasks;
         private TaskModel _selectedTask;
 
+        private List<TaskModel> _filteredTasks;
+        private bool isFiltered = false;
         private string _message;
         private bool _enableForward;
 
         public ColumnModel Column { get => _column; set => _column = value; }
 
-        public ObservableCollection<TaskModel> Tasks
+        public List<TaskModel> Tasks
         {
-            get => _tasks;
+            get 
+            {
+                if (isFiltered)
+                    return FilteredTasks;
+                else
+                    return _tasks;
+            }
             set
             {
                 _tasks = value;
@@ -36,6 +44,30 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             {
                 _selectedTask = value;
                 EnableForward = value != null;
+            }
+        }
+
+        public List<TaskModel> FilteredTasks 
+        { 
+            get => _filteredTasks; 
+            set => _filteredTasks = value; 
+        }
+
+        public string Filter 
+        {
+            set
+            {
+                if (value == "")
+                {
+                    isFiltered = false;
+                }
+                else
+                {
+                    FilteredTasks = new List<TaskModel>();
+                    _tasks.ForEach (x => { if(x.Title.Contains(value) | x.Description.Contains(value)) { FilteredTasks.Add(x); } });
+                    isFiltered = true;
+                }
+                RaisePropertyChanged("Tasks");
             }
         }
 
@@ -78,7 +110,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         public void RefreshTasks()
         {
-            Tasks = new ObservableCollection<TaskModel>();
+            Tasks = new List<TaskModel>();
             foreach (var task in Column.GetTasks())
                 Tasks.Add(task);
         }

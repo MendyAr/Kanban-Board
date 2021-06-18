@@ -1,5 +1,4 @@
-﻿using IntroSE.Kanban.Frontend.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;

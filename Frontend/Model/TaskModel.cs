@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Data.Entity.Migrations.Model;
 using System.Windows;
+using System.Windows.Media;
 using STask = IntroSE.Kanban.Backend.ServiceLayer.Task;
 
 namespace IntroSE.Kanban.Frontend.Model
@@ -79,6 +79,7 @@ namespace IntroSE.Kanban.Frontend.Model
                     MessageBox.Show("Cannot change due date. " + e.Message);
                 }
                 RaisePropertyChanged("DueDate");
+                RaisePropertyChanged("DueDateBackgroundColor");
             }
         }
         public string EmailAssignee
@@ -97,6 +98,35 @@ namespace IntroSE.Kanban.Frontend.Model
                     MessageBox.Show("Cannot change Assignee. " + e.Message);
                 }
                 RaisePropertyChanged("EmailAssignee");
+                RaisePropertyChanged("AssigneeBorderColor");
+            }
+        }
+
+        public SolidColorBrush DueDateBackgroundColor
+        {
+            get
+            {
+                Color c;
+                if (DateTime.Now >= DueDate)
+                    c = Colors.Red;
+                else if( (DateTime.Now - CreationTime) >= 0.75 * (DueDate - CreationTime))
+                    c = Colors.Orange;
+                else
+                    c = Colors.White;
+                return new SolidColorBrush(c);
+            }
+        }
+
+        public SolidColorBrush AssigneeBorderColor
+        {
+            get
+            {
+                Color c;
+                if (EmailAssignee == User.Email)
+                    c = Colors.Blue;
+                else
+                    c = Colors.Gray;
+                return new SolidColorBrush(c);
             }
         }
 

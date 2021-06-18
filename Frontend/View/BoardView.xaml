@@ -7,7 +7,7 @@
         xmlns:vm ="clr-namespace:IntroSE.Kanban.Frontend.ViewModel"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:BoardViewModel, IsDesignTimeCreatable=False}"
-        Title="Board" Height="450" Width="800">
+        Title="Board" Height="500" Width="800">
     <Grid Margin="0,0,0,0">
         <Grid.Background>
             <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
@@ -30,13 +30,15 @@
                             <DockPanel LastChildFill="True">
                                 <Grid DockPanel.Dock="Top" Height="30">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="450"></ColumnDefinition>
+                                        <ColumnDefinition Width="400"></ColumnDefinition>
                                         <ColumnDefinition Width="75"></ColumnDefinition>
-                                        <ColumnDefinition Width="75"></ColumnDefinition>
+                                        <ColumnDefinition Width="100"></ColumnDefinition>
+                                        <ColumnDefinition Width="210"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Background="#FFE2D3D3" FontWeight="Bold">Column Name</Label>
-                                    <Label Grid.Column="1" Background="#FFE2D3D3" FontWeight="Bold">Ordinal</Label>
-                                    <Label Grid.Column="2" Margin="0,0,-26,0" Background="#FFE2D3D3" FontWeight="Bold">Tasks Limit</Label>
+                                    <Label Grid.Column="0" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro" FontWeight="Bold">Column Name</Label>
+                                    <Label Grid.Column="1" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro" FontWeight="Bold">Ordinal</Label>
+                                    <Label Grid.Column="2" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro" FontWeight="Bold">Tasks Limit</Label>
+                                    <Label Grid.Column="3" FontSize="14" HorizontalContentAlignment="Center" Background="Gainsboro">Selection Zone</Label>
                                 </Grid>
                                 <ItemsPresenter></ItemsPresenter>
                             </DockPanel>
@@ -47,13 +49,13 @@
                     <DataTemplate>
                         <Grid Margin="0,2">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="450"></ColumnDefinition>
+                                <ColumnDefinition Width="400"></ColumnDefinition>
                                 <ColumnDefinition Width="75"></ColumnDefinition>
-                                <ColumnDefinition Width="75"></ColumnDefinition>
+                                <ColumnDefinition Width="100"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <TextBox Text="{Binding Path=Name, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="0"></TextBox>
-                            <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="1"></TextBox>
-                            <TextBox Text="{Binding Path=Limit, Mode=TwoWay}" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="2"></TextBox>
+                            <TextBox Text="{Binding Path=Ordinal, Mode=TwoWay}" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="1"></TextBox>
+                            <TextBox Text="{Binding Path=Limit, Mode=TwoWay}" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" FontSize="14" FontWeight="Bold" Grid.Column="2"></TextBox>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -71,7 +73,7 @@
                 <Button Content="Add Task" HorizontalAlignment="Left" Height="47" Margin="260,8,0,0" VerticalAlignment="Top" Width="79" Click="Add_Task"/>
                 <TextBox HorizontalAlignment="Left" Height="26" Margin="488,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Text="{Binding NewColumnOrdinal, Mode=OneWayToSource}"/>
                 <Label Content="Insert ordinal:" HorizontalAlignment="Left" Height="34" Margin="488,58,0,0" VerticalAlignment="Top" Width="199"/>
-                <TextBlock Text="{Binding Message, Mode=OneWay}" TextWrapping="Wrap" Foreground="Red" Margin="22,62,301,10"/>
+                <TextBlock Text="{Binding Message, Mode=OneWay}" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red" Margin="22,62,301,10"/>
                 <Button Content="Refresh" HorizontalAlignment="Left" Height="34" Margin="710,0,0,0" VerticalAlignment="Top" Width="44" Click="Refresh"/>
             </Grid>
         </StackPanel>

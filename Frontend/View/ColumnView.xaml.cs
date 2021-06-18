@@ -1,4 +1,5 @@
 ﻿using IntroSE.Kanban.Frontend.ViewModel;
+using System.ComponentModel;
 using System.Windows;
 
 namespace IntroSE.Kanban.Frontend.View
@@ -31,6 +32,11 @@ namespace IntroSE.Kanban.Frontend.View
             {
                 taskView.Show();
             }
+        }
+
+        private void Button_Click_Sort_by_Due_Date(object sender, RoutedEventArgs e)
+        {
+            TasksListBox.Items.SortDescriptions.Add(new SortDescription("DueDate", ListSortDirection.Ascending));
         }
 
     }

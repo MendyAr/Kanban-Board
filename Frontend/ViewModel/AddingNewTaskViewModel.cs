@@ -33,7 +33,8 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             try
             {
                 Message = "";
-                Controller.AddTask(_board, Title, Description, DueDate);
+                TaskModel task= Controller.AddTask(_board, Title, Description, DueDate);
+                Board.Columns[0].Tasks.Add(task);
                 Message = $" The Task '{Title}' had been created successfully";
             }
             catch (Exception e)

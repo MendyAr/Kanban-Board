@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using SColumn = IntroSE.Kanban.Backend.ServiceLayer.Column;
 
 namespace IntroSE.Kanban.Frontend.Model
@@ -8,7 +10,7 @@ namespace IntroSE.Kanban.Frontend.Model
     {
         private UserModel _user;
         private BoardModel _board;
-        private List<TaskModel> _tasks;
+        private ObservableCollection<TaskModel> _tasks;
 
         private string _name;
         private int _ordinal;
@@ -86,8 +88,12 @@ namespace IntroSE.Kanban.Frontend.Model
                 RaisePropertyChanged("Limit");
             }
         }
+        private void HandlechangeTasks(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged("Tasks");
+        }
 
-        public List<TaskModel> Tasks { get => _tasks; set => _tasks = value; }
+        public ObservableCollection<TaskModel> Tasks { get => _tasks; set => _tasks = value; }
 
         public ColumnModel(BoardModel board, SColumn sColumn)
         {
@@ -96,7 +102,8 @@ namespace IntroSE.Kanban.Frontend.Model
             this._name = sColumn.Name;
             this._ordinal = sColumn.Ordinal;
             this._limit = sColumn.Limit;
-            this._tasks = User.Controller.GetColumnTasks(this);
+            this._tasks = new ObservableCollection<TaskModel>(User.Controller.GetColumnTasks(this));
+            Tasks.CollectionChanged += HandlechangeTasks;
 
         }
     }

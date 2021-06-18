@@ -3,8 +3,11 @@ using IntroSE.Kanban.Frontend.Model;
 
 namespace IntroSE.Kanban.Frontend.ViewModel
 {
-    class LoginViewModel : ViewModelObject
+    class LoginViewModel : NotifiableObject
     {
+
+        private BackendController controller;
+
         private string _username;
         private string _password;
         private string _message;
@@ -35,7 +38,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             Message = "";
             try
             {
-                return Controller.Login(Username, Password); 
+                return controller.Login(Username, Password); 
             }
             catch (Exception e)
             {
@@ -49,7 +52,7 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             Message = "";
             try
             {
-                Controller.Register(Username, Password);
+                controller.Register(Username, Password);
                 Message = $"{Username} had successfully register ";
             }
             catch(Exception e)
@@ -58,9 +61,9 @@ namespace IntroSE.Kanban.Frontend.ViewModel
             }
         }
 
-        public LoginViewModel(BackendController controller) : base(controller)
+        public LoginViewModel(BackendController controller)
         {
-            
+            this.controller = controller;
         }
     }
 }

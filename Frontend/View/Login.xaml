@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="Login" Height="450" Width="800">
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="\Images\Board_Background.png" Stretch="UniformToFill"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -23,7 +26,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Viewbox Grid.Column="0" >
-                <Label Content="UserName" Margin="10"/>
+                <Label Content="Username" Margin="10"/>
             </Viewbox>
             <TextBox Grid.Column="1" Text="{Binding Path=Username, Mode=TwoWay}"/>
         </Grid>

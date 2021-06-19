@@ -28,7 +28,7 @@
             <Viewbox Grid.Column="0" HorizontalAlignment="Left">
                 <Label Content="Title: " FontWeight="Bold"/>
             </Viewbox> 
-                <TextBox Text="{Binding Path=Task.Title, Mode=TwoWay}"  Height="auto" Width="auto" Grid.Column="1"/>
+                <TextBox Text="{Binding Path=Task.Title, Mode=TwoWay}" FontSize="24" Height="auto" Width="auto" Grid.Column="1"/>
         </Grid>
         
         <!-- Assignee -->
@@ -39,8 +39,8 @@
             </Grid.ColumnDefinitions>
             <Viewbox Grid.Column="0" HorizontalAlignment="Left">
                 <Label Content="Assignee: " FontWeight="Bold"/>
-            </Viewbox> 
-                <TextBox Text="{Binding Path=Task.EmailAssignee, Mode=TwoWay}" Height="auto" Width="auto" Grid.Column="1"/>
+            </Viewbox>
+            <TextBox Text="{Binding Path=Task.EmailAssignee, Mode=TwoWay}" FontSize="22" Height="auto" Width="auto" Grid.Column="1"/>
         </Grid>
         
         <!-- Description -->

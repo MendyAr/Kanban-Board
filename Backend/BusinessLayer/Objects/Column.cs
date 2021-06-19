@@ -42,7 +42,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             set
             {
                 if (value != -1 && _tasks.Count > value) 
-                    throw new ArgumentException(_name);
+                    throw new InvalidOperationException(_name);
                 _limit = value;
                 _dColumn.Limit = value;
             }
@@ -113,7 +113,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         ITask IColumn.GetTask(int taskId)
         {
             if (!_tasks.ContainsKey(taskId))
-                throw new ArgumentOutOfRangeException(_name);
+                throw new IndexOutOfRangeException(_name);
             return _tasks[taskId];
         }
 

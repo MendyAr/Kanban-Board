@@ -306,10 +306,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 board.AddColumn(column);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to add column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             try
             {
@@ -341,10 +341,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 boards[creatorEmail][boardName].RenameColumn(columnOrdinal, newColumnName);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to rename column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
         }
 
@@ -364,10 +364,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 boards[creatorEmail][boardName].MoveColumn(columnOrdinal, shiftSize);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to move column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (ArithmeticException)
             {
@@ -392,10 +392,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                     boards[creatorEmail][boardName].RemoveColumn(columnOrdinal);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to remove column at '{creatorEmail}:{boardName}[{columnOrdinal}]' - out of range 0 - {e.Message} (inclusive)");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
         }
 
@@ -423,12 +423,12 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
                 boards[creatorEmail][boardName].LimitColumn(columnOrdinal, limit);
                 log.Info($"SUCCESSFULLY set new limit for '{creatorEmail}:{boardName}'[{columnOrdinal}]' by '{userEmail}'. Limit: " + limit);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
-            catch (ArgumentException e)
+            catch (InvalidOperationException e)
             {
                 log.Warn($"FAILED to set limit for '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Column has more than " + limit + " tasks. Limit: " + limit);
                 throw new ArgumentException($"Cannot set limit: There are more than {limit} tasks in column '{e.Message}' of board '{creatorEmail}:{boardName}'");
@@ -497,7 +497,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">The task to be updated identified task ID</param>        
         /// <param name="emailAssignee">userEmail of the user to assign to task to</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
+        /// <exception cref="ArgumentException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new DueDate isn't legal</exception>
         /// <remarks>calls ValidateLogin, CheckMembership</remarks>
         internal void AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
@@ -508,17 +508,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (columnOrdinal == (boards[creatorEmail][boardName].ColumnCount - 1) )
             {
                 log.Warn($"FAILED to assign task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Updating tasks at column 'done' is prohibited");
-                throw new ArgumentOutOfRangeException("Cannot reassign tasks in rightmost column");
+                throw new ArgumentException("Cannot reassign tasks in rightmost column");
             }
             try
             {
                 boards[creatorEmail][boardName].AssignTask(userEmail, columnOrdinal, taskId, emailAssignee);
                 log.Info($"SUCCESSFULLY assigned Task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' to '{emailAssignee}' by '{userEmail}'");
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -541,7 +541,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="DueDate">new and updated due date</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
+        /// <exception cref="ArgumentException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new DueDate isn't legal</exception>
         /// <remarks>calls ValidateLogin, CheckMembership</remarks>
         internal void UpdateTaskDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime DueDate)
@@ -551,17 +551,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (columnOrdinal == (boards[creatorEmail][boardName].ColumnCount - 1) )
             {
                 log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Updating tasks at column 'done' is prohibited");
-                throw new ArgumentOutOfRangeException("Cannot update tasks in rightmost column");
+                throw new ArgumentException("Cannot update tasks in rightmost column");
             }
             try
             {
                 boards[creatorEmail][boardName].UpdateTaskDueDate(userEmail, columnOrdinal, taskId, DueDate);
                 log.Info($"SUCCESSFULLY updated Task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - DueDate");
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -589,7 +589,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="title">new and updated title</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
+        /// <exception cref="ArgumentException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new title isn't legal</exception>
         /// <remarks>calls ValidateLogin, CheckMembership</remarks>
         internal void UpdateTaskTitle(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string title)
@@ -599,17 +599,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (columnOrdinal == (boards[creatorEmail][boardName].ColumnCount - 1) )
             {
                 log.Warn($"FAILED to update task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Updating tasks at column 'done' is prohibited");
-                throw new ArgumentOutOfRangeException("Cannot update tasks in rightmost column");
+                throw new ArgumentException("Cannot update tasks in rightmost column");
             }
             try
             {
                 boards[creatorEmail][boardName].UpdateTaskTitle(userEmail, columnOrdinal, taskId, title);
                 log.Info($"SUCCESSFULLY updated Task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Title");
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -637,7 +637,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
         /// <param name="description">new and updated description</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to update a task from column 2</exception>
+        /// <exception cref="ArgumentException">Thrown if asked to update a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if new description isn't legal</exception>
         /// <remarks>calls ValidateLogin CheckMembership</remarks>
         internal void UpdateTaskDescription(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string description)
@@ -647,17 +647,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (columnOrdinal == (boards[creatorEmail][boardName].ColumnCount - 1) )
             {
                 log.Warn($"FAILED to update task '{taskId}' at '{userEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Updating tasks at column 'done' is prohibited");
-                throw new ArgumentOutOfRangeException("Cannot update tasks in rightmost column");
+                throw new ArgumentException("Cannot update tasks in rightmost column");
             }
             try
             {
                 boards[creatorEmail][boardName].UpdateTaskDescription(userEmail, columnOrdinal, taskId, description);
                 log.Info($"SUCCESSFULLY updated Task '{taskId}' at '{creatorEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Description");
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -684,7 +684,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// <param name="boardName">board's name - identifier</param>
         /// <param name="columnOrdinal">column in which the task is stored</param>
         /// <param name="taskId">task's ID</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if asked to advance a task from column 2</exception>
+        /// <exception cref="ArgumentException">Thrown if asked to advance a task from column 2</exception>
         /// <exception cref="ArgumentException">Throw if the task isn't stored in said column, if next column is at it's limit</exception>
         /// <remarks>calls ValidateLogin, CheckMembership</remarks>
         internal void AdvanceTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
@@ -694,17 +694,17 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             if (columnOrdinal == (boards[creatorEmail][boardName].ColumnCount - 1) )
             {
                 log.Warn($"FAILED to advance task '{taskId}' from '{userEmail}:{boardName}[{columnOrdinal}]' by '{userEmail}' - Advancing tasks from column 'done' is prohibited");
-                throw new ArgumentOutOfRangeException("Cannot advance tasks from rightmost column");
+                throw new ArgumentException("Cannot advance tasks from rightmost column");
             }
             try
             {
                 boards[creatorEmail][boardName].AdvanceTask(userEmail, columnOrdinal, taskId);
                 log.Info($"SUCCESSFULLY advanced Task '{taskId}' from '{creatorEmail}:{boardName}[{columnOrdinal}]' to '{creatorEmail}:{boardName}[{columnOrdinal + 1}]' by '{userEmail}'");
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
             catch (IndexOutOfRangeException e)
             {
@@ -740,10 +740,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return boards[creatorEmail][boardName].GetColumn(columnOrdinal);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
         }
 
@@ -764,10 +764,10 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             {
                 return boards[creatorEmail][boardName].GetColumnTasks(columnOrdinal);
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (ArgumentException e)
             {
                 log.Warn($"FAILED to access '{creatorEmail}:{boardName}[{columnOrdinal}]' - Column doesn't exist");
-                throw new ArgumentOutOfRangeException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
+                throw new ArgumentException($"Column ordinal out of range: Argument needs to be between 0 and {e.Message} (inclusive)");
             }
         }
 

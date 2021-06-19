@@ -94,11 +94,11 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         /// Adds the given column to the board
         /// </summary>
         /// <param name="column">the added column</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when column's ordinal is out of legal range</exception>
+        /// <exception cref="ArgumentException">Thrown when column's ordinal is out of legal range</exception>
         void IBoard.AddColumn(IColumn column)
         {
             if (column.Ordinal < 0 || column.Ordinal > _columnCounter)
-                throw new ArgumentOutOfRangeException($"{_columnCounter - 1}");
+                throw new ArgumentException($"{_columnCounter}");
             _columns.Insert(column.Ordinal, column);
             _columnCounter++;
             for (int i = column.Ordinal + 1; i < _columnCounter; i++)
@@ -421,7 +421,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
         {
             if (columnOrdinal < 0 || columnOrdinal >= _columnCounter)
             {
-                throw new ArgumentOutOfRangeException($"{_columnCounter-1}");
+                throw new ArgumentException($"{_columnCounter-1}");
             }
         }
     }

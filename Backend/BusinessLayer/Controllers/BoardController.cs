@@ -762,7 +762,7 @@ namespace IntroSE.Kanban.Backend.BusinessLayer
             CheckMembership(userEmail, creatorEmail, boardName, "GetColumn");
             try
             {
-                return boards[userEmail][boardName].GetColumnTasks(columnOrdinal);
+                return boards[creatorEmail][boardName].GetColumnTasks(columnOrdinal);
             }
             catch (ArgumentOutOfRangeException e)
             {

@@ -54,7 +54,7 @@
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
-                    <Setter Property="BorderThickness" Value="0.75"/>
+                    <Setter Property="BorderThickness" Value="2"/>
                     <Setter Property="BorderBrush" Value="{Binding AssigneeBorderColor, Mode=OneWay}" />
                 </Style>
             </ListBox.ItemContainerStyle>

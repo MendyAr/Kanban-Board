@@ -110,9 +110,10 @@ namespace IntroSE.Kanban.Frontend.ViewModel
 
         public void RefreshTasks()
         {
-            Tasks = new List<TaskModel>();
+            _tasks = new List<TaskModel>();
             foreach (var task in Column.GetTasks())
-                Tasks.Add(task);
+                _tasks.Add(task);
+            RaisePropertyChanged("Tasks");
         }
     }
 

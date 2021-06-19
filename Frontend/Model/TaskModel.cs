@@ -125,7 +125,7 @@ namespace IntroSE.Kanban.Frontend.Model
                 if (EmailAssignee == User.Email)
                     c = Colors.Blue;
                 else
-                    c = Colors.Gray;
+                    c = Colors.Transparent;
                 return new SolidColorBrush(c);
             }
         }
